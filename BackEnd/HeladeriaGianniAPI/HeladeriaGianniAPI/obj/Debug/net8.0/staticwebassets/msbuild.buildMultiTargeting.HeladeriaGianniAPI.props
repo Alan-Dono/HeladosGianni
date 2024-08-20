@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\HeladeriaGianniAPI.props" />
+</Project>

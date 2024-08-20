@@ -1,0 +1,15 @@
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\bin\Debug\net8.0\ApplicationLayer.deps.json
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\bin\Debug\net8.0\ApplicationLayer.dll
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\bin\Debug\net8.0\ApplicationLayer.pdb
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\bin\Debug\net8.0\DomainLayer.dll
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\bin\Debug\net8.0\DomainLayer.pdb
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.csproj.AssemblyReference.cache
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.AssemblyInfoInputs.cache
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.AssemblyInfo.cs
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.csproj.CoreCompileInputs.cache
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\Applicat.033E422A.Up2Date
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.dll
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\refint\ApplicationLayer.dll
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.pdb
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ref\ApplicationLayer.dll
