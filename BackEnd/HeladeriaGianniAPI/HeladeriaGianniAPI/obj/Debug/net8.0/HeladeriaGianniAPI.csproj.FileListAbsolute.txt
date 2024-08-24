@@ -142,3 +142,4 @@ C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\HeladeriaGianniAPI\bin\Debug\
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\HeladeriaGianniAPI\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\HeladeriaGianniAPI\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\HeladeriaGianniAPI\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\HeladeriaGianniAPI\obj\Debug\net8.0\HeladeriaGianniAPI.sourcelink.json

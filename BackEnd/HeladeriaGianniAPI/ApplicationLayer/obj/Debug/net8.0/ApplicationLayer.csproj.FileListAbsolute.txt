@@ -13,3 +13,4 @@ C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\ne
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\refint\ApplicationLayer.dll
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.pdb
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ref\ApplicationLayer.dll
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\obj\Debug\net8.0\ApplicationLayer.sourcelink.json

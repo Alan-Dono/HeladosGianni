@@ -28,6 +28,15 @@ builder.Services.AddScoped<EmpleadoService>();
 
 builder.Services.AddScoped<ITurnoRepository, TurnoRepository>();
 builder.Services.AddScoped<TurnoService>();
+
+builder.Services.AddScoped<IProductoCategoriaRepository, ProductoCategoriaRepository>();
+builder.Services.AddScoped<ProductoCategoriaService>();
+
+builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+builder.Services.AddScoped<ProveedorService>();
+
+builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
+builder.Services.AddScoped<ProductoService>();
 // Configuración de AutoMapper
 //builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -40,6 +49,25 @@ builder.Services.AddSwaggerGen();
 
 
 var app = builder.Build();
+
+#region VerificarConnexionDB
+// Verificar conexión a la base de datos
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<HeladeriaDbContext>();
+    try
+    {
+        // Intenta acceder a la base de datos
+        await dbContext.Database.CanConnectAsync();
+        Console.WriteLine("Conectado con éxito a la base de datos.");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Error al conectar a la base de datos: {ex.Message}");
+    }
+}
+#endregion
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -119,9 +119,12 @@ namespace DataAccesLayer.Migrations
 
                     b.Property<string>("NombreCategoria")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("NombreCategoria")
+                        .IsUnique();
 
                     b.ToTable("ProductoCategorias");
                 });

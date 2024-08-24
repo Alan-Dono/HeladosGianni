@@ -10,7 +10,19 @@ namespace DataAccesLayer
 {
     public class HeladeriaDbContext : DbContext
     {
+
         public HeladeriaDbContext(DbContextOptions<HeladeriaDbContext> options) : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ProductoCategoria>()
+                .HasIndex(pc => pc.NombreCategoria)
+                .IsUnique();
+        }
+
+
         public DbSet<Sabor> Sabores { get; set; }
         public DbSet<ProductoCategoria> ProductoCategorias { get; set; }
         public DbSet<Producto> Productos { get; set; }

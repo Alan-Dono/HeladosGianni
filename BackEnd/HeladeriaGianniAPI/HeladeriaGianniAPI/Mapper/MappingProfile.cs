@@ -19,12 +19,34 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<Turno, TurnoDtoRes>()
                 .ForMember(dest => dest.Empleado, opt => opt.MapFrom(src => src.Empleado)) // Mapea Empleado si es necesario
                 .ReverseMap();
-
             CreateMap<TurnoDtoReq, Turno>()
                 .ForMember(dest => dest.FechaInicio, opt => opt.MapFrom(src => src.FechaInicio))
                 .ForMember(dest => dest.FechaFin, opt => opt.Ignore()) // Ignora FechaFin en la solicitud
                 .ReverseMap();
+
+            CreateMap<ProductoCategoria, ProductoCategoriaDtoRes>().ReverseMap();
+            CreateMap<ProductoCategoriaDtoReq, ProductoCategoria>();
+
+            CreateMap<Proveedor, ProveedorDtoRes>().ReverseMap();
+            CreateMap<ProveedorDtoReq, Proveedor>();
+
+            // Mapeo para crear un producto
+            CreateMap<ProductoCreacionDto, Producto>()
+                .ForMember(dest => dest.ProductoCategoriaId, opt => opt.MapFrom(src => src.ProductoCategoriaId))
+                .ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
+                .ForMember(dest => dest.ProductoCategoria, opt => opt.Ignore())
+                .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
+                .ReverseMap();
+
+            // Mapeo para devolver un producto con sus detalles
+            CreateMap<Producto, ProductoDtoRes>()
+                .ForMember(dest => dest.ProductoCategoriaDtoRes, opt => opt.MapFrom(src => src.ProductoCategoria))
+                .ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src .Proveedor))
+                .ReverseMap();
+
+
+
         }
+
     }
-    
 }

@@ -9,6 +9,7 @@ C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\DataAccesLayer.AssemblyInfoInputs.cache
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\DataAccesLayer.AssemblyInfo.cs
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\DataAccesLayer.csproj.CoreCompileInputs.cache
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\DataAccesLayer.sourcelink.json
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\DataAcce.AB8F2C65.Up2Date
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\DataAccesLayer.dll
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DataAccesLayer\obj\Debug\net8.0\refint\DataAccesLayer.dll
