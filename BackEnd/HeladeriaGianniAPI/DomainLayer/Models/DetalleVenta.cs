@@ -41,4 +41,4 @@ namespace DomainLayer.Models
 
         #endregion
     }
-}
+}  

@@ -3,17 +3,17 @@ using ApplicationLayer.Services;
 using DataAccesLayer;
 using DataAccesLayer.Repositories;
 using DomainLayer.Interface;
-using HeladeriaGianniAPI.Mapper;
 using Microsoft.EntityFrameworkCore;
-
+using System.Globalization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Configuración de la cultura global
+CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
 // Configuración de la base de datos
-// Configuración del DbContext
 builder.Services.AddDbContext<HeladeriaDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -37,20 +37,24 @@ builder.Services.AddScoped<ProveedorService>();
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<ProductoService>();
+
 // Configuración de AutoMapper
-//builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
+// Configuración de Newtonsoft.Json para usar la cultura invariante
+builder.Services.AddControllers()
+    .AddNewtonsoftJson(options =>
+    {
+        options.SerializerSettings.Culture = CultureInfo.InvariantCulture;
+    });
 
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
 var app = builder.Build();
 
-#region VerificarConnexionDB
+#region VerificarConexionDB
 // Verificar conexión a la base de datos
 using (var scope = app.Services.CreateScope())
 {
@@ -68,15 +72,12 @@ using (var scope = app.Services.CreateScope())
 }
 #endregion
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

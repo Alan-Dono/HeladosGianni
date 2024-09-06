@@ -24,7 +24,7 @@ namespace ApplicationLayer.Services
 
         public async Task<Producto> ObtenerProductosPorId(int id)
         {
-            return await productoRepository.ObtenerProductoPorId(id);
+             return await productoRepository.ObtenerProductoPorId(id);
         }
 
         public async Task<IEnumerable<Producto>> ObtenerProductosPorCategoria(int idCategoria)
@@ -42,9 +42,9 @@ namespace ApplicationLayer.Services
             await productoRepository.AgregarProducto(producto);
         }
 
-        public async Task EditarProducto(Producto producto)
+        public async Task EditarProducto(Producto producto, int id)
         {
-            await productoRepository.EditarProducto(producto);
+            await productoRepository.EditarProducto(producto,id);
         }
 
         public async Task EliminarProducto(int id)

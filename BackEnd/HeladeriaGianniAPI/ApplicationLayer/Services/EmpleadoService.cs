@@ -26,12 +26,12 @@ namespace ApplicationLayer.Services
         {
             return await _empleadoRepository.ObtenerPorIdAsync(id);
         }
-
+        
         public async Task AgregarEmpleadoAsync(Empleado empleado)
         {
             await _empleadoRepository.AgregarAsync(empleado);
         }
-
+        
         public async Task ActualizarEmpleadoAsync(Empleado empleado)
         {
             await _empleadoRepository.ActualizarAsync(empleado);

@@ -1,8 +1,10 @@
 ﻿using ApplicationLayer.Services;
 using AutoMapper;
 using DomainLayer.Models;
+using HeladeriaGianniAPI.DTOs.Request;
 using HeladeriaGianniAPI.DTOs.Response;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 
 namespace HeladeriaGianniAPI.Controllers
 {
@@ -39,11 +41,12 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProveedorDtoRes>> ObtenerProductoPorId(int id)
+        public async Task<ActionResult<ProductoDtoRes>> ObtenerProductoPorId(int id)
         {
             try
             {
-                var productoDto = await productoService.ObtenerProductosPorId(id);
+                var producto = await productoService.ObtenerProductosPorId(id);
+                var productoDto = mapper.Map<ProductoDtoRes>(producto);
                 return Ok(productoDto);
             }
             catch (Exception ex)
@@ -53,18 +56,21 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductoCreacionDto>> CrearProducto([FromBody] ProductoCreacionDto productoDto)
+        public async Task<ActionResult<ProductoDtoRes>> CrearProducto([FromBody] ProductoCreacionDtoReq productoCreacionDto)
         {
             try
             {
                 // Mapear el DTO a la entidad Producto
-                var producto = mapper.Map<Producto>(productoDto);
+                var producto = mapper.Map<Producto>(productoCreacionDto);
 
                 // Agregar el producto a la base de datos
                 await productoService.AgregarProducto(producto);
 
+                // Recargar el producto desde la base de datos para incluir las relaciones
+                producto = await productoService.ObtenerProductosPorId(producto.Id);
+
                 // Mapear la entidad Producto de nuevo al DTO para devolver la respuesta
-                var productoCreadoDto = mapper.Map<ProductoCreacionDto>(producto);
+                var productoCreadoDto = mapper.Map<ProductoDtoRes>(producto);
 
                 // Devolver una respuesta 201 Created con la ubicación del nuevo recurso
                 return CreatedAtAction(nameof(ObtenerProductoPorId), new { id = producto.Id }, productoCreadoDto);
@@ -77,6 +83,45 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ProductoDtoRes>> ActualizarProducto([FromBody] ProductoCreacionDtoReq productoActualizarDto, int id)
+        {
+            try
+            {
+                // Mapear el DTO a la entidad Producto
+                var producto = mapper.Map<Producto>(productoActualizarDto);
+
+                // Pasar a la capa de aplicación para editar el producto
+                await productoService.EditarProducto(producto, id);
+
+                // Obtener el producto actualizado y mapearlo a DTO de respuesta
+                var productoActualizado = await productoService.ObtenerProductosPorId(id);
+                var productoResDto = mapper.Map<ProductoDtoRes>(productoActualizado);
+
+                return Ok(productoResDto);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+        [HttpDelete]
+        public async Task<ActionResult> EliminarProducto(int id)
+        {
+            try
+            {
+                await productoService.EliminarProducto(id);
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+             
 
 
 

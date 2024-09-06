@@ -2,6 +2,7 @@
 using DomainLayer.Models;
 using HeladeriaGianniAPI.DTOs.Request;
 using HeladeriaGianniAPI.DTOs.Response;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace HeladeriaGianniAPI.Mapper
@@ -31,7 +32,14 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<ProveedorDtoReq, Proveedor>();
 
             // Mapeo para crear un producto
-            CreateMap<ProductoCreacionDto, Producto>()
+            CreateMap<ProductoCreacionDtoReq, Producto>()
+                .ForMember(dest => dest.ProductoCategoriaId, opt => opt.MapFrom(src => src.ProductoCategoriaId))
+                .ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
+                .ForMember(dest => dest.ProductoCategoria, opt => opt.Ignore())
+                .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
+                .ReverseMap();
+            // Mapeo para actualizar un producto
+            CreateMap<ProductoActualizarDtoReq, Producto>()
                 .ForMember(dest => dest.ProductoCategoriaId, opt => opt.MapFrom(src => src.ProductoCategoriaId))
                 .ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
                 .ForMember(dest => dest.ProductoCategoria, opt => opt.Ignore())
@@ -44,9 +52,15 @@ namespace HeladeriaGianniAPI.Mapper
                 .ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src .Proveedor))
                 .ReverseMap();
 
-
+            
 
         }
 
+/*        private ProductoCategoria MapProductoCategoria(ProductoCreacionDtoReq productoCreacionDto, Producto producto)
+        {
+            var categoria = new ProductoCategoria();
+            categoria.Id = productoCreacionDto.ProductoCategoriaId;
+            categoria.NombreCategoria = productoCreacionDto.ca
+        }*/
     }
 }

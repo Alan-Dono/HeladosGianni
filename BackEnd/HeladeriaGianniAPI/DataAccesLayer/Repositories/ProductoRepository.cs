@@ -30,17 +30,45 @@ namespace DataAccesLayer.Repositories
 
         }
 
-        public async Task EditarProducto(Producto producto)
-        {
-            var existe = await context.Productos.AnyAsync(x =>
-                x.NombreProducto == producto.NombreProducto && x.Id != producto.Id);
-            if (existe)
+        /*    public async Task EditarProducto(Producto producto, int id)
             {
-                throw new Exception($"El producto {producto.NombreProducto} ya existe");
+                var productoExistente = await context.Productos.FindAsync(id);
+
+                if (productoExistente == null)
+                {
+                    throw new Exception("Producto no encontrado");
+                }
+                productoExistente.NombreProducto = producto.NombreProducto;
+                productoExistente.Precio = producto.Precio;
+                productoExistente.Descripcion = producto.Descripcion;
+                productoExistente.ProductoCategoriaId = producto.ProductoCategoriaId;
+                productoExistente.ProveedorId = producto.ProveedorId;
+
+                context.Update(productoExistente);
+                await context.SaveChangesAsync();
+            }*/
+        public async Task EditarProducto(Producto producto, int id)
+        {
+            // Buscar el producto existente en la base de datos
+            var productoExistente = await context.Productos
+                .AsNoTracking() // Asegúrate de no rastrear esta consulta si solo lo usas para obtener la entidad
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (productoExistente == null)
+            {
+                throw new Exception("Producto no encontrado");
             }
+
+            // Asignar el ID del producto existente al producto recibido
+            producto.Id = id;
+
+            // Actualizar el producto
             context.Update(producto);
-            await context.SaveChangesAsync();   
+
+            // Guardar los cambios en la base de datos
+            await context.SaveChangesAsync();
         }
+
 
         public async Task EliminarProducto(int id)
         {
@@ -60,7 +88,11 @@ namespace DataAccesLayer.Repositories
             {
                 throw new Exception("El producto no existe");
             }
-            return existe;
+            var producto = await context.Productos
+                .Include(x => x.ProductoCategoria)
+                .Include(x => x.Proveedor)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            return producto;
         }
 
         public async Task<IEnumerable<Producto>> ObtenerProductos()

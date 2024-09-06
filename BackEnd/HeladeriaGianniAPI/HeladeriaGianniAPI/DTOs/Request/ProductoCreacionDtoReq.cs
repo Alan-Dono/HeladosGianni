@@ -1,10 +1,11 @@
 ﻿using DomainLayer.Models;
 using System.ComponentModel.DataAnnotations;
 
-namespace HeladeriaGianniAPI.DTOs.Response
+namespace HeladeriaGianniAPI.DTOs.Request
 {
-    public class ProductoCreacionDto
+    public class ProductoCreacionDtoReq
     {
+        [Required]
         public string NombreProducto { get; set; }
         [Required]
         public int ProductoCategoriaId { get; set; }
@@ -16,6 +17,5 @@ namespace HeladeriaGianniAPI.DTOs.Response
         public double Precio { get; set; }
         [MaxLength(150)]
         public string Descripcion { get; set; }
-
     }
 }
