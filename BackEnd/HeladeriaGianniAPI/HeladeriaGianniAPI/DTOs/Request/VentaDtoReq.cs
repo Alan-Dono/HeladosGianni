@@ -5,6 +5,6 @@
         public int EmpleadoId { get; set; }
         public DateTime FechaDeVenta { get; set; }
         public double TotalVenta { get; set; }
-        public List<DetalleVentaDtoReq> DetallesVentas { get; set; }
+        public ICollection<DetalleVentaDtoReq> DetallesVentas { get; set; }
     }
 }

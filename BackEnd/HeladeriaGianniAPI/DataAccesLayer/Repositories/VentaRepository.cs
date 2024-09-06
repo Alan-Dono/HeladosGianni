@@ -37,7 +37,11 @@ namespace DataAccesLayer.Repositories
 
         public async Task<Venta> ObtenerVentaPorId(int id)
         {
-            var existe = await context.Ventas.FindAsync(id);
+            var existe = await context.Ventas
+                .Include(x => x.DetallesVentas)
+                .Include(x => x.empleado)
+                .FirstOrDefaultAsync(x => x.Id == id);
+
             if (existe == null)
             {
                 throw new Exception("No se encontro la venta");

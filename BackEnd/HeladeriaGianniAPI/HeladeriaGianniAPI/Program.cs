@@ -38,6 +38,8 @@ builder.Services.AddScoped<ProveedorService>();
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<ProductoService>();
 
+builder.Services.AddScoped<IVentaRepository, VentaRepository>();
+builder.Services.AddScoped<VentaService>();
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

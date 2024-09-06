@@ -1,4 +1,5 @@
 ﻿using DomainLayer.Models;
+using HeladeriaGianniAPI.DTOs.Request;
 
 namespace HeladeriaGianniAPI.DTOs.Response
 {
@@ -8,8 +9,6 @@ namespace HeladeriaGianniAPI.DTOs.Response
         public int EmpleadoId { get; set; }
         public DateTime FechaDeVenta { get; set; }
         public double TotalVenta { get; set; }
-        //public ICollection<DetalleVenta> DetallesVentas { get; set; }
-
-        //public Empleado empleado { get; set; }
+        public ICollection<DetalleVentaDtoRes> DetallesVentas { get; set; }
     }
 }
