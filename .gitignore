@@ -1,1 +1,12 @@
-.vs/
+# Ignorar binarios y archivos de compilación en HeladeriaGianniAPI
+BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/bin/
+BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/obj/
+
+# Ignorar configuraciones locales específicas de usuario
+BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/*.user
+
+# Ignorar archivos de configuración específicos de entornos locales
+BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/appsettings.Development.json
+
+# Archivos temporales y de caché
+BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/.vs/
