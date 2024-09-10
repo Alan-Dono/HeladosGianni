@@ -1,4 +1,5 @@
-﻿using DomainLayer.Interface;
+﻿using ApplicationLayer.BusinessLogic;
+using DomainLayer.Interface;
 using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,17 @@ namespace ApplicationLayer.Services
     public class VentaService
     {
         private readonly IVentaRepository ventaRepository;
+        private readonly CalculadoraVentas calculadoraVentas;
 
-        public VentaService( IVentaRepository ventaRepository)
+        public VentaService( IVentaRepository ventaRepository, CalculadoraVentas calculadoraVentas)
         {
             this.ventaRepository = ventaRepository;
+            this.calculadoraVentas = calculadoraVentas;
         }
 
         public async Task<ICollection<Venta>> ObtenerVentas()
         {
+
             return await ventaRepository.ObtenerVentas();
         }
 
@@ -34,12 +38,18 @@ namespace ApplicationLayer.Services
 
         public async Task AgregarVenta(Venta venta)
         {
+            calculadoraVentas.AgregarUnaVenta(venta);
             await ventaRepository.AgregarVenta(venta);
         }
 
         public async Task EliminarVenta(int id)
         {
             await ventaRepository.EliminarVenta(id);
+        }
+
+        public Venta AplicarDescuento(Venta venta,double porcentajeDescuento)
+        {
+            return calculadoraVentas.VentaConDescuento(venta, porcentajeDescuento);
         }
     }
 }

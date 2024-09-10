@@ -1,4 +1,5 @@
 using ApplicationLayer;
+using ApplicationLayer.BusinessLogic;
 using ApplicationLayer.Services;
 using DataAccesLayer;
 using DataAccesLayer.Repositories;
@@ -40,6 +41,8 @@ builder.Services.AddScoped<ProductoService>();
 
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<VentaService>();
+
+builder.Services.AddScoped<CalculadoraVentas>();
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

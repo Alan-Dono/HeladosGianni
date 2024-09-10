@@ -52,12 +52,20 @@ namespace HeladeriaGianniAPI.Mapper
                 .ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src .Proveedor))
                 .ReverseMap();
 
+            CreateMap<Producto, ProductoVentaDtoRes>()
+                .ReverseMap();
+
             CreateMap<Venta, VentaDtoRes>()
                 .ForMember(dest => dest.DetallesVentas, opt => opt.MapFrom(src => src.DetallesVentas));
+
             CreateMap<VentaDtoReq, Venta>()
                 .ForMember(dest => dest.DetallesVentas, opt => opt.MapFrom(src => src.DetallesVentas));
-            CreateMap<DetalleVenta, DetalleVentaDtoRes>();
-            CreateMap<DetalleVentaDtoReq, DetalleVenta>();
+
+            CreateMap<DetalleVenta, DetalleVentaDtoRes>()
+                .ReverseMap();
+
+            CreateMap<DetalleVentaDtoReq, DetalleVenta>()
+                .ReverseMap();
 
         }
 

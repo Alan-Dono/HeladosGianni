@@ -29,7 +29,7 @@ namespace DataAccesLayer.Repositories
             var existe = await context.Ventas.FindAsync(id);
             if (existe != null)
             {
-                context.Remove(id);
+                context.Remove(existe);
                 await context.SaveChangesAsync();
             }
 
@@ -39,6 +39,7 @@ namespace DataAccesLayer.Repositories
         {
             var existe = await context.Ventas
                 .Include(x => x.DetallesVentas)
+                    .ThenInclude(x => x.Producto)
                 .Include(x => x.empleado)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
@@ -53,6 +54,7 @@ namespace DataAccesLayer.Repositories
         {
             var ventas = await context.Ventas
                 .Include(x => x.DetallesVentas)
+                    .ThenInclude(x => x.Producto)
                 .Include(x=> x.empleado)
                 .ToListAsync();
             return ventas;
@@ -67,5 +69,7 @@ namespace DataAccesLayer.Repositories
                 .ToListAsync();
             return ventas;
         }
+
+
     }
 }

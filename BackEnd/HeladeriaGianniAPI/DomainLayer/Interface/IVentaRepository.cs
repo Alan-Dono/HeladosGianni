@@ -13,6 +13,6 @@ namespace DomainLayer.Interface
         Task<Venta> ObtenerVentaPorId(int id);
         Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime fechaDesde, DateTime fechaHasta);
         Task AgregarVenta(Venta venta);
-        Task EliminarVenta(int id); 
+        Task EliminarVenta(int id);
     }
 }
