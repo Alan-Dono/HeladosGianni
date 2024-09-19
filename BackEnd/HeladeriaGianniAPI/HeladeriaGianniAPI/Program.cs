@@ -10,7 +10,7 @@ using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configuración de la cultura global
+// Configuración de la cultura global (pasar valores con decimales)
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
@@ -57,6 +57,18 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Configuracion de cors 
+// Configuración de CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp", builder =>
+    {
+        builder.WithOrigins("http://localhost:5173") // La URL del frontend
+               .AllowAnyMethod() // Permite cualquier método HTTP (GET, POST, PUT, etc.)
+               .AllowAnyHeader() // Permite cualquier encabezado (headers)
+               .AllowCredentials(); // Si utilizas autenticación basada en cookies o tokens
+    });
+});
 var app = builder.Build();
 
 #region VerificarConexionDB
@@ -85,6 +97,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("AllowReactApp");
+
 
 app.UseAuthorization();
 

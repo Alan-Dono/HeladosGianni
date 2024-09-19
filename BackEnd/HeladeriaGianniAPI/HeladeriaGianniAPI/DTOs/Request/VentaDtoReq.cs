@@ -4,7 +4,7 @@
     {
         public int EmpleadoId { get; set; }
         public DateTime FechaDeVenta { get; set; }
-        //public double TotalVenta { get; set; }
+        public double TotalVenta { get; set; }
         public ICollection<DetalleVentaDtoReq> DetallesVentas { get; set; }
     }
 }

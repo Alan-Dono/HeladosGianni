@@ -10,7 +10,7 @@ namespace DomainLayer.Models
     {   
 
         #region Constructor
-        public DetalleVenta()
+/*        public DetalleVenta()
         {
             
         }
@@ -25,7 +25,7 @@ namespace DomainLayer.Models
             Subtotal = subtotal;
             Venta = venta;
             Producto = producto;
-        }
+        }*/
 
         #endregion
 

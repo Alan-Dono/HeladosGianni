@@ -22,7 +22,6 @@ namespace ApplicationLayer.Services
 
         public async Task<ICollection<Venta>> ObtenerVentas()
         {
-
             return await ventaRepository.ObtenerVentas();
         }
 

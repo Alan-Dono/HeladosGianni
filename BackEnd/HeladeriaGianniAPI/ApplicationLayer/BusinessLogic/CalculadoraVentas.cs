@@ -13,8 +13,8 @@ namespace ApplicationLayer.BusinessLogic
         {
             if (venta == null) return;
             SetSubtotalDetalleVenta(venta.DetallesVentas);
-            CalcularTotalVenta(venta);
         }
+
 
         public Venta VentaConDescuento(Venta venta, double porcentajeDescuento)
         {
@@ -37,7 +37,7 @@ namespace ApplicationLayer.BusinessLogic
             }
         }
 
-        private double CalcularTotalVenta(Venta venta)
+/*        private double CalcularTotalVenta(Venta venta)
         {
             if (venta == null) return 0;
             double total = 0;
@@ -46,7 +46,7 @@ namespace ApplicationLayer.BusinessLogic
                 total += detalle.Subtotal; // Suma el subtotal al total de la venta
             }
             return Math.Round(total, 2);
-        }
+        }*/
 
     }
 }

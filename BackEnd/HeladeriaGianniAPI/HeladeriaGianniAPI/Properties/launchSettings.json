@@ -22,11 +22,11 @@
     "https": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
-      "launchUrl": "swagger",
+      "launchBrowser": false, // Evitar abrir el navegador
+      "launchUrl": "", // Quitar la referencia a Swagger si no lo necesitas
       "applicationUrl": "https://localhost:7266;http://localhost:5076",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production" // Ejecutar en entorno de Producción
       }
     },
     "IIS Express": {
