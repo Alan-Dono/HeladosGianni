@@ -1,0 +1,66 @@
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 60px;
+    /* Ajusta el ancho según sea necesario */
+    background-color: #b0b0b0;
+    /* Gris aún más oscuro */
+    color: #333;
+    /* Color de los iconos */
+    overflow: hidden;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    z-index: 1000;
+    /* Asegúrate de que el menú esté por encima del contenido */
+}
+
+.sidebar.open {
+    width: 220px;
+    /* Ajusta el ancho cuando esté abierto */
+    background-color: #e0e0e0;
+    /* Color de fondo más brillante en estado abierto */
+}
+
+.sidebar-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px;
+    /* Más espacio para los iconos */
+    color: #333;
+    text-align: center;
+    text-decoration: none;
+    /* Elimina el subrayado del enlace */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+
+.menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Fondo opaco al hacer hover */
+    color: #007bff;
+    /* Color del texto al hacer hover */
+}
+
+.menu-item span {
+    margin-left: 15px;
+    /* Espacio entre el icono y el texto */
+}
+
+.menu-item svg {
+    font-size: 24px;
+    /* Tamaño del icono */
+}
+
+.sidebar.closed .menu-item span {
+    display: none;
+    /* Oculta el texto cuando el menú está cerrado */
+}

@@ -1,0 +1,98 @@
+/* Ajuste general para las tarjetas */
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px;
+    /* Reducimos el padding para que las tarjetas sean más compactas */
+    margin-bottom: 5px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    height: auto;
+    /* Deja que la altura se ajuste automáticamente */
+    transition: height 0.3s ease;
+}
+
+.order-item-details,
+.order-item-controls,
+.order-item-subtotal {
+    display: flex;
+    align-items: center;
+}
+
+.order-item-details {
+    flex: 3;
+    display: flex;
+    align-items: center;
+}
+
+.item-info {
+    margin-left: 5px;
+}
+
+.item-name {
+    font-size: 0.9rem;
+    /* Reducimos el tamaño de fuente */
+    color: #333;
+}
+
+.item-price {
+    font-size: 0.8rem;
+    color: #666;
+}
+
+.order-item-controls {
+    flex: 1;
+    justify-content: center;
+}
+
+.item-quantity {
+    margin: 0 10px;
+    font-size: 0.9rem;
+    /* Ajustamos el tamaño de la cantidad */
+}
+
+.order-item-subtotal {
+    flex: 1;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #333;
+    padding-right: 5px;
+}
+
+/* Flexibilidad para reducir tamaño */
+.order-summary-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Ocupa toda la altura del contenedor */
+    overflow-y: hidden;
+    /* Evitamos el scroll */
+}
+
+.order-summary-container:hover {
+    overflow-y: auto;
+    /* Permite scroll solo al hacer hover si es necesario */
+}
+
+/* Contenedor adaptable */
+.order-summary-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    /* Se adapta a la altura de la ventana */
+    overflow-y: auto;
+}
+
+.order-summary-container>* {
+    flex-shrink: 1;
+    /* Reduce el tamaño de los hijos si es necesario */
+}
+
+.order-summary-total {
+    padding-top: 5px;
+    border-top: 1px solid #ddd;
+    margin-top: 5px;
+}

@@ -5,10 +5,6 @@ function App() {
   return (
     <div>
       <AppRouter />
-      <section>
-
-      </section>
-
     </div>
 
   );

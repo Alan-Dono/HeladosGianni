@@ -17,5 +17,6 @@ namespace HeladeriaGianniAPI.DTOs.Request
         public double Precio { get; set; }
         [MaxLength(150)]
         public string Descripcion { get; set; }
+        public IFormFile Foto { get; set; }
     }
 }

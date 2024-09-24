@@ -1,0 +1,52 @@
+.order-summary-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.order-summary-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+.order-summary-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* Alinear verticalmente los elementos */
+    margin-top: 20px;
+}
+
+.discount-input {
+    width: 70%;
+    /* Ajustamos el tamaño del input */
+    padding: 10px;
+    margin-right: 5px;
+    /* Espacio reducido entre input y botón */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.apply-discount-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    /* Reducir el tamaño del padding */
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 1rem;
+    height: 40px;
+    /* Igualar la altura al campo de texto */
+}
+
+.apply-discount-button:hover {
+    background-color: #45a049;
+}
