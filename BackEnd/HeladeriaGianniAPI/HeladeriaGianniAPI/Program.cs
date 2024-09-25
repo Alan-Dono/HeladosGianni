@@ -96,6 +96,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Habilitar archivos estáticos
+app.UseStaticFiles(); // Esto sirve archivos desde wwwroot por defecto
+
+
 app.UseHttpsRedirection();
 
 app.UseCors("AllowReactApp");

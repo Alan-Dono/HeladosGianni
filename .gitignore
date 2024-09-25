@@ -10,3 +10,32 @@ BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/appsettings.Development.json
 
 # Archivos temporales y de caché
 BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/.vs/
+
+# Archivos y carpetas de React/Node.js
+
+# node_modules es donde npm instala las dependencias, no se debe subir.
+FrontEnd/react-app/node_modules/
+
+# Build generado para producción
+FrontEnd/react-app/build/
+
+# Archivos de logs
+FrontEnd/react-app/npm-debug.log*
+FrontEnd/react-app/yarn-debug.log*
+FrontEnd/react-app/yarn-error.log*
+
+# Directorios relacionados con testing
+FrontEnd/react-app/coverage/
+
+# Ignorar archivos temporales de editores
+*.log
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Archivos relacionados con sistemas operativos
+.DS_Store
+Thumbs.db

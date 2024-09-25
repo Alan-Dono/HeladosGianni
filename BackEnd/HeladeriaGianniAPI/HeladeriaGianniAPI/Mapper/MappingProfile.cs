@@ -49,8 +49,10 @@ namespace HeladeriaGianniAPI.Mapper
             // Mapeo para devolver un producto con sus detalles
             CreateMap<Producto, ProductoDtoRes>()
                 .ForMember(dest => dest.ProductoCategoriaDtoRes, opt => opt.MapFrom(src => src.ProductoCategoria))
-                .ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src .Proveedor))
+                .ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src.Proveedor))
+                .ForMember(dest => dest.Foto, opt => opt.MapFrom(src => src.Foto)) // Incluir la propiedad Foto
                 .ReverseMap();
+
 
             CreateMap<Producto, ProductoVentaDtoRes>()
                 .ReverseMap();

@@ -11,6 +11,7 @@ namespace HeladeriaGianniAPI.DTOs.Response
         public int ProveedorId { get; set; }
         public double Precio { get; set; }
         public string Descripcion { get; set; }
+        public string Foto { get; set; }
         public ProductoCategoriaDtoRes ProductoCategoriaDtoRes { get; set; }
         public ProveedorDtoRes ProveedorDtoRes { get; set; }
     }
