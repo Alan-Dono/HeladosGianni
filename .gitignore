@@ -1,4 +1,4 @@
-# Ignorar binarios y archivos de compilación en HeladeriaGianniAPI
+# Ignorar binarios y archivos de compilación en HeladeriaGianniAPI (backend)
 BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/bin/
 BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/obj/
 
@@ -11,31 +11,39 @@ BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/appsettings.Development.json
 # Archivos temporales y de caché
 BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/.vs/
 
-# Archivos y carpetas de React/Node.js
+# Archivos y carpetas de React/Node.js (frontend)
 
 # node_modules es donde npm instala las dependencias, no se debe subir.
-FrontEnd/react-app/node_modules/
+FrontEnd/HeladeriaApp/node_modules/
 
 # Build generado para producción
-FrontEnd/react-app/build/
+FrontEnd/HeladeriaApp/build/
+FrontEnd/HeladeriaApp/dist/
+FrontEnd/HeladeriaApp/dist-ssr/
 
-# Archivos de logs
-FrontEnd/react-app/npm-debug.log*
-FrontEnd/react-app/yarn-debug.log*
-FrontEnd/react-app/yarn-error.log*
+# Logs
+FrontEnd/HeladeriaApp/logs/
+FrontEnd/HeladeriaApp/*.log
+FrontEnd/HeladeriaApp/npm-debug.log*
+FrontEnd/HeladeriaApp/yarn-debug.log*
+FrontEnd/HeladeriaApp/yarn-error.log*
+FrontEnd/HeladeriaApp/pnpm-debug.log*
+FrontEnd/HeladeriaApp/lerna-debug.log*
 
-# Directorios relacionados con testing
-FrontEnd/react-app/coverage/
+# Archivos locales
+FrontEnd/HeladeriaApp/*.local
 
-# Ignorar archivos temporales de editores
-*.log
+# Directorios y archivos de editores
+FrontEnd/HeladeriaApp/.vscode/
+FrontEnd/HeladeriaApp/.idea/
 .vscode/
 .idea/
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+*.sw?
 
-# Archivos relacionados con sistemas operativos
-.DS_Store
+# Archivos y carpetas comunes a ignorar en frontend y backend
 Thumbs.db

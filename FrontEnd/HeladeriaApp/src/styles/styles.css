@@ -1,0 +1,16 @@
+/* src/styles.css */
+
+/* Reset CSS para eliminar márgenes y paddings por defecto */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Asegura que el padding y el borde no afecten el tamaño total */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    /* Establece una fuente básica */
+    background-color: #f5f5f5;
+    /* Fondo claro por defecto */
+}
