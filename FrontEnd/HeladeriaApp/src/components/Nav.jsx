@@ -37,14 +37,17 @@ const Nav = ({ isDarkMode, toggleTheme }) => {
                 '& .MuiDrawer-paper': {
                     width: open ? drawerWidthOpen : drawerWidthClosed,
                     backgroundColor: menuColor,
-                    transition: 'background-color 0.3s, width 0.3s',
+                    transition: 'background-color 0.3s, width 0.3s, opacity 0.3s', // Incluye opacidad en la transición
                     overflowX: 'hidden',
-                    opacity: open ? 1 : 0.6,
+                    opacity: open ? 1 : 0.6, // Ajusta la opacidad
                 },
+                zIndex: 1, // Asegúrate de que sea más alto que el contenido principal
                 height: '100vh',
                 backgroundColor: backgroundColor,
             }}
         >
+            {/* Contenido del Drawer */}
+
             <List>
                 <ListItem button onClick={handleToggleMenu}>
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
