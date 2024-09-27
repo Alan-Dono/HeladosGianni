@@ -31,7 +31,7 @@ const ProductTiket = ({ producto, agregar, restar, eliminar }) => {
                     <RemoveIcon />
                 </IconButton>
                 <Typography variant="body2" sx={{ mx: 1 }}>{producto.cantidad}</Typography>
-                <IconButton onClick={() => agregar(producto.id)} size="small">
+                <IconButton onClick={() => agregar(producto)} size="small">
                     <AddIcon />
                 </IconButton>
             </Box>

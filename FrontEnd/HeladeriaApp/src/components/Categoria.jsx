@@ -4,7 +4,7 @@ import { Card, CardContent, Box } from '@mui/material';
 import ProductoCard from './ProductoCard';
 import { useTheme } from '@emotion/react';
 
-const Categoria = ({ nombreCategoria, productos, agregar }) => {
+const Categoria = ({ productos, agregar }) => {
 
     const [isHovered, setIsHovered] = useState(false);
     const theme = useTheme();
