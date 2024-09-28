@@ -5,10 +5,12 @@ import { Box } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
 const Ventas = () => {
+
     const [carrito, setCarrito] = useState([]);
     const [descuento, setDescuento] = useState(0);
     const [categorias, setCategorias] = useState([]);
-
+    const [subtotal, setSubtotal] = useState(0); // Estado para subtotal
+    const [total, setTotal] = useState(0); // Estado para total
     const theme = useTheme();
 
     // Simulación de datos obtenidos de la base de datos
@@ -78,7 +80,6 @@ const Ventas = () => {
         ],
     };
 
-
     useEffect(() => {
         const fetchCategorias = () => {
             const categoriasData = Object.keys(productos).map(key => ({
@@ -120,10 +121,13 @@ const Ventas = () => {
         setCarrito(prevCarrito => prevCarrito.filter(item => item.id !== id));
     };
 
-    // Cálculo de subtotal y total
-    const subtotal = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+    // Calcular subtotal y total
+    useEffect(() => {
+        const newSubtotal = carrito.reduce((acc, prod) => acc + prod.precio * prod.cantidad, 0);
+        setSubtotal(newSubtotal);
+        setTotal(newSubtotal - (newSubtotal * descuento / 100)); // Actualiza el total basado en el descuento
+    }, [carrito, descuento]); // Dependencias para recalcular subtotal y total
 
-    const total = subtotal - descuento;
 
     return (
         <Box sx={{ display: 'flex', height: '100vh', p: 2 }}>
@@ -143,7 +147,6 @@ const Ventas = () => {
                             nombreCategoria={categoria.nombre}
                             productos={categoria.productos}
                             agregar={agregarProducto}
-                            restar={restarProducto}
                         />
                     </Box>
                 ))}
@@ -151,9 +154,12 @@ const Ventas = () => {
             <Box sx={{ width: '30%', padding: 0.5 }}>
                 <OrdenCompra
                     carrito={carrito}
+                    setCarrito={setCarrito}
                     subtotal={subtotal}
+                    setSubtotal={setSubtotal} // Puedes pasar esto si necesitas actualizarlo desde OrdenCompra
                     descuento={descuento}
                     total={total}
+                    setTotal={setTotal} // Pasar el setter de total
                     setDescuento={setDescuento}
                     agregar={agregarProducto}
                     restar={restarProducto}
