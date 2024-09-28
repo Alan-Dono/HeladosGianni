@@ -12,8 +12,8 @@ const AppRoutes = ({ isDarkMode, toggleTheme }) => {
         <Routes>
             <Route path="/" element={<Layout isDarkMode={isDarkMode} toggleTheme={toggleTheme} />}>
                 <Route index element={<Home />} />
-                <Route path="/ventas" element={<Ventas />} />
-                <Route path="/productos" element={<Productos />} />
+                <Route path="ventas" element={<Ventas />} />
+                <Route path="productos" element={<Productos />} />
                 <Route path="/empleados" element={<Empleados />} />
                 <Route path="/turnos" element={<Turnos />} />
             </Route>
