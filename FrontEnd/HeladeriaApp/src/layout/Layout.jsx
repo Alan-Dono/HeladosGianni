@@ -31,11 +31,12 @@ const Layout = ({ isDarkMode, toggleTheme }) => {
                 sx={{
                     flexGrow: 1,
                     p: 0,
-                    m: 0,
-                    height: '100%',
+                    mb: 0,
+                    height: '100vh',
                     bgcolor: backgroundColor,
                     overflow: 'hidden', // Cambia a 'hidden' para evitar el scroll
                     marginLeft: '80px', // Este margen iguala el ancho del menú
+                    
                 }}
             >
                 <Outlet />

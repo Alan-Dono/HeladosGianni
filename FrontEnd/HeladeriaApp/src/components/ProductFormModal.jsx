@@ -1,97 +1,105 @@
-// src/components/ProductFormModal.js
-import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Slide, Grow, Fade } from '@mui/material';
+import React from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Slide, Box } from '@mui/material';
+import { Formik, Form, Field } from 'formik';
+import { productValidationSchema } from '../validations/ProductValidation';
 
-
-const categories = ['Helados', 'Café', 'Chocolates']; // Opciones de categorías
+const categories = ['Helados', 'Café', 'Chocolates', 'Postres', 'Bebidas', 'Galletas']; // Opciones de categorías ampliadas
 
 const ProductFormModal = ({ open, onClose, product, onSave }) => {
-    const [formData, setFormData] = useState({
+
+    const initialValues = product ? {
+        nombre: product.nombre,
+        categoria: product.categoria,
+        descripcion: product.descripcion,
+        precio: product.precio,
+    } : {
         nombre: '',
         categoria: '',
         descripcion: '',
         precio: '',
-    });
-
-    // Actualiza el formulario cuando el producto cambia (para editar)
-    useEffect(() => {
-        if (product) {
-            setFormData(product);
-        } else {
-            setFormData({
-                nombre: '',
-                categoria: '',
-                descripcion: '',
-                precio: '',
-            });
-        }
-    }, [product]);
-
-    // Manejar cambios en el formulario
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    // Guardar cambios
-    const handleSubmit = () => {
-        if (formData.nombre && formData.categoria && formData.precio) {
-            onSave(formData);
-        }
+    // Hacemos el método handleSubmit asincrónico
+    const handleSubmit = async (values, { setSubmitting }) => {
+        await onSave({ ...product, ...values }); // Agregar el id si es necesario
+        setSubmitting(false);
+        onClose();
     };
 
+
+    
     return (
-        <Dialog open={open} onClose={onClose}
-            TransitionComponent={Slide}
-            
-                >
+        <Dialog open={open} onClose={onClose} TransitionComponent={Slide} fullWidth maxWidth="sm">
             <DialogTitle>{product ? 'Editar Producto' : 'Agregar Producto'}</DialogTitle>
-            <DialogContent>
-                <TextField
-                    label="Nombre"
-                    name="nombre"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    select
-                    label="Categoría"
-                    name="categoria"
-                    value={formData.categoria}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                >
-                    {categories.map((category) => (
-                        <MenuItem key={category} value={category}>
-                            {category}
-                        </MenuItem>
-                    ))}
-                </TextField>
-                <TextField
-                    label="Descripción"
-                    name="descripcion"
-                    value={formData.descripcion}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-                <TextField
-                    label="Precio"
-                    name="precio"
-                    type="number"
-                    value={formData.precio}
-                    onChange={handleChange}
-                    fullWidth
-                    margin="normal"
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary">Cancelar</Button>
-                <Button onClick={handleSubmit} color="primary">{product ? 'Guardar Cambios' : 'Agregar'}</Button>
-            </DialogActions>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={productValidationSchema}
+                onSubmit={handleSubmit}
+                enableReinitialize
+            >
+                {({ errors, touched, isSubmitting }) => (
+                    <Form>
+                        <DialogContent>
+                            <Box mb={2}>
+                                <Field
+                                    as={TextField}
+                                    label="Nombre"
+                                    name="nombre"
+                                    fullWidth
+                                    error={touched.nombre && Boolean(errors.nombre)}
+                                    helperText={touched.nombre && errors.nombre}
+                                />
+                            </Box>
+                            <Box mb={2}>
+                                <Field
+                                    as={TextField}
+                                    label="Categoría"
+                                    name="categoria"
+                                    select
+                                    fullWidth
+                                    error={touched.categoria && Boolean(errors.categoria)}
+                                    helperText={touched.categoria && errors.categoria}
+                                >
+                                    {categories.map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                            {option}
+                                        </MenuItem>
+                                    ))}
+                                </Field>
+                            </Box>
+                            <Box mb={2}>
+                                <Field
+                                    as={TextField}
+                                    label="Descripción"
+                                    name="descripcion"
+                                    fullWidth
+                                    multiline
+                                    rows={3}
+                                    error={touched.descripcion && Boolean(errors.descripcion)}
+                                    helperText={touched.descripcion && errors.descripcion}
+                                />
+                            </Box>
+                            <Box mb={2}>
+                                <Field
+                                    as={TextField}
+                                    label="Precio"
+                                    name="precio"
+                                    type="number"
+                                    fullWidth
+                                    error={touched.precio && Boolean(errors.precio)}
+                                    helperText={touched.precio && errors.precio}
+                                />
+                            </Box>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick={onClose} color="primary">Cancelar</Button>
+                            <Button type="submit" color="primary" disabled={isSubmitting}>
+                                {product ? 'Guardar Cambios' : 'Agregar Producto'}
+                            </Button>
+                        </DialogActions>
+                    </Form>
+                )}
+            </Formik>
         </Dialog>
     );
 };
