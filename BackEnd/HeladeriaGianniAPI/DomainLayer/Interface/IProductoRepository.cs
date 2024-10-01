@@ -14,7 +14,7 @@ namespace DomainLayer.Interface
         Task<IEnumerable<Producto>> ObtenerProductosPorProveedor(int idPoveedor);
         Task<Producto> ObtenerProductoPorId(int id);
         Task AgregarProducto(Producto producto);
-        Task EditarProducto(Producto producto, int id);
+        Task EditarProducto(int id, Producto producto);
         Task EliminarProducto(int id);
        
     }

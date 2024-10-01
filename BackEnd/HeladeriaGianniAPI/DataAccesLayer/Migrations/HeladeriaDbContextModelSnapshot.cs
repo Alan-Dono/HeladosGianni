@@ -88,10 +88,6 @@ namespace DataAccesLayer.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<string>("Foto")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("NombreProducto")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -102,14 +98,9 @@ namespace DataAccesLayer.Migrations
                     b.Property<int>("ProductoCategoriaId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProveedorId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductoCategoriaId");
-
-                    b.HasIndex("ProveedorId");
 
                     b.ToTable("Productos");
                 });
@@ -132,23 +123,6 @@ namespace DataAccesLayer.Migrations
                         .IsUnique();
 
                     b.ToTable("ProductoCategorias");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Proveedor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NombreProveedor")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Proveedor");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Sabor", b =>
@@ -247,15 +221,7 @@ namespace DataAccesLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DomainLayer.Models.Proveedor", "Proveedor")
-                        .WithMany()
-                        .HasForeignKey("ProveedorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("ProductoCategoria");
-
-                    b.Navigation("Proveedor");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Turno", b =>

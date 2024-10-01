@@ -47,11 +47,11 @@ namespace DataAccesLayer.Repositories
                 context.Update(productoExistente);
                 await context.SaveChangesAsync();
             }*/
-        public async Task EditarProducto(Producto producto, int id)
+        public async Task EditarProducto(int id, Producto producto)
         {
             // Buscar el producto existente en la base de datos
             var productoExistente = await context.Productos
-                .AsNoTracking() // Asegúrate de no rastrear esta consulta si solo lo usas para obtener la entidad
+                //.AsNoTracking() // Asegúrate de no rastrear esta consulta si solo lo usas para obtener la entidad
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (productoExistente == null)
@@ -62,8 +62,8 @@ namespace DataAccesLayer.Repositories
             // Asignar el ID del producto existente al producto recibido
             producto.Id = id;
 
-            // Actualizar el producto
-            context.Update(producto);
+            // Asignar los nuevos valores al producto existente sin crear un nuevo rastreo
+            context.Entry(productoExistente).CurrentValues.SetValues(producto);
 
             // Guardar los cambios en la base de datos
             await context.SaveChangesAsync();
@@ -90,7 +90,7 @@ namespace DataAccesLayer.Repositories
             }
             var producto = await context.Productos
                 .Include(x => x.ProductoCategoria)
-                .Include(x => x.Proveedor)
+                //.Include(x => x.Proveedor)
                 .FirstOrDefaultAsync(p => p.Id == id);
             return producto;
         }
@@ -99,7 +99,7 @@ namespace DataAccesLayer.Repositories
         {
             return await context.Productos
                 .Include(x => x.ProductoCategoria)
-                .Include(x => x.Proveedor)
+                //.Include(x => x.Proveedor)
                 .ToListAsync();
         }
 
@@ -114,7 +114,7 @@ namespace DataAccesLayer.Repositories
         public async Task<IEnumerable<Producto>> ObtenerProductosPorProveedor(int idProveedor)
         {
             var productos = await context.Productos
-                .Where(x => x.ProveedorId == idProveedor)
+                //.Where(x => x.ProveedorId == idProveedor)
                 .ToListAsync();
             return productos;
         }

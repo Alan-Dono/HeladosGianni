@@ -33,8 +33,8 @@ builder.Services.AddScoped<TurnoService>();
 builder.Services.AddScoped<IProductoCategoriaRepository, ProductoCategoriaRepository>();
 builder.Services.AddScoped<ProductoCategoriaService>();
 
-builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
-builder.Services.AddScoped<ProveedorService>();
+//builder.Services.AddScoped<IProveedorRepository, ProveedorRepository>();
+//builder.Services.AddScoped<ProveedorService>();
 
 builder.Services.AddScoped<IProductoRepository, ProductoRepository>();
 builder.Services.AddScoped<ProductoService>();
@@ -65,8 +65,8 @@ builder.Services.AddCors(options =>
     {
         builder.WithOrigins("http://localhost:5173") // La URL del frontend
                .AllowAnyMethod() // Permite cualquier método HTTP (GET, POST, PUT, etc.)
-               .AllowAnyHeader() // Permite cualquier encabezado (headers)
-               .AllowCredentials(); // Si utilizas autenticación basada en cookies o tokens
+               .AllowAnyHeader(); // Permite cualquier encabezado (headers)
+
     });
 });
 var app = builder.Build();

@@ -1,4 +1,4 @@
-﻿using DomainLayer.Interface;
+﻿/*using DomainLayer.Interface;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -51,3 +51,4 @@ namespace DataAccesLayer.Repositories
         }
     }
 }
+*/

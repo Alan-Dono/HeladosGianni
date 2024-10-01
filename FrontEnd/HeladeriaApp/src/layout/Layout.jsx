@@ -5,6 +5,7 @@ import Nav from '../components/Nav';
 import { useTheme } from '@mui/material/styles';
 
 const Layout = ({ isDarkMode, toggleTheme }) => {
+    
     const theme = useTheme();
     const backgroundColor = theme.palette.background.default;
 

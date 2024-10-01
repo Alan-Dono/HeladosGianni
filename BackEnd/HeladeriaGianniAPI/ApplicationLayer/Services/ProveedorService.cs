@@ -1,4 +1,4 @@
-﻿using DomainLayer.Interface;
+﻿/*using DomainLayer.Interface;
 using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -43,3 +43,4 @@ namespace ApplicationLayer.Services
         }
     }
 }
+*/

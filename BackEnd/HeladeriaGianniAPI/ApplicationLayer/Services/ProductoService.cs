@@ -42,9 +42,9 @@ namespace ApplicationLayer.Services
             await productoRepository.AgregarProducto(producto);
         }
 
-        public async Task EditarProducto(Producto producto, int id)
+        public async Task EditarProducto(int id, Producto producto)
         {
-            await productoRepository.EditarProducto(producto,id);
+            await productoRepository.EditarProducto(id, producto);
         }
 
         public async Task EliminarProducto(int id)

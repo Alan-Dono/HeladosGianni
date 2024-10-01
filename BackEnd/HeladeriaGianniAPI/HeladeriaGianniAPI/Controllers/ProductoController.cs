@@ -56,11 +56,11 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProductoDtoRes>> CrearProducto([FromForm] ProductoCreacionDtoReq productoCreacionDto)
+        public async Task<ActionResult<ProductoDtoRes>> CrearProducto([FromBody] ProductoCreacionDtoReq productoCreacionDto)
         {
             try
             {
-                // Verificar si se ha enviado una imagen
+               /* // Verificar si se ha enviado una imagen
                 string rutaFoto = null;
                 if (productoCreacionDto.Foto != null && productoCreacionDto.Foto.Length > 0)
                 {
@@ -82,13 +82,13 @@ namespace HeladeriaGianniAPI.Controllers
 
                     // Guardar la ruta relativa en el producto
                     rutaFoto = $"/images/{fileName}";
-                }
+                }*/
 
                 // Mapear el DTO a la entidad Producto
                 var producto = mapper.Map<Producto>(productoCreacionDto);
 
                 // Asignar la ruta de la foto si existe
-                producto.Foto = rutaFoto;
+                //producto.Foto = rutaFoto;
 
                 // Agregar el producto a la base de datos
                 await productoService.AgregarProducto(producto);
@@ -112,7 +112,7 @@ namespace HeladeriaGianniAPI.Controllers
 
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ProductoDtoRes>> ActualizarProducto([FromBody] ProductoCreacionDtoReq productoActualizarDto, int id)
+        public async Task<ActionResult<ProductoDtoRes>> ActualizarProducto(int id , [FromBody] ProductoCreacionDtoReq productoActualizarDto)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace HeladeriaGianniAPI.Controllers
                 var producto = mapper.Map<Producto>(productoActualizarDto);
 
                 // Pasar a la capa de aplicación para editar el producto
-                await productoService.EditarProducto(producto, id);
+                await productoService.EditarProducto(id, producto);
 
                 // Obtener el producto actualizado y mapearlo a DTO de respuesta
                 var productoActualizado = await productoService.ObtenerProductosPorId(id);
@@ -136,7 +136,7 @@ namespace HeladeriaGianniAPI.Controllers
 
 
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         public async Task<ActionResult> EliminarProducto(int id)
         {
             try

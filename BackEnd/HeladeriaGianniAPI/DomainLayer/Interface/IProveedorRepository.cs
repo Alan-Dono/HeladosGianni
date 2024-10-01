@@ -1,4 +1,4 @@
-﻿using DomainLayer.Models;
+﻿/*using DomainLayer.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,3 +16,4 @@ namespace DomainLayer.Interface
         Task EliminarProveedor(int id);
     }
 }
+*/

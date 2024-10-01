@@ -28,29 +28,29 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<ProductoCategoria, ProductoCategoriaDtoRes>().ReverseMap();
             CreateMap<ProductoCategoriaDtoReq, ProductoCategoria>();
 
-            CreateMap<Proveedor, ProveedorDtoRes>().ReverseMap();
-            CreateMap<ProveedorDtoReq, Proveedor>();
+            //CreateMap<Proveedor, ProveedorDtoRes>().ReverseMap();
+            //CreateMap<ProveedorDtoReq, Proveedor>();
 
             // Mapeo para crear un producto
             CreateMap<ProductoCreacionDtoReq, Producto>()
                 .ForMember(dest => dest.ProductoCategoriaId, opt => opt.MapFrom(src => src.ProductoCategoriaId))
-                .ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
+                //.ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
                 .ForMember(dest => dest.ProductoCategoria, opt => opt.Ignore())
-                .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
+                //.ForMember(dest => dest.Proveedor, opt => opt.Ignore())
                 .ReverseMap();
             // Mapeo para actualizar un producto
             CreateMap<ProductoActualizarDtoReq, Producto>()
                 .ForMember(dest => dest.ProductoCategoriaId, opt => opt.MapFrom(src => src.ProductoCategoriaId))
-                .ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
+                //.ForMember(dest => dest.ProveedorId, opt => opt.MapFrom(src => src.ProveedorId))
                 .ForMember(dest => dest.ProductoCategoria, opt => opt.Ignore())
-                .ForMember(dest => dest.Proveedor, opt => opt.Ignore())
+                //.ForMember(dest => dest.Proveedor, opt => opt.Ignore())
                 .ReverseMap();
 
             // Mapeo para devolver un producto con sus detalles
             CreateMap<Producto, ProductoDtoRes>()
                 .ForMember(dest => dest.ProductoCategoriaDtoRes, opt => opt.MapFrom(src => src.ProductoCategoria))
-                .ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src.Proveedor))
-                .ForMember(dest => dest.Foto, opt => opt.MapFrom(src => src.Foto)) // Incluir la propiedad Foto
+                //.ForMember(dest => dest.ProveedorDtoRes, opt => opt.MapFrom(src => src.Proveedor))
+                //.ForMember(dest => dest.Foto, opt => opt.MapFrom(src => src.Foto)) // Incluir la propiedad Foto
                 .ReverseMap();
 
 

@@ -30,7 +30,7 @@ namespace DataAccesLayer
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<Empleado> Empleado { get; set; }
         public DbSet<DetalleVenta> DetalleVenta { get; set; }
-        public DbSet<Proveedor> Proveedor { get; set; }
+        //public DbSet<Proveedor> Proveedor { get; set; }
         
     }
 }

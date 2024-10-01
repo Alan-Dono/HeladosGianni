@@ -1,15 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField, MenuItem, Slide, Box } from '@mui/material';
 import { Formik, Form, Field } from 'formik';
 import { productValidationSchema } from '../validations/ProductValidation';
-
-const categories = ['Helados', 'Café', 'Chocolates', 'Postres', 'Bebidas', 'Galletas']; // Opciones de categorías ampliadas
+import { getProductosCategorias } from '../api/ApiCategoriasProductos';
 
 const ProductFormModal = ({ open, onClose, product, onSave }) => {
 
+    const [categories, setCategories] = useState([]);
+
+    const fetchCategories = async () => {
+        try {
+            const data = await getProductosCategorias();
+            setCategories(data); // Asegúrate de que 'data' sea un array con id y nombreCategoria
+        } catch (error) {
+            console.error("Error al obtener categorias", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchCategories();
+    }, []);
+
     const initialValues = product ? {
-        nombre: product.nombre,
-        categoria: product.categoria,
+        nombre: product.nombreProducto,
+        categoria: product.productoCategoriaDtoRes.id, // Cambiado a id
         descripcion: product.descripcion,
         precio: product.precio,
     } : {
@@ -19,15 +33,25 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         precio: '',
     };
 
-    // Hacemos el método handleSubmit asincrónico
     const handleSubmit = async (values, { setSubmitting }) => {
-        await onSave({ ...product, ...values }); // Agregar el id si es necesario
-        setSubmitting(false);
-        onClose();
+        // Crea un objeto solo con los campos necesarios
+        const producto = {
+            categoria: values.categoria, // Asegúrate de que esto sea un ID válido
+            descripcion: values.descripcion,
+            nombre: values.nombre,
+            precio: values.precio
+        };
+
+        try {
+            await onSave(producto);
+            setSubmitting(false);
+            onClose();
+        } catch (error) {
+            console.error('Error al guardar el producto:', error);
+            setSubmitting(false);
+        }
     };
 
-
-    
     return (
         <Dialog open={open} onClose={onClose} TransitionComponent={Slide} fullWidth maxWidth="sm">
             <DialogTitle>{product ? 'Editar Producto' : 'Agregar Producto'}</DialogTitle>
@@ -61,8 +85,8 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                                     helperText={touched.categoria && errors.categoria}
                                 >
                                     {categories.map((option) => (
-                                        <MenuItem key={option} value={option}>
-                                            {option}
+                                        <MenuItem key={option.id} value={option.id}>
+                                            {option.nombreCategoria} {/* Mostrar el nombre de la categoría */}
                                         </MenuItem>
                                     ))}
                                 </Field>

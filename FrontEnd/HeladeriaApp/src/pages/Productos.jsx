@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, IconButton, Snackbar, TextField, Grid } from '@mui/material';
 import { Add, Edit, Delete } from '@mui/icons-material';
 import MuiAlert from '@mui/material/Alert';
 import ProductFormModal from '../components/ProductFormModal';
 import { productValidationSchema } from '../validations/ProductValidation'; // Asegúrate de que la ruta es correcta
+import { getProductos, crearProducto, actualizarProducto, eliminarProducto } from "../api/ApiProducto";
+
 
 const initialProducts = [
     { id: 1, nombre: 'Helado de Fresa', categoria: 'Helados', descripcion: 'Delicioso helado de fresa', precio: 3.50 },
@@ -31,7 +33,8 @@ const initialProducts = [
 
 
 const Productos = () => {
-    const [productos, setProductos] = useState(initialProducts);
+
+    const [productos, setProductos] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
@@ -44,6 +47,21 @@ const Productos = () => {
         page: 0,
     });
 
+    // Obtener todos los productos al cargar el componente
+    useEffect(() => {
+        fetchProductos();
+    }, []);
+
+
+    const fetchProductos = async () => {
+        try {
+            const productosObtenidos = await getProductos();
+            setProductos(productosObtenidos);
+        } catch (error) {
+            console.error("Error al obtener productos", error);
+        }
+    };
+
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
     };
@@ -51,18 +69,34 @@ const Productos = () => {
     // Método asincrónico para guardar el producto
     const handleSaveProduct = async (newProduct) => {
         if (selectedProduct) {
-            // Editar producto existente
-            await updateProduct(newProduct);
-            setProductos(prevProducts =>
-                prevProducts.map(p => (p.id === selectedProduct.id ? { ...p, ...newProduct } : p))
-            );
+            try {
+                // Editar producto existente
+                console.log('id', selectedProduct.id, ' lo que esta en handle', newProduct);
+
+                await actualizarProducto(selectedProduct.id, newProduct);
+                setProductos(prevProducts =>
+                    prevProducts.map(p => (p.id === selectedProduct.id ? { ...p, ...newProduct } : p))
+                );
+                abrirAlerta('Producto actualizado exitosamente', 'success');
+            } catch (error) {
+                console.error("Error al actualizar el producto", error);
+                abrirAlerta('Error al actualizar el producto', 'error');
+            }
         } else {
             // Crear nuevo producto
-            const savedProduct = await createProduct(newProduct);
-            setProductos(prevProducts => [...prevProducts, savedProduct]);
+            try {
+                console.log('estamos aca', newProduct);
+
+                const productoCreado = await crearProducto(newProduct);
+                setProductos([...productos, productoCreado]); // Agrega el nuevo producto a la lista
+                abrirAlerta('Producto creado exitosamente', 'success');
+            } catch (error) {
+                console.error("Error al crear el producto", error);
+                abrirAlerta('Error al crear el producto', 'error');
+            }
         }
+        fetchProductos();
         setOpenModal(false);
-        abrirAlerta(selectedProduct ? 'Producto actualizado exitosamente' : 'Producto creado exitosamente', 'success');
     };
 
     const handleEditClick = (product) => {
@@ -75,11 +109,19 @@ const Productos = () => {
         setOpenDeleteDialog(true);
     };
 
-    const confirmDelete = () => {
-        const updatedProducts = productos.filter((product) => product.id !== selectedProduct.id);
-        setProductos(updatedProducts);
+    const confirmDelete = async () => {
+        try {
+            await eliminarProducto(selectedProduct.id);
+            console.log('log', selectedProduct);
+
+            setProductos(productos.filter((prod) => prod.id !== selectedProduct.id)); // Remueve el producto de la lista
+            abrirAlerta('Producto eliminado exitosamente', 'success');
+        } catch (error) {
+            console.error("Error al eliminar el producto", error);
+            abrirAlerta('Error al eliminar el producto', 'error');
+        }
+        fetchProductos();
         setOpenDeleteDialog(false);
-        abrirAlerta('Producto eliminado exitosamente', 'success');
     };
 
     const abrirAlerta = (mensaje, tipo) => {
@@ -92,24 +134,54 @@ const Productos = () => {
         setSnackbarAbierto(false);
     };
 
-    const createProduct = async (newProduct) => {
-        // Simulando una llamada a la API
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const createdProduct = { ...newProduct, id: Date.now() };
-                resolve(createdProduct);
-            }, 1000);
-        });
-    };
+    const rows = productos.filter(product => {
+        return (
+            product.nombreProducto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.precio.toString().includes(searchTerm) ||
+            product.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.productoCategoriaDtoRes.nombreCategoria.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    });
 
-    const updateProduct = async (updatedProduct) => {
-        // Simulando una llamada a la API
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve(updatedProduct);
-            }, 1000);
-        });
-    };
+
+    const colums = [
+        { field: 'id', headerName: 'ID', flex: 0.2 },
+        { field: 'nombreProducto', headerName: 'Nombre', flex: 1 },
+        //{ field: 'nombreCategoria', headerName: 'Categoría', flex: 1 },
+        {
+            field: 'productoCategoriaDtoRes',
+            headerName: 'Categoría',
+            flex: 1,
+            valueGetter: (params) => {
+                return params.nombreCategoria || 'N/A'; // Usando optional chaining
+            }
+        }, // Mapea correctamente
+        { field: 'descripcion', headerName: 'Descripción', flex: 2 },
+        {
+            field: 'precio',
+            headerName: 'Precio',
+            flex: 0.5,
+            renderCell: (params) => {
+                return `$${params.value.toFixed(2)}`;
+            },
+        },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            flex: 0.5,
+            renderCell: (params) => (
+                <>
+                    <IconButton color="primary" onClick={() => handleEditClick(params.row)}>
+                        <Edit />
+                    </IconButton>
+                    <IconButton color="error" onClick={() => handleDeleteClick(params.row)}>
+                        <Delete />
+                    </IconButton>
+                </>
+            ),
+        },
+    ]
+
 
     return (
         <Box sx={{
@@ -148,41 +220,8 @@ const Productos = () => {
 
             <Box sx={{ flexGrow: 1, height: 'calc(100% - 120px)', width: '100%' }}> {/* Ajusta la altura para ocupar el espacio restante */}
                 <DataGrid
-                    rows={productos.filter(product =>
-                        product.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        product.precio.toString().includes(searchTerm) ||
-                        product.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                        product.categoria.toLowerCase().includes(searchTerm.toLowerCase())
-                    )}
-                    columns={[
-                        { field: 'id', headerName: 'ID', flex: 0.2 },
-                        { field: 'nombre', headerName: 'Nombre', flex: 1 },
-                        { field: 'categoria', headerName: 'Categoría', flex: 1 },
-                        { field: 'descripcion', headerName: 'Descripción', flex: 2 },
-                        {
-                            field: 'precio',
-                            headerName: 'Precio',
-                            flex: 0.5,
-                            renderCell: (params) => {
-                                return `$${params.value.toFixed(2)}`;
-                            },
-                        },
-                        {
-                            field: 'acciones',
-                            headerName: 'Acciones',
-                            flex: 0.5,
-                            renderCell: (params) => (
-                                <>
-                                    <IconButton color="primary" onClick={() => handleEditClick(params.row)}>
-                                        <Edit />
-                                    </IconButton>
-                                    <IconButton color="error" onClick={() => handleDeleteClick(params.row)}>
-                                        <Delete />
-                                    </IconButton>
-                                </>
-                            ),
-                        },
-                    ]}
+                    rows={rows}
+                    columns={colums}
                     paginationModel={paginationModel}
                     onPaginationModelChange={setPaginationModel}
                     pageSizeOptions={[5, 10, 15, 25, 50]}

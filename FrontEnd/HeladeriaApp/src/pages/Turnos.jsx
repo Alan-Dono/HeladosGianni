@@ -1,70 +1,155 @@
-// src/pages/Turnos.js
-import { Box } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import React from 'react';
+import React, { useState } from 'react';
+import { Box, Button, Typography, Snackbar } from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
+import TurnoFormModal from '../components/TurnoFormModal';
+import ResponsableFormModal from '../components/ResponsableFormModal';
+import CierreParcialModal from '../components/CierreParcialModal';
+import FinalizarTurnoModal from '../components/FinalizarTurnoModal';
+import TurnoActualCard from '../components/TurnoActualCard';
+import HistorialTurnosTable from '../components/HistorialTurnosTable';
 
-const Turnos = () => {
-    // Definición de las columnas de la tabla
-    const columns = [
-        { field: 'id', headerName: 'ID', width: 90 },
-        {
-            field: 'firstName',
-            headerName: 'First Name',
-            width: 150,
-            editable: true,
-        },
-        {
-            field: 'lastName',
-            headerName: 'Last Name',
-            width: 150,
-            editable: true,
-        },
-        {
-            field: 'age',
-            headerName: 'Age',
-            type: 'number',
-            width: 110,
-            editable: true,
-        },
-        {
-            field: 'fullName',
-            headerName: 'Full Name',
-            description: 'This column has a value getter and is not sortable.',
-            sortable: false,
-            width: 160,
-            valueGetter: (params) =>
-                `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-        },
-    ];
+export const Turnos = () => {
+  const [turnoActual, setTurnoActual] = useState(null);
+  const [historialTurnos, setHistorialTurnos] = useState([]);
+  const [openTurnoModal, setOpenTurnoModal] = useState(false);
+  const [openResponsableModal, setOpenResponsableModal] = useState(false);
+  const [openCierreParcialModal, setOpenCierreParcialModal] = useState(false);
+  const [openFinalizarTurnoModal, setOpenFinalizarTurnoModal] = useState(false);
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
-    // Datos de ejemplo para las filas
-    const rows = [
-        { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-        { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-        { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-        { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-        { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-        { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-        { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-        { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-        { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-    ];
+  const handleIniciarTurno = (turnoData) => {
+    setTurnoActual({ ...turnoData, ventas: [], responsableActual: turnoData.responsableInicial });
+    setOpenTurnoModal(false);
+    showSnackbar('Turno iniciado con éxito', 'success');
+  };
 
-    return (
-        <Box sx={{ padding: 2 }}>
-            <div style={{ height: 400, width: '100%' }}>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5 ,15 ,25]}
-                    checkboxSelection
-                    disableSelectionOnClick
-                    experimentalFeatures={{ newEditingApi: true }} // Permite nuevas funcionalidades de edición
-                />
-            </div>
-        </Box>
-    );
+  const handleCambiarResponsable = (nuevoResponsable) => {
+    if (turnoActual) {
+      const cierreParcial = {
+        responsable: turnoActual.responsableActual,
+        ventas: turnoActual.ventas,
+        fecha: new Date()
+      };
+      setTurnoActual(prevTurno => ({
+        ...prevTurno,
+        responsableActual: nuevoResponsable,
+        cierresParciales: [...(prevTurno.cierresParciales || []), cierreParcial],
+        ventas: []
+      }));
+      setOpenResponsableModal(false);
+      showSnackbar('Responsable cambiado con éxito', 'success');
+    }
+  };
+
+  const handleCierreParcial = () => {
+    if (turnoActual) {
+      const cierreParcial = {
+        responsable: turnoActual.responsableActual,
+        ventas: turnoActual.ventas,
+        fecha: new Date()
+      };
+      setTurnoActual(prevTurno => ({
+        ...prevTurno,
+        cierresParciales: [...(prevTurno.cierresParciales || []), cierreParcial],
+        ventas: []
+      }));
+      setOpenCierreParcialModal(false);
+      showSnackbar('Cierre parcial realizado con éxito', 'success');
+    }
+  };
+
+  const handleFinalizarTurno = () => {
+    if (turnoActual) {
+      const turnoFinalizado = {
+        ...turnoActual,
+        fechaFin: new Date(),
+        cierresParciales: [
+          ...(turnoActual.cierresParciales || []),
+          {
+            responsable: turnoActual.responsableActual,
+            ventas: turnoActual.ventas,
+            fecha: new Date()
+          }
+        ]
+      };
+      setHistorialTurnos(prevHistorial => [...prevHistorial, turnoFinalizado]);
+      setTurnoActual(null);
+      setOpenFinalizarTurnoModal(false);
+      showSnackbar('Turno finalizado con éxito', 'success');
+    }
+  };
+
+  const showSnackbar = (message, severity) => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setSnackbar({ ...snackbar, open: false });
+  };
+
+  return (
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h4" gutterBottom>Gestión de Turnos</Typography>
+
+      {!turnoActual ? (
+        <Button variant="contained" onClick={() => setOpenTurnoModal(true)}>Iniciar Turno</Button>
+      ) : (
+        <>
+          <TurnoActualCard
+            turno={turnoActual}
+            onCambiarResponsable={() => setOpenResponsableModal(true)}
+            onCierreParcial={() => setOpenCierreParcialModal(true)}
+            onFinalizarTurno={() => setOpenFinalizarTurnoModal(true)}
+          />
+          <Box sx={{ mt: 2 }}>
+            <Button variant="contained" onClick={() => setOpenResponsableModal(true)}>Cambiar Responsable</Button>
+            <Button variant="contained" onClick={() => setOpenCierreParcialModal(true)} sx={{ ml: 2 }}>Cierre Parcial</Button>
+            <Button variant="contained" color="secondary" onClick={() => setOpenFinalizarTurnoModal(true)} sx={{ ml: 2 }}>Finalizar Turno</Button>
+          </Box>
+        </>
+      )}
+
+      <Box sx={{ mt: 4 }}>
+        <Typography variant="h5" gutterBottom>Historial de Turnos</Typography>
+        <HistorialTurnosTable turnos={historialTurnos} />
+      </Box>
+
+      <TurnoFormModal
+        open={openTurnoModal}
+        onClose={() => setOpenTurnoModal(false)}
+        onIniciarTurno={handleIniciarTurno}
+      />
+      <ResponsableFormModal
+        open={openResponsableModal}
+        onClose={() => setOpenResponsableModal(false)}
+        onCambiarResponsable={handleCambiarResponsable}
+      />
+      <CierreParcialModal
+        open={openCierreParcialModal}
+        onClose={() => setOpenCierreParcialModal(false)}
+        onCierreParcial={handleCierreParcial}
+        turnoActual={turnoActual}
+      />
+      <FinalizarTurnoModal
+        open={openFinalizarTurnoModal}
+        onClose={() => setOpenFinalizarTurnoModal(false)}
+        onFinalizarTurno={handleFinalizarTurno}
+        turnoActual={turnoActual}
+      />
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={snackbar.open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <MuiAlert onClose={handleCloseSnackbar} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </MuiAlert>
+      </Snackbar>
+    </Box>
+  );
 };
-
-export default Turnos;

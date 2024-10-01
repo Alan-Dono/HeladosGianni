@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Drawer, List, ListItem, ListItemIcon, ListItemText, Box } from '@mui/material';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText, Box, ListItemButton } from '@mui/material';
 import { Home, ShoppingCart, Store, People, Today, Menu as MenuIcon, WbSunny, Nightlight } from '@mui/icons-material';
 import { Link } from 'react-router-dom';
 import { useTheme } from '@mui/material/styles'; // Cambiado a '@mui/material/styles'
@@ -8,6 +8,8 @@ const drawerWidthClosed = 80;
 const drawerWidthOpen = 240;
 
 const Nav = ({ isDarkMode, toggleTheme }) => {
+
+
     const [open, setOpen] = useState(false);
     const theme = useTheme(); // Obtener el tema actual
 
@@ -49,47 +51,47 @@ const Nav = ({ isDarkMode, toggleTheme }) => {
             {/* Contenido del Drawer */}
 
             <List>
-                <ListItem button onClick={handleToggleMenu}>
+                <ListItemButton onClick={handleToggleMenu}>
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <MenuIcon sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="MENU" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem button component={Link} to="/">
+                <ListItemButton  component={Link} to="/">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <Home sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="HOME" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem button component={Link} to="/ventas">
+                <ListItemButton  component={Link} to="/ventas">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <ShoppingCart sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="VENTAS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem button component={Link} to="/productos">
+                <ListItemButton  component={Link} to="/productos">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <Store sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="PRODUCTOS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem button component={Link} to="/empleados">
+                <ListItemButton  component={Link} to="/empleados">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <People sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="EMPLEADOS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
-                </ListItem>
+                </ListItemButton>
 
-                <ListItem button component={Link} to="/turnos">
+                <ListItemButton  component={Link} to="/turnos">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <Today sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="TURNOS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
-                </ListItem>
+                </ListItemButton>
             </List>
 
             <Box sx={{ marginTop: 'auto', paddingBottom: 2, display: 'flex', pl: 2 }}>

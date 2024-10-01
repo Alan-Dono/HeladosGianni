@@ -5,6 +5,7 @@ import { lightTheme, darkTheme } from './theme/Theme';
 import AppRoutes from './routes/AppRoutes';
 
 const App = () => {
+  
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const toggleTheme = () => {
