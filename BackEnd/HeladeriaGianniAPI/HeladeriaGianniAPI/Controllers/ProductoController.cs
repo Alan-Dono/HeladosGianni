@@ -40,7 +40,7 @@ namespace HeladeriaGianniAPI.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "ObtenerProductoPorId")]
         public async Task<ActionResult<ProductoDtoRes>> ObtenerProductoPorId(int id)
         {
             try
@@ -149,7 +149,26 @@ namespace HeladeriaGianniAPI.Controllers
                 return BadRequest(ex.Message);
             }
         }
-             
+
+        [HttpGet("categoria/{id}", Name = "ObtenerProductosPorCategoria")]
+        public async Task<ActionResult<IEnumerable<ProductoDtoRes>>> ObtenerProductosPorCategoria(int id)
+        {
+            try
+            {
+                var productosCategorias = await productoService.ObtenerProductosPorCategoria(id);
+                if (productosCategorias != null && productosCategorias.Any())
+                {
+                    var productosDto = mapper.Map<IEnumerable<ProductoDtoRes>>(productosCategorias);
+                    return Ok(productosDto);
+                }
+                return NotFound("No se encontraron productos.");
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
+        }
 
 
 

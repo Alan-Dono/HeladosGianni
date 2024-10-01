@@ -21,7 +21,7 @@ const ProductTiket = ({ producto, agregar, restar, eliminar }) => {
         >
             {/* Información del producto */}
             <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <Typography variant="body2">{producto.nombre}</Typography>
+                <Typography variant="body2">{producto.nombreProducto}</Typography>
                 <Typography variant="body2">${producto.precio} x {producto.cantidad}</Typography>
             </Box>
 

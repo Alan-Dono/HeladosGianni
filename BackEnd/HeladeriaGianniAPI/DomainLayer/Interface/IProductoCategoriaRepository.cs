@@ -14,5 +14,6 @@ namespace DomainLayer.Interface
         Task AgregarCategoria(ProductoCategoria productoCategoria);
         Task ActualizarCategoria(ProductoCategoria productoCategoria);
         Task EliminarCategoria(int id);
+
     }
 }

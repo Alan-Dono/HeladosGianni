@@ -46,7 +46,7 @@ const ProductoCard = ({ producto, agregar }) => {
                     }}
                     noWrap={false} // Permitir el ajuste de línea
                 >
-                    {producto.nombre}
+                    {producto.nombreProducto}
                 </Typography>
                 <Typography
                     variant="caption"
