@@ -1,28 +1,33 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Slide } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { Formik, Form, Field } from 'formik';
 import { employeeValidationSchema } from '../validations/EmployeeValidation';
+import es from 'date-fns/locale/es'; // Importar el locale español
 
 const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
     const initialValues = {
         id: empleado?.id || '',
-        nombre: empleado?.nombre || '',
-        apellido: empleado?.apellido || '',
+        nombreEmpleado: empleado?.nombreEmpleado || '',
+        apellidoEmpleado: empleado?.apellidoEmpleado || '',
         celular: empleado?.celular || '',
-        fechaContratacion: empleado?.fechaContratacion || null
+        fechaContratacion: empleado?.fechaContratacion ? new Date(empleado.fechaContratacion) : null
     };
 
     return (
-        <Dialog open={open} onClose={handleClose} TransitionComponent={Slide}>
+        <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
             <DialogTitle>{empleado ? 'Editar Empleado' : 'Nuevo Empleado'}</DialogTitle>
             <Formik
                 initialValues={initialValues}
                 validationSchema={employeeValidationSchema}
                 onSubmit={(values, { setSubmitting }) => {
-                    handleSave(values);
+                    const empleadoData = {
+                        ...values,
+                        fechaContratacion: values.fechaContratacion ? values.fechaContratacion.toISOString().split('T')[0] : null
+                    };
+                    handleSave(empleadoData);
                     setSubmitting(false);
                     handleClose();
                 }}
@@ -32,38 +37,32 @@ const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
                         <DialogContent>
                             <Field
                                 as={TextField}
+                                fullWidth
                                 margin="dense"
-                                name="nombre"
+                                name="nombreEmpleado"
                                 label="Nombre"
-                                type="text"
-                                fullWidth
-                                variant="outlined"
-                                error={touched.nombre && errors.nombre}
-                                helperText={touched.nombre && errors.nombre}
+                                error={touched.nombreEmpleado && Boolean(errors.nombreEmpleado)}
+                                helperText={touched.nombreEmpleado && errors.nombreEmpleado}
                             />
                             <Field
                                 as={TextField}
+                                fullWidth
                                 margin="dense"
-                                name="apellido"
+                                name="apellidoEmpleado"
                                 label="Apellido"
-                                type="text"
-                                fullWidth
-                                variant="outlined"
-                                error={touched.apellido && errors.apellido}
-                                helperText={touched.apellido && errors.apellido}
+                                error={touched.apellidoEmpleado && Boolean(errors.apellidoEmpleado)}
+                                helperText={touched.apellidoEmpleado && errors.apellidoEmpleado}
                             />
                             <Field
                                 as={TextField}
+                                fullWidth
                                 margin="dense"
                                 name="celular"
                                 label="Celular"
-                                type="tel"
-                                fullWidth
-                                variant="outlined"
-                                error={touched.celular && errors.celular}
+                                error={touched.celular && Boolean(errors.celular)}
                                 helperText={touched.celular && errors.celular}
                             />
-                            <LocalizationProvider dateAdapter={AdapterDateFns}>
+                            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={es}>
                                 <DatePicker
                                     label="Fecha de Contratación"
                                     value={values.fechaContratacion}
@@ -73,7 +72,7 @@ const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
                                             {...params}
                                             fullWidth
                                             margin="dense"
-                                            error={touched.fechaContratacion && errors.fechaContratacion}
+                                            error={touched.fechaContratacion && Boolean(errors.fechaContratacion)}
                                             helperText={touched.fechaContratacion && errors.fechaContratacion}
                                         />
                                     )}
@@ -82,7 +81,9 @@ const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
                         </DialogContent>
                         <DialogActions>
                             <Button onClick={handleClose}>Cancelar</Button>
-                            <Button type="submit">Guardar</Button>
+                            <Button type="submit" variant="contained" color="primary">
+                                Guardar
+                            </Button>
                         </DialogActions>
                     </Form>
                 )}

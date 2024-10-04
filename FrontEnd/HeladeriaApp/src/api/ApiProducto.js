@@ -79,8 +79,6 @@ export const eliminarProducto = async (id) => {
 export const getProductoByCategory = async (id) => {
   try {
     const response = await apiClient.get(`/productos/categoria/${id}`);
-    console.log("log", response.data);
-
     return response.data;
   } catch (error) {
     console.error(`Error al obtener el producto con ID: ${id}`, error);

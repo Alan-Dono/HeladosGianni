@@ -71,8 +71,6 @@ const Productos = () => {
         if (selectedProduct) {
             try {
                 // Editar producto existente
-                console.log('id', selectedProduct.id, ' lo que esta en handle', newProduct);
-
                 await actualizarProducto(selectedProduct.id, newProduct);
                 setProductos(prevProducts =>
                     prevProducts.map(p => (p.id === selectedProduct.id ? { ...p, ...newProduct } : p))

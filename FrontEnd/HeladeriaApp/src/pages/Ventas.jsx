@@ -3,8 +3,8 @@ import Categoria from '../components/Categoria';
 import OrdenCompra from '../components/OrdenCompra';
 import { Box } from '@mui/material';
 import { useTheme } from '@emotion/react';
-import { getProductosCategorias } from '../api/ApiCategoriasProductos'
-import { getProductoByCategory } from '../api/ApiProducto';
+import CategoriaProductoService from '../services/CategoriaProductoService';
+
 const Ventas = () => {
 
     const [carrito, setCarrito] = useState([]);
@@ -19,40 +19,14 @@ const Ventas = () => {
     useEffect(() => {
         const fetchCategoriasConProductos = async () => {
             try {
-                // Obtén las categorías
-                const categoriasData = await getProductosCategorias();
-                console.log(categoriasData);
-
-                // Definir un orden específico para las categorías
-                const ordenCategorias = {
-                    'Heladeria': 1,  // Asumiendo que el nombre de la categoría es "Helados"
-                    'Cafeteria': 2,
-                    'Chocolateria': 3,
-                    // Agrega más categorías si es necesario
-                };
-
-                // Ordenar las categorías según el objeto ordenCategorias
-                const categoriasOrdenadas = categoriasData.sort((a, b) => {
-                    return (ordenCategorias[a.nombreCategoria] || Infinity) - (ordenCategorias[b.nombreCategoria] || Infinity);
-                });
-
-                // Para cada categoría, obtén los productos
-                const categoriasConProductos = await Promise.all(
-                    categoriasOrdenadas.map(async (categoria) => {
-                        const productos = await getProductoByCategory(categoria.id);
-                        return { ...categoria, productos };
-                    })
-                );
-
-                setCategorias(categoriasConProductos);
+                const categorias = await CategoriaProductoService.obtenerCategoriasConProductos();
+                setCategorias(categorias);
             } catch (error) {
                 console.error('Error al obtener las categorías y productos', error);
             }
         };
-
         fetchCategoriasConProductos();
     }, []);
-
 
     // Lógica de carrito
     const agregarProducto = (producto) => {
@@ -106,7 +80,7 @@ const Ventas = () => {
                         borderRadius: '4px',
                     }}>
                         <Categoria
-                            nombreCategoria={categoria.nombreProducto}
+                            nombreCategoria={categoria.nombreCategoria}
                             productos={categoria.productos}
                             agregar={agregarProducto}
                         />

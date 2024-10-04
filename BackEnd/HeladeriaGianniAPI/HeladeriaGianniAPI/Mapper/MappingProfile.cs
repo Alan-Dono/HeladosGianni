@@ -14,10 +14,22 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<Sabor, SaborDtoRes>().ReverseMap(); //Origen/Destino
             CreateMap<SaborDtoReq, Sabor>().ReverseMap();
 
-            CreateMap<Empleado, EmpleadoDtoRes>().ReverseMap();
-            CreateMap<EmpleadoDtoReq, Empleado>().ReverseMap();
+            // Mapeo de Empleado a EmpleadoDtoRes
+            CreateMap<Empleado, EmpleadoDtoRes>()
+                .ForMember(dest => dest.FechaContratacion,
+                           opt => opt.MapFrom(src => src.FechaContratacion.HasValue
+                                                        ? src.FechaContratacion.Value.ToString("yyyy-MM-dd")
+                                                        : null)); // Convertir DateOnly? a string
 
-            CreateMap<Turno, TurnoDtoRes>()
+            // Mapeo de EmpleadoDtoReq a Empleado
+            CreateMap<EmpleadoDtoReq, Empleado>()
+                .ForMember(dest => dest.FechaContratacion,
+                           opt => opt.MapFrom(src => !string.IsNullOrEmpty(src.FechaContratacion)
+                                                        ? DateOnly.Parse(src.FechaContratacion)
+                                                        : (DateOnly?)null)); // Convertir string a DateOnly?
+        
+
+        CreateMap<Turno, TurnoDtoRes>()
                 .ForMember(dest => dest.Empleado, opt => opt.MapFrom(src => src.Empleado)) // Mapea Empleado si es necesario
                 .ReverseMap();
             CreateMap<TurnoDtoReq, Turno>()

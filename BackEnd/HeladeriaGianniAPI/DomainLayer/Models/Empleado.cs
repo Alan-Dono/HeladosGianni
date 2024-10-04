@@ -12,5 +12,10 @@ namespace DomainLayer.Models
         public string NombreEmpleado { get; set; }
         public string ApellidoEmpleado { get; set; }
 
+        public string? Celular { get; set; }  // Nullable
+
+        public DateOnly? FechaContratacion { get; set; }  // Nullable para permitir fechas no definidas
+
+
     }
 }

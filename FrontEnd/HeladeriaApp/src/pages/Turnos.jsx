@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Button, Typography, Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
 import TurnoFormModal from '../components/TurnoFormModal';
@@ -7,8 +7,9 @@ import CierreParcialModal from '../components/CierreParcialModal';
 import FinalizarTurnoModal from '../components/FinalizarTurnoModal';
 import TurnoActualCard from '../components/TurnoActualCard';
 import HistorialTurnosTable from '../components/HistorialTurnosTable';
-
+import { getEmpleados } from '../api/ApiEmpleado';
 export const Turnos = () => {
+  const [empleados, setEmpleados] = useState([]);
   const [turnoActual, setTurnoActual] = useState(null);
   const [historialTurnos, setHistorialTurnos] = useState([]);
   const [openTurnoModal, setOpenTurnoModal] = useState(false);
@@ -89,6 +90,21 @@ export const Turnos = () => {
     }
     setSnackbar({ ...snackbar, open: false });
   };
+
+  const fetchEmpleados = useCallback(async () => {
+    try {
+      const empleadosData = await getEmpleados();
+      setEmpleados(empleadosData);
+    } catch (error) {
+      console.error("Error al obtener empleados", error);
+      showSnackbar('Error al cargar los empleados', 'error');
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchEmpleados();
+  },[])
+
 
   return (
     <Box sx={{ padding: 2 }}>
