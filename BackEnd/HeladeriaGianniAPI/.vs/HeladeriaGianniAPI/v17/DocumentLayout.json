@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\dataacceslayer\\repositories\\cierrecajarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\repositories\\cierrecajarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\cierrecajaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\cierrecajaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\dtos\\response\\ventadtores.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\dtos\\response\\ventadtores.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\dataacceslayer\\repositories\\ventarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\repositories\\ventarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\mapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -22,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,41 +42,67 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CierreCajaRepository.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\CierreCajaRepository.cs",
-              "RelativeDocumentMoniker": "DataAccesLayer\\Repositories\\CierreCajaRepository.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\CierreCajaRepository.cs",
-              "RelativeToolTip": "DataAccesLayer\\Repositories\\CierreCajaRepository.cs",
-              "ViewState": "AQIAAEgAAAAAAAAAAAAowFcAAAAtAAAA",
+              "DocumentIndex": 3,
+              "Title": "VentaRepository.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\VentaRepository.cs",
+              "RelativeDocumentMoniker": "DataAccesLayer\\Repositories\\VentaRepository.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\VentaRepository.cs",
+              "RelativeToolTip": "DataAccesLayer\\Repositories\\VentaRepository.cs",
+              "ViewState": "AQIAABUAAAAAAAAAAAAAwB4AAAAxAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-10T21:07:41.525Z",
+              "WhenOpened": "2024-10-10T22:49:50.627Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CierreCajaService.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\CierreCajaService.cs",
-              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\CierreCajaService.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\CierreCajaService.cs",
-              "RelativeToolTip": "ApplicationLayer\\Services\\CierreCajaService.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAAzwAAAAAAAAAAA",
+              "DocumentIndex": 0,
+              "Title": "VentaService.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\VentaService.cs",
+              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\VentaService.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\VentaService.cs",
+              "RelativeToolTip": "ApplicationLayer\\Services\\VentaService.cs",
+              "ViewState": "AQIAABYAAAAAAAAAAAASwCoAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-10T21:07:32.378Z",
+              "WhenOpened": "2024-10-10T22:45:46.9Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "VentaDtoRes.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\DTOs\\Response\\VentaDtoRes.cs",
+              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\DTOs\\Response\\VentaDtoRes.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\DTOs\\Response\\VentaDtoRes.cs",
+              "RelativeToolTip": "HeladeriaGianniAPI\\DTOs\\Response\\VentaDtoRes.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwAoAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-10T22:34:54.562Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "MappingProfile.cs",
               "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
               "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
               "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
               "RelativeToolTip": "HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
-              "ViewState": "AQIAACIAAAAAAAAAAAAQwDQAAAA3AAAA",
+              "ViewState": "AQIAAAEAAAAAAAAAAAAAACoAAAA5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-10T19:18:18.333Z",
+              "WhenOpened": "2024-10-10T21:29:49.914Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "VentaController.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
+              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
+              "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
+              "ViewState": "AQIAACsAAAAAAAAAAAAAADwAAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-10-10T21:28:27.137Z",
               "EditorCaption": ""
             }
           ]

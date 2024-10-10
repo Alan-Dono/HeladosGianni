@@ -28,7 +28,6 @@ namespace HeladeriaGianniAPI.Controllers
         public async Task<IActionResult> ObtenerVentas()
         {
             var ventas = await _ventaService.ObtenerVentas();
-
             var ventasDto = _mapper.Map<ICollection<VentaDtoRes>>(ventas);
             return Ok(ventasDto);
         }
@@ -54,6 +53,14 @@ namespace HeladeriaGianniAPI.Controllers
             return Ok(ventasDto);
         }
 
+        [HttpGet("cierres/{id}")]
+        public async Task<IActionResult> ObtenerVentasPorCierreCaja(int id)
+        {
+            var ventas = await _ventaService.ObtenerPorCierreCaja(id);
+            var ventasDto = _mapper.Map<IEnumerable<VentaDtoRes>>(ventas);
+            return Ok(ventasDto);
+        }
+
         // Crear una nueva venta
         [HttpPost]
         public async Task<ActionResult<VentaDtoRes>> CrearVenta([FromBody] VentaDtoReq ventaDtoReq)
@@ -66,7 +73,7 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         // Eliminar una venta
-        [HttpDelete("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> AnularVenta(int id)
         {
             await _ventaService.AnularVenta(id);

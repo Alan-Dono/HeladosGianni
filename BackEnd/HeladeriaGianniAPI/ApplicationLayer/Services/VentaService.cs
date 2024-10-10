@@ -49,9 +49,6 @@ namespace ApplicationLayer.Services
             await ventaRepository.AnularVenta(id);
         }
        
-
-
-
       
     }
 }

@@ -37,7 +37,7 @@ namespace DataAccesLayer
 
             // Configuración de la relación entre DetalleVenta y Venta
             modelBuilder.Entity<DetalleVenta>()
-                .HasKey(dv => new { dv.VentaId, dv.ProductoId }); // Clave compuesta
+                .HasKey(dv => dv.Id); 
 
             modelBuilder.Entity<DetalleVenta>()
                 .HasOne(dv => dv.Venta) // DetalleVenta tiene una relación con Venta

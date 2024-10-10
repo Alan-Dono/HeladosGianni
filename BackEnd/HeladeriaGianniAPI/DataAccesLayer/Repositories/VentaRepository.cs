@@ -64,10 +64,8 @@ namespace DataAccesLayer.Repositories
             {
                 // Desactivar la venta
                 existe.Activa = false;
-
                 // Establecer un valor en otra propiedad
                 existe.FechaAnulacion = DateTime.UtcNow; // Ejemplo: estableciendo la fecha de anulación
-
                 // Guardar los cambios en la base de datos
                 await context.SaveChangesAsync();
             }

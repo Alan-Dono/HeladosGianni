@@ -37,14 +37,16 @@ namespace HeladeriaGianniAPI.Mapper
 
             CreateMap<Producto, ProductoVentaDtoRes>().ReverseMap();
 
-            // Mapeos para Venta
-            CreateMap<Venta, VentaDtoRes>().ReverseMap();
+            CreateMap<Venta, VentaDtoRes>()
+                .ForMember(dest => dest.IdsDetalleVentas, opt => opt.MapFrom(MapIdsDetallesVentas));
+
             CreateMap<VentaDtoReq, Venta>().ReverseMap();
 
             // Mapeos para DetalleVenta
             CreateMap<DetalleVenta, DetalleVentaDtoRes>().ReverseMap();
-            CreateMap<DetalleVentaDtoReq, DetalleVenta>()
-                .ForMember(dest => dest.Subtotal, opt => opt.MapFrom(src => src.Cantidad * src.PrecioUnitario)).ReverseMap();
+
+            CreateMap<DetalleVentaDtoReq, DetalleVenta>().ReverseMap();
+                //.ForMember(dest => dest.Subtotal, opt => opt.MapFrom(src => src.Cantidad * src.PrecioUnitario)).ReverseMap();
 
             // Mapeos para CierreCaja
             CreateMap<CierreCaja, CierreCajaDtoRes>();
@@ -69,5 +71,16 @@ namespace HeladeriaGianniAPI.Mapper
             }
             return lista;
         }
+
+        private List<int> MapIdsDetallesVentas(Venta venta, VentaDtoRes ventaDto)
+        {
+            var lista = new List<int>();
+            foreach (var detalle in venta.DetallesVentas)
+            {
+                lista.Add(detalle.Id);
+            }
+            return lista;
+        }
+
     }
 }
