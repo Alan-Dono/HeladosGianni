@@ -1,10 +1,6 @@
 ﻿using DomainLayer.Interface;
 using DomainLayer.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace ApplicationLayer.Services
 {
@@ -32,19 +28,14 @@ namespace ApplicationLayer.Services
             return await cierreCajaRepository.ObtenerCierrePorId(id);
         }
 
-/*        public async Task AgregarCierreCaja(CierreCaja cierreCaja)
+        public async Task IniciarCaja(CierreCaja cierreCaja)
         {
-            await cierreCajaRepository.AgregarCierreCaja(cierreCaja);
-        }*/
-
-        public async Task IniciarCaja(int idTurno, int idEmpleado, DateTime fecha)
-        {
-            await cierreCajaRepository.IniciarCaja(idTurno, idEmpleado, fecha);
+            await cierreCajaRepository.IniciarCaja(cierreCaja);
         }
 
-        public async Task FinalizarCaja(int idTurno, DateTime fecha)
+        public async Task CambiarResponsable(int idCierre, CierreCaja cajaNueva)
         {
-            await cierreCajaRepository.FinalizarCaja(idTurno, fecha);
-        }
+            await cierreCajaRepository.CambiarResponsable(idCierre, cajaNueva);
+        }  
     }
 }

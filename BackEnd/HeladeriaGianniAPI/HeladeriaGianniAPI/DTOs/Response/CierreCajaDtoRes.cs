@@ -5,10 +5,9 @@ namespace HeladeriaGianniAPI.DTOs.Response
     public class CierreCajaDtoRes
     {
         public int Id { get; set; }
-        public double? TotalVentas { get; set; }
-        public double? TotalDescuentos { get; set; }
+        public double TotalVentas { get; set; }
+        public double TotalDescuentos { get; set; }
         public int CantidadDeVetnas { get; set; } = 0;
-        [Required]
         public DateTime FechaInicio { get; set; }
         public DateTime? FechaFin { get; set; }
         public int IdTurno { get; set; }

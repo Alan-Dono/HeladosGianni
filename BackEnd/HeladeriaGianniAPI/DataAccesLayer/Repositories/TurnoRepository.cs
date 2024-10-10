@@ -17,14 +17,14 @@ namespace DataAccesLayer.Repositories
             _context = context;
         }
 
-        public async Task FinalizarTurno(int idTurno, DateTime fechaFin)
+        public async Task FinalizarTurno(int idTurno, DateTime fecha)
         {
             try
             {
-                var turno = await _context.Turnos.FindAsync(idTurno);
-                if (turno != null)
+                var turnoActivo = await _context.Turnos.FindAsync(idTurno);
+                if (turnoActivo != null)
                 {
-                    turno.FechaFin = fechaFin;
+                    turnoActivo.FechaFin = fecha;
                     await _context.SaveChangesAsync();
                 }
                 else

@@ -9,7 +9,8 @@ namespace DomainLayer.Interface
         Task<Turno> ObtenerPorIdAsync(int id);
         Task<ICollection<Turno>> ObtenerPorFechasAsync(DateTime fechaDesde, DateTime fechaHasta);
         Task IniciarTurnoAsync(Turno turno);
-        Task FinalizarTurno(int idTurno, DateTime fechaFin);
+        Task FinalizarTurno(int id, DateTime fecha);
+        
         
     }
 }

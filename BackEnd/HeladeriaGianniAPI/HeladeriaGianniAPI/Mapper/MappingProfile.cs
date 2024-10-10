@@ -7,8 +7,9 @@ namespace HeladeriaGianniAPI.Mapper
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        public MappingProfile()    //origen / destino
         {
+         
             // Mapeos para Empleado
             CreateMap<Empleado, EmpleadoDtoRes>()
                 .ForMember(dest => dest.FechaContratacion,
@@ -49,12 +50,24 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<CierreCaja, CierreCajaDtoRes>();
 
 
-            CreateMap<CierreCajaDtoReq, CierreCaja>();
+            CreateMap<IniciarCajaDtoReq, CierreCaja>();
 
             // Mapeos para Turno
-            CreateMap<Turno, TurnoDtoRes>().ReverseMap();
-            CreateMap<TurnoDtoReq, Turno>().ReverseMap();
+            CreateMap<Turno, TurnoDtoRes>()
+                .ForMember(dest => dest.IdsCierresCaja, opt => opt.MapFrom(MapIdsCierreCajas));
 
+            CreateMap<TurnoDtoReq, Turno>();
+
+        }
+
+        private List<int> MapIdsCierreCajas(Turno turno , TurnoDtoRes dto)
+        {
+            var lista = new List<int>();
+            foreach(var cierre in turno.CierreCajas)
+            {
+                lista.Add(cierre.Id);
+            }
+            return lista;
         }
     }
 }

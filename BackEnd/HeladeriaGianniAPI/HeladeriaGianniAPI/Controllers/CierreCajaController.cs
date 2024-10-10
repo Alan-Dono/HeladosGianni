@@ -69,36 +69,35 @@ namespace HeladeriaGianniAPI.Controllers
             return Ok(cierresDtoRes);
         }
 
-        // Método para finalizar una caja
-        [HttpPut("finalizar/{turnoId}")]
-        public async Task<IActionResult> FinalizarCaja(int turnoId, [FromBody] DateTime fecha)
-        {
-            try
-            {
-                await _cierreCajaService.FinalizarCaja(turnoId, fecha);
-                return NoContent(); // No hay contenido para devolver, solo confirmación
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound($"No se encontró un cierre de caja abierto para el turno con ID: {turnoId}.");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Error al finalizar la caja: {ex.Message}"); // Manejo de otros errores
-            }
-        }
+        
 
         // Método para iniciar una caja
         [HttpPost("iniciar")]
-        public async Task<IActionResult> IniciarCaja([FromBody] CierreCajaDtoReq iniciarCajaDtoReq)
+        public async Task<IActionResult> IniciarCaja([FromBody] IniciarCajaDtoReq iniciarCajaDtoReq)
         {
             if (iniciarCajaDtoReq == null)
             {
                 return BadRequest("La información para iniciar la caja es requerida.");
             }
-
-            await _cierreCajaService.IniciarCaja(iniciarCajaDtoReq.IdTurno, iniciarCajaDtoReq.IdEmpleado, iniciarCajaDtoReq.Fecha);
+            var cierre = _mapper.Map<CierreCaja>(iniciarCajaDtoReq);
+            await _cierreCajaService.IniciarCaja(cierre);
             return Created("Cierre de caja iniciado exitosamente", null); // Mensaje de éxito, puedes modificar según necesites
         }
+
+        [HttpPost("cambiarresponsable/{id}")]
+        public async Task<IActionResult> CambiarResponsable(int id, [FromBody] IniciarCajaDtoReq iniciarCajaDto)
+        {
+            try
+            {
+                var caja = _mapper.Map<CierreCaja>(iniciarCajaDto);
+                await _cierreCajaService.CambiarResponsable(id, caja);
+                return Ok("Responsable cambiado y nueva caja iniciada con éxito.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error en la capa de datos: {ex.Message}");
+            }
+        }
+
     }
 }
