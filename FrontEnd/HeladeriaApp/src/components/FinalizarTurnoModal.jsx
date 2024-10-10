@@ -1,35 +1,25 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
+import { Modal, Box, Button, Typography } from '@mui/material';
 
 const FinalizarTurnoModal = ({ open, onClose, onFinalizarTurno, turnoActual }) => {
-    const handleFinalizarTurno = () => {
+    const handleFinalizar = () => {
         onFinalizarTurno();
     };
-
-    const calcularTotalVentas = () => {
-        let total = 0;
-        if (turnoActual) {
-            total += turnoActual.ventas.reduce((sum, venta) => sum + venta.monto, 0);
-            turnoActual.cierresParciales.forEach(cierre => {
-                total += cierre.ventas.reduce((sum, venta) => sum + venta.monto, 0);
-            });
-        }
-        return total.toFixed(2);
-    };
+    console.log("log de turno actual en finalizar", turnoActual);
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Finalizar Turno</DialogTitle>
-            <DialogContent>
-                <Typography>Responsable Inicial: {turnoActual?.responsableInicial}</Typography>
-                <Typography>Responsable Actual: {turnoActual?.responsableActual}</Typography>
-                <Typography>Total de ventas: ${calcularTotalVentas()}</Typography>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancelar</Button>
-                <Button onClick={handleFinalizarTurno}>Finalizar Turno</Button>
-            </DialogActions>
-        </Dialog>
+        <Modal open={open} onClose={onClose}>
+            <Box sx={{ padding: 2, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 3 }}>
+                <Typography variant="h6">Finalizar Turno</Typography>
+                <Typography variant="body1">¿Está seguro que desea finalizar el turno?</Typography>
+                <Typography variant="body2" sx={{ mt: 2 }}>
+                    Responsable Actual: {turnoActual?.responsableActual}
+                </Typography>
+                <Button variant="contained" color="secondary" onClick={handleFinalizar} sx={{ mt: 2 }}>
+                    Confirmar Finalización
+                </Button>
+            </Box>
+        </Modal>
     );
 };
 

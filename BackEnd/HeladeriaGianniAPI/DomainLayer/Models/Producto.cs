@@ -1,10 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DomainLayer.Models
 {
@@ -22,9 +16,11 @@ namespace DomainLayer.Models
         [Range(0, double.MaxValue ,ErrorMessage = "El campo precio debe ser mayor a 0")]
         public double Precio { get; set; }
         [MaxLength(150)]
-        public string Descripcion { get; set; }
-        //public string Foto { get; set; }
-        public ProductoCategoria? ProductoCategoria { get; set; }
+        public string? Descripcion { get; set; }
+
+
+        // Propiedades de navegacion
+        public ProductoCategoria ProductoCategoria { get; set; }
         //public Proveedor? Proveedor { get; set; } 
     }
 }

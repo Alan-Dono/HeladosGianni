@@ -4,7 +4,7 @@ import Home from '../pages/Home';
 import Ventas from '../pages/Ventas';
 import Productos from '../pages/Productos';
 import Empleados from '../pages/Empleados';
-import { Turnos } from '../pages/Turnos';
+import  Turnos  from '../pages/Turnos';
 import Layout from '../layout/Layout';
 
 const AppRoutes = ({ isDarkMode, toggleTheme }) => {

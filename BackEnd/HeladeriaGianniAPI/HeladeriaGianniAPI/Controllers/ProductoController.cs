@@ -60,35 +60,8 @@ namespace HeladeriaGianniAPI.Controllers
         {
             try
             {
-               /* // Verificar si se ha enviado una imagen
-                string rutaFoto = null;
-                if (productoCreacionDto.Foto != null && productoCreacionDto.Foto.Length > 0)
-                {
-                    var uploadsPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-                    if (!Directory.Exists(uploadsPath))
-                    {
-                        Directory.CreateDirectory(uploadsPath);
-                    }
-
-                    // Crear un nombre único para el archivo
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(productoCreacionDto.Foto.FileName);
-                    var filePath = Path.Combine(uploadsPath, fileName);
-
-                    // Guardar el archivo
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await productoCreacionDto.Foto.CopyToAsync(stream);
-                    }
-
-                    // Guardar la ruta relativa en el producto
-                    rutaFoto = $"/images/{fileName}";
-                }*/
-
                 // Mapear el DTO a la entidad Producto
                 var producto = mapper.Map<Producto>(productoCreacionDto);
-
-                // Asignar la ruta de la foto si existe
-                //producto.Foto = rutaFoto;
 
                 // Agregar el producto a la base de datos
                 await productoService.AgregarProducto(producto);

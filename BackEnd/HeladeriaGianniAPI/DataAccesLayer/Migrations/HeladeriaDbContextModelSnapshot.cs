@@ -22,7 +22,7 @@ namespace DataAccesLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DomainLayer.Models.DetalleVenta", b =>
+            modelBuilder.Entity("DomainLayer.Models.CierreCaja", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -30,26 +30,56 @@ namespace DataAccesLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CantidadDeVetnas")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("FechaFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdEmpleado")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IdTurno")
+                        .HasColumnType("int");
+
+                    b.Property<double>("TotalDescuentos")
+                        .HasColumnType("float");
+
+                    b.Property<double>("TotalVentas")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("IdEmpleado");
+
+                    b.HasIndex("IdTurno");
+
+                    b.ToTable("CierreCajas");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.DetalleVenta", b =>
+                {
+                    b.Property<int>("VentaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
                     b.Property<double>("PrecioUnitario")
                         .HasColumnType("float");
 
-                    b.Property<int>("ProductoId")
-                        .HasColumnType("int");
-
                     b.Property<double>("Subtotal")
                         .HasColumnType("float");
 
-                    b.Property<int>("VentaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("VentaId", "ProductoId");
 
                     b.HasIndex("ProductoId");
-
-                    b.HasIndex("VentaId");
 
                     b.ToTable("DetalleVenta");
                 });
@@ -69,8 +99,8 @@ namespace DataAccesLayer.Migrations
                     b.Property<string>("Celular")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateOnly?>("FechaContratacion")
-                        .HasColumnType("date");
+                    b.Property<DateTime?>("FechaContratacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("NombreEmpleado")
                         .IsRequired()
@@ -90,7 +120,6 @@ namespace DataAccesLayer.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descripcion")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
@@ -121,35 +150,11 @@ namespace DataAccesLayer.Migrations
 
                     b.Property<string>("NombreCategoria")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("NombreCategoria")
-                        .IsUnique();
 
                     b.ToTable("ProductoCategorias");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Sabor", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Descripcion")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nombre")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sabores");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Turno", b =>
@@ -160,18 +165,28 @@ namespace DataAccesLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("EmpleadoId")
+                    b.Property<int>("CantidadCierresParciales")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("FechaFin")
+                    b.Property<int>("CantidadDeVentas")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("EstaActivo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("FechaFin")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaInicio")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<double>("TotalDescuentos")
+                        .HasColumnType("float");
 
-                    b.HasIndex("EmpleadoId");
+                    b.Property<double>("TotalVentas")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
 
                     b.ToTable("Turnos");
                 });
@@ -184,20 +199,48 @@ namespace DataAccesLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("EmpleadoId")
-                        .HasColumnType("int");
+                    b.Property<bool>("Activa")
+                        .HasColumnType("bit");
+
+                    b.Property<double>("Descuentos")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime?>("FechaAnulacion")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("FechaDeVenta")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("IdCierreCaja")
+                        .HasColumnType("int");
 
                     b.Property<double>("TotalVenta")
                         .HasColumnType("float");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("EmpleadoId");
+                    b.HasIndex("IdCierreCaja");
 
                     b.ToTable("Ventas");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.CierreCaja", b =>
+                {
+                    b.HasOne("DomainLayer.Models.Empleado", "Empleado")
+                        .WithMany()
+                        .HasForeignKey("IdEmpleado")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DomainLayer.Models.Turno", "Turno")
+                        .WithMany("CierreCajas")
+                        .HasForeignKey("IdTurno")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
+
+                    b.Navigation("Turno");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.DetalleVenta", b =>
@@ -230,26 +273,25 @@ namespace DataAccesLayer.Migrations
                     b.Navigation("ProductoCategoria");
                 });
 
-            modelBuilder.Entity("DomainLayer.Models.Turno", b =>
-                {
-                    b.HasOne("DomainLayer.Models.Empleado", "Empleado")
-                        .WithMany()
-                        .HasForeignKey("EmpleadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Empleado");
-                });
-
             modelBuilder.Entity("DomainLayer.Models.Venta", b =>
                 {
-                    b.HasOne("DomainLayer.Models.Empleado", "empleado")
-                        .WithMany()
-                        .HasForeignKey("EmpleadoId")
+                    b.HasOne("DomainLayer.Models.CierreCaja", "CierreCaja")
+                        .WithMany("Ventas")
+                        .HasForeignKey("IdCierreCaja")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("empleado");
+                    b.Navigation("CierreCaja");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.CierreCaja", b =>
+                {
+                    b.Navigation("Ventas");
+                });
+
+            modelBuilder.Entity("DomainLayer.Models.Turno", b =>
+                {
+                    b.Navigation("CierreCajas");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Venta", b =>

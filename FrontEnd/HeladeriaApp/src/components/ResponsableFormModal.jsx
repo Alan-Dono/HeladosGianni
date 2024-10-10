@@ -1,32 +1,37 @@
 import React, { useState } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import { Modal, Box, Button, Typography, TextField } from '@mui/material';
 
-const ResponsableFormModal = ({ open, onClose, onCambiarResponsable }) => {
-    const [nuevoResponsable, setNuevoResponsable] = useState('');
+const ResponsableFormModal = ({ open, onClose, onCambiarResponsable, empleados }) => {
+    const [responsable, setResponsable] = useState('');
 
     const handleSubmit = () => {
-        onCambiarResponsable(nuevoResponsable);
-        setNuevoResponsable('');
+        onCambiarResponsable(responsable);
+        setResponsable('');
     };
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Cambiar Responsable</DialogTitle>
-            <DialogContent>
+        <Modal open={open} onClose={onClose}>
+            <Box sx={{ padding: 2, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 3 }}>
+                <Typography variant="h6">Cambiar Responsable</Typography>
                 <TextField
-                    autoFocus
-                    margin="dense"
-                    label="Nuevo Responsable"
+                    select
+                    label="Seleccione un Responsable"
+                    value={responsable}
+                    onChange={(e) => setResponsable(e.target.value)}
                     fullWidth
-                    value={nuevoResponsable}
-                    onChange={(e) => setNuevoResponsable(e.target.value)}
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancelar</Button>
-                <Button onClick={handleSubmit}>Cambiar Responsable</Button>
-            </DialogActions>
-        </Dialog>
+                    margin="normal"
+                >
+                    {empleados.map((empleado) => (
+                        <option key={empleado.id} value={empleado.id}>
+                            {empleado.nombreEmpleado + " " + empleado.apellidoEmpleado}
+                        </option>
+                    ))}
+                </TextField>
+                <Button variant="contained" onClick={handleSubmit} sx={{ mt: 2 }}>
+                    Cambiar Responsable
+                </Button>
+            </Box>
+        </Modal>
     );
 };
 

@@ -1,5 +1,4 @@
-﻿using DomainLayer.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HeladeriaGianniAPI.DTOs.Request
 {

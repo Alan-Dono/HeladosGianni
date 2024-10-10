@@ -2,7 +2,6 @@ import apiClient from "./ApiCliente";
 
 // Función para crear un nuevo empleado
 export const createEmpleado = async (empleadoData) => {
-  console.log("log dataApi", empleadoData);
   try {
     const obj = {
       NombreEmpleado: empleadoData.nombreEmpleado, // Ajustar aquí
@@ -12,8 +11,6 @@ export const createEmpleado = async (empleadoData) => {
         ? new Date(empleadoData.fechaContratacion).toISOString().split("T")[0] // yyyy-MM-dd
         : null,
     };
-
-    console.log("log de la llamada api", obj);
     const response = await apiClient.post("/empleados", obj);
     return response.data;
   } catch (error) {

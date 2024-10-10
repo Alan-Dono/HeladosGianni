@@ -11,8 +11,9 @@ namespace DomainLayer.Interface
     {
         Task<ICollection<Venta>> ObtenerVentas();
         Task<Venta> ObtenerVentaPorId(int id);
+        Task<ICollection<Venta>> ObtenerPorCierreCaja(int id);
         Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime fechaDesde, DateTime fechaHasta);
-        Task AgregarVenta(Venta venta);
-        Task EliminarVenta(int id);
+        Task RegistrarVenta(Venta venta);
+        Task AnularVenta (int id);
     }
 }

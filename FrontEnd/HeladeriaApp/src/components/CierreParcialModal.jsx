@@ -1,23 +1,24 @@
 import React from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
+import { Modal, Box, Button, Typography } from '@mui/material';
 
 const CierreParcialModal = ({ open, onClose, onCierreParcial, turnoActual }) => {
-    const handleCierreParcial = () => {
+    const handleCierre = () => {
         onCierreParcial();
     };
 
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Cierre Parcial</DialogTitle>
-            <DialogContent>
-                <Typography>Responsable: {turnoActual?.responsableActual}</Typography>
-                <Typography>Total de ventas: ${turnoActual?.ventas.reduce((sum, venta) => sum + venta.monto, 0).toFixed(2)}</Typography>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>Cancelar</Button>
-                <Button onClick={handleCierreParcial}>Realizar Cierre Parcial</Button>
-            </DialogActions>
-        </Dialog>
+        <Modal open={open} onClose={onClose}>
+            <Box sx={{ padding: 2, bgcolor: 'background.paper', borderRadius: 2, boxShadow: 3 }}>
+                <Typography variant="h6">Realizar Cierre Parcial</Typography>
+                <Typography variant="body1">¿Está seguro que desea realizar un cierre parcial?</Typography>
+                <Typography variant="body2" sx={{ mt: 2 }}>
+                    Responsable Actual: {turnoActual?.responsableActual}
+                </Typography>
+                <Button variant="contained" onClick={handleCierre} sx={{ mt: 2 }}>
+                    Confirmar Cierre Parcial
+                </Button>
+            </Box>
+        </Modal>
     );
 };
 

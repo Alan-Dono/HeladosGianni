@@ -19,7 +19,7 @@ namespace HeladeriaGianniAPI.Controllers
             _turnoService = turnoService;
             _mapper = mapper;
         }
-
+        
         [HttpPost("iniciar")]
         public async Task<IActionResult> IniciarTurno([FromBody] TurnoDtoReq turnoDtoReq)
         {
@@ -34,7 +34,7 @@ namespace HeladeriaGianniAPI.Controllers
         {
             try
             {
-                await _turnoService.FinalizarTurnoAsync(id, fechaFin);
+                await _turnoService.FinalizarTurno(id, fechaFin);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -46,7 +46,7 @@ namespace HeladeriaGianniAPI.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
-            var turno = await _turnoService.ObtenerTurnoPorIdAsync(id);
+            var turno = await _turnoService.ObtenerPorIdAsync(id);
             if (turno == null)
                 return NotFound();
 
@@ -58,31 +58,19 @@ namespace HeladeriaGianniAPI.Controllers
         public async Task<IActionResult> ObtenerTodos()
         {
             var turnos = await _turnoService.ObtenerTodosAsync();
-            var turnosDto = _mapper.Map<IEnumerable<TurnoDtoRes>>(turnos);
+            var turnosDto = _mapper.Map<ICollection<TurnoDtoRes>>(turnos);
             return Ok(turnosDto);
         }
 
         [HttpGet("fechas")]
         public async Task<IActionResult> ObtenerPorFechas([FromQuery] DateTime fechaDesde, [FromQuery] DateTime fechaHasta)
         {
-            var turnos = await _turnoService.ObtenerPorFechas(fechaDesde, fechaHasta);
+            var turnos = await _turnoService.ObtenerPorFechasAsync(fechaDesde, fechaHasta);
             var turnosDto = _mapper.Map<IEnumerable<TurnoDtoRes>>(turnos);
             return Ok(turnosDto);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Eliminar(int id)
-        {
-            try
-            {
-                await _turnoService.EliminarTurno(id);
-                return NoContent();
-            }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
-        }
+        
     }
 
 }

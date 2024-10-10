@@ -1,55 +1,41 @@
 import React from 'react';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Paper,
-    Typography
-} from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import { Paper } from '@mui/material';
 
 const HistorialTurnosTable = ({ turnos }) => {
-    const calcularTotalVentas = (turno) => {
-        let total = turno.ventas.reduce((sum, venta) => sum + venta.monto, 0);
-        turno.cierresParciales.forEach(cierre => {
-            total += cierre.ventas.reduce((sum, venta) => sum + venta.monto, 0);
-        });
-        return total.toFixed(2);
-    };
+    console.log("log data", turnos);
+
+    const columns = [
+        { field: 'fechaInicio', headerName: 'Fecha Inicio', width: 180 },
+        { field: 'fechaFin', headerName: 'Fecha Fin', width: 180 },
+        { field: 'responsableInicial', headerName: 'Responsable Inicial', width: 200 },
+        { field: 'responsableFinal', headerName: 'Responsable Final', width: 200 },
+        { field: 'totalVentas', headerName: 'Total Ventas', width: 150, valueFormatter: ({ value }) => `$${value ? value.toFixed(2) : 'N/A'}` },
+        { field: 'cierresParciales', headerName: 'Cierres Parciales', width: 140 }, //valueGetter: (params) => params.row.cierresParciales ? params.row.cierresParciales.length : 'Sin cierres parciales' },
+        { field: 'detalles', headerName: 'Detalles', width: 150, renderCell: () => <button>Ver detalles</button> },
+    ];
+
+    const rows = turnos.map((turno, index) => ({
+        id: index,  // Cada fila debe tener un 'id' único
+        fechaInicio: new Date(turno.fechaInicio).toLocaleString(),
+        fechaFin: new Date(turno.fechaFin).toLocaleString(),
+        responsableInicial: `${turno.empleado.nombreEmpleado} ${turno.empleado.apellidoEmpleado}`,
+        responsableFinal: turno.empleado.nombreEmpleado, // cambiar por responsable actual
+        totalVentas: 100, // cambiar por datos
+        cierresParciales: 5, // igual que arriba
+    }));
 
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Fecha Inicio</TableCell>
-                        <TableCell>Fecha Fin</TableCell>
-                        <TableCell>Responsable Inicial</TableCell>
-                        <TableCell>Responsable Final</TableCell>
-                        <TableCell>Total Ventas</TableCell>
-                        <TableCell>Detalles</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {turnos.map((turno, index) => (
-                        <TableRow key={index}>
-                            <TableCell>{turno.fechaInicio.toLocaleString()}</TableCell>
-                            <TableCell>{turno.fechaFin.toLocaleString()}</TableCell>
-                            <TableCell>{turno.responsableInicial}</TableCell>
-                            <TableCell>{turno.responsableActual}</TableCell>
-                            <TableCell>${calcularTotalVentas(turno)}</TableCell>
-                            <TableCell>
-                                <Typography variant="body2">
-                                    Cierres Parciales: {turno.cierresParciales.length}
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Paper style={{ height: 400, width: '100%' }}>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5, 10, 20]}
+                checkboxSelection
+                disableSelectionOnClick
+            />
+        </Paper>
     );
 };
 

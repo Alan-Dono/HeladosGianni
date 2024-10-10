@@ -1,10 +1,14 @@
-﻿namespace HeladeriaGianniAPI.DTOs.Request
+﻿using DomainLayer.Models;
+
+namespace HeladeriaGianniAPI.DTOs.Request
 {
     public class VentaDtoReq
     {
-        public int EmpleadoId { get; set; }
         public DateTime FechaDeVenta { get; set; }
         public double TotalVenta { get; set; }
+        public double? Descuentos { get; set; }
+        public int IdCierreCaja { get; set; }
+        public int IdTurno { get; set; }
         public ICollection<DetalleVentaDtoReq> DetallesVentas { get; set; }
     }
 }

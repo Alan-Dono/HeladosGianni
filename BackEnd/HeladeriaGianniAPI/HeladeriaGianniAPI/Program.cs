@@ -1,5 +1,3 @@
-using ApplicationLayer;
-using ApplicationLayer.BusinessLogic;
 using ApplicationLayer.Services;
 using DataAccesLayer;
 using DataAccesLayer.Repositories;
@@ -21,9 +19,6 @@ builder.Services.AddDbContext<HeladeriaDbContext>(options =>
         b => b.MigrationsAssembly("DataAccesLayer"))); // Especifica el ensamblado para las migraciones
 
 // Inyección de dependencias
-builder.Services.AddScoped<ISaborRepository, SaborRepository>();
-builder.Services.AddScoped<GestionarSabores>();
-
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<EmpleadoService>();
 
@@ -42,7 +37,10 @@ builder.Services.AddScoped<ProductoService>();
 builder.Services.AddScoped<IVentaRepository, VentaRepository>();
 builder.Services.AddScoped<VentaService>();
 
-builder.Services.AddScoped<CalculadoraVentas>();
+builder.Services.AddScoped<ICierreCajaRepository, CierreCajaRepository>();
+builder.Services.AddScoped<CierreCajaService>();
+
+//builder.Services.AddScoped<CalculadoraVentas>();
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

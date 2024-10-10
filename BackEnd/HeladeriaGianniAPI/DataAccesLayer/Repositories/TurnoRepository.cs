@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccesLayer.Repositories
@@ -18,54 +17,85 @@ namespace DataAccesLayer.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Turno>> ObtenerTodosAsync()
+        public async Task FinalizarTurno(int idTurno, DateTime fechaFin)
         {
-            var turnos = await _context.Turnos
-             .Include(t => t.Empleado)
-             .ToListAsync();
-            return turnos;
-        }
-
-        public async Task<Turno> ObtenerPorIdAsync(int id)
-        {
-            var turno = await _context.Turnos
-                .Include(x => x.Empleado)
-                .FirstOrDefaultAsync(x => x.Id == id);
-            return turno;
-        }
-
-        public async Task<IEnumerable<Turno>> ObtenerPorFechasAsync(DateTime fechaDesde, DateTime fechaHasta)
-        {
-            var turnos = await _context.Turnos
-                .Where(t => t.FechaInicio >= fechaDesde && t.FechaFin <= fechaHasta)
-                .Include(t => t.Empleado)
-                .ToListAsync();
-            return turnos;
+            try
+            {
+                var turno = await _context.Turnos.FindAsync(idTurno);
+                if (turno != null)
+                {
+                    turno.FechaFin = fechaFin;
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new KeyNotFoundException($"No se encontró un turno con el ID {idTurno}.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al finalizar el turno en la capa de datos: {ex.Message}", ex);
+            }
         }
 
         public async Task IniciarTurnoAsync(Turno turno)
         {
-            await _context.Turnos.AddAsync(turno);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task FinalizarTurno(int id, DateTime fechaFin)
-        {
-            var turnoAFinalizar = await _context.Turnos.FindAsync(id);
-            turnoAFinalizar.FechaFin = fechaFin;
-            _context.Update(turnoAFinalizar);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task EliminarAsync(int id)
-        {
-            var turno = await _context.Turnos.FindAsync(id);
-            if (turno != null)
+            try
             {
-                _context.Turnos.Remove(turno);
+                _context.Turnos.Add(turno);
                 await _context.SaveChangesAsync();
             }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al iniciar el turno en la capa de datos.", ex);
+            }
         }
+
+        public async Task<ICollection<Turno>> ObtenerPorFechasAsync(DateTime fechaDesde, DateTime fechaHasta)
+        {
+            try
+            {
+                return await _context.Turnos
+                    .Where(t => t.FechaInicio >= fechaDesde && t.FechaInicio <= fechaHasta)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener turnos por fechas en la capa de datos.", ex);
+            }
+        }
+
+        public async Task<Turno> ObtenerPorIdAsync(int id)
+        {
+            try
+            {
+                var turno = await _context.Turnos.FindAsync(id);
+                if (turno == null)
+                {
+                    throw new KeyNotFoundException($"No se encontró un turno con el ID {id}.");
+                }
+
+                return turno;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener el turno por ID en la capa de datos.", ex);
+            }
+        }
+
+        public async Task<ICollection<Turno>> ObtenerTodosAsync()
+        {
+            try
+            {
+                var turnos = await _context.Turnos.ToListAsync();
+                return turnos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener la lista de turnos en la capa de datos.", ex);
+            }
+        }
+
 
     }
 }

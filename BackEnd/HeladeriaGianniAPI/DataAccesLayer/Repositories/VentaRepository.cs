@@ -18,21 +18,10 @@ namespace DataAccesLayer.Repositories
         {
             this.context = context;
         }
-        public async Task AgregarVenta(Venta venta)
+        public async Task RegistrarVenta(Venta venta)
         {
             context.Add(venta);
             await context.SaveChangesAsync();
-        }
-
-        public async Task EliminarVenta(int id)
-        {
-            var existe = await context.Ventas.FindAsync(id);
-            if (existe != null)
-            {
-                context.Remove(existe);
-                await context.SaveChangesAsync();
-            }
-
         }
 
         public async Task<Venta> ObtenerVentaPorId(int id)
@@ -40,7 +29,6 @@ namespace DataAccesLayer.Repositories
             var existe = await context.Ventas
                 .Include(x => x.DetallesVentas)
                     .ThenInclude(x => x.Producto)
-                .Include(x => x.empleado)
                 .FirstOrDefaultAsync(x => x.Id == id);
 
             if (existe == null)
@@ -55,7 +43,6 @@ namespace DataAccesLayer.Repositories
             var ventas = await context.Ventas
                 .Include(x => x.DetallesVentas)
                     .ThenInclude(x => x.Producto)
-                .Include(x=> x.empleado)
                 .ToListAsync();
             return ventas;
         }
@@ -63,13 +50,37 @@ namespace DataAccesLayer.Repositories
         public async Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime fechaDesde, DateTime fechaHasta)
         {
             var ventas = await context.Ventas
-                .Where(x => x.FechaDeVenta >= fechaDesde && x.FechaDeVenta <= fechaHasta)
                 .Include(x => x.DetallesVentas)
-                .Include(x => x.empleado)
+                    .ThenInclude(x => x.Producto)
+                .Where(x => x.FechaDeVenta >= fechaDesde && x.FechaDeVenta <= fechaHasta)             
                 .ToListAsync();
             return ventas;
         }
 
+        public async Task AnularVenta(int id)
+        {
+            var existe = await context.Ventas.FindAsync(id);
+            if (existe != null)
+            {
+                // Desactivar la venta
+                existe.Activa = false;
 
+                // Establecer un valor en otra propiedad
+                existe.FechaAnulacion = DateTime.UtcNow; // Ejemplo: estableciendo la fecha de anulación
+
+                // Guardar los cambios en la base de datos
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<ICollection<Venta>> ObtenerPorCierreCaja(int id)
+        {
+            var ventas = await context.Ventas
+                .Include(x => x.DetallesVentas)
+                    .ThenInclude(x => x.Producto)
+                .Where(x => x.IdCierreCaja == id)
+                .ToListAsync();
+            return ventas;
+        }
     }
 }

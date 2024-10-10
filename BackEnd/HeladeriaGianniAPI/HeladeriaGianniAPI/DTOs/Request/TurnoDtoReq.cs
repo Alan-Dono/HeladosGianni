@@ -1,8 +1,9 @@
-﻿namespace HeladeriaGianniAPI.DTOs.Request
+﻿using HeladeriaGianniAPI.DTOs.Response;
+
+namespace HeladeriaGianniAPI.DTOs.Request
 {
     public class TurnoDtoReq
     {
-        public int EmpleadoId { get; set; }
-        public DateTime FechaInicio { get; set; }
+        public DateTime Fecha { get; set; }
     }
 }

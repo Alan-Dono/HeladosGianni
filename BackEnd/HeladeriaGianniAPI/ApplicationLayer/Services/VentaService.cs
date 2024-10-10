@@ -12,12 +12,10 @@ namespace ApplicationLayer.Services
     public class VentaService
     {
         private readonly IVentaRepository ventaRepository;
-        private readonly CalculadoraVentas calculadoraVentas;
 
-        public VentaService( IVentaRepository ventaRepository, CalculadoraVentas calculadoraVentas)
+        public VentaService( IVentaRepository ventaRepository)
         {
             this.ventaRepository = ventaRepository;
-            this.calculadoraVentas = calculadoraVentas;
         }
 
         public async Task<ICollection<Venta>> ObtenerVentas()
@@ -30,25 +28,30 @@ namespace ApplicationLayer.Services
             return await ventaRepository.ObtenerVentaPorId(id);
         }
 
-        public async Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime desde, DateTime hasta)
+        public async Task<ICollection<Venta>> ObtenerPorCierreCaja(int id)
         {
-            return await ventaRepository.ObtenerVentasEntreFechas(desde, hasta);
+            return await ventaRepository.ObtenerPorCierreCaja(id);
         }
 
-        public async Task AgregarVenta(Venta venta)
+
+        public async Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime fechaDesde, DateTime fechaHasta)
         {
-            calculadoraVentas.AgregarUnaVenta(venta);
-            await ventaRepository.AgregarVenta(venta);
+            return await ventaRepository.ObtenerVentasEntreFechas(fechaDesde, fechaHasta);
         }
 
-        public async Task EliminarVenta(int id)
+        public async Task RegistrarVenta(Venta venta)
         {
-            await ventaRepository.EliminarVenta(id);
+            await ventaRepository.RegistrarVenta(venta);
         }
 
-        public Venta AplicarDescuento(Venta venta,double porcentajeDescuento)
+        public async Task AnularVenta(int id)
         {
-            return calculadoraVentas.VentaConDescuento(venta, porcentajeDescuento);
+            await ventaRepository.AnularVenta(id);
         }
+       
+
+
+
+      
     }
 }

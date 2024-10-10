@@ -26,29 +26,31 @@ export const getVentaById = async (id) => {
 export const getVentasEntreFechas = async (desde, hasta) => {
   try {
     const response = await apiClient.get("/ventas/entre-fechas", {
-      params: { desde, hasta },
+      params: {desde, hasta},
     });
     return response.data;
   } catch (error) {
-    console.error(`Error al obtener las ventas entre ${desde} y ${hasta}`, error);
+    console.error(
+      `Error al obtener las ventas entre ${desde} y ${hasta}`,
+      error
+    );
     throw error;
   }
 };
 
 // Función para crear una nueva venta
 export const crearVenta = async (venta) => {
-
   try {
     const ventaObj = {
       EmpleadoId: venta.empleadoId,
       FechaDeVenta: venta.fechaDeVenta,
       TotalVenta: venta.totalVenta,
-      DetallesVentas: venta.detallesVentas.map(detalle => ({
+      DetallesVentas: venta.detallesVentas.map((detalle) => ({
         ProductoId: detalle.productoId,
         Cantidad: detalle.cantidad,
         PrecioUnitario: detalle.precioUnitario,
-        Subtotal: detalle.subtotal
-      }))
+        Subtotal: detalle.subtotal,
+      })),
     };
     const response = await apiClient.post("/ventas", ventaObj);
     return response.data;
@@ -69,3 +71,16 @@ export const eliminarVenta = async (id) => {
   }
 };
 
+// Función para obtener ventas por ID de turno
+export const getVentasPorTurno = async (id) => {
+  try {
+    const response = await apiClient.get(`/ventas/obtenerportuno${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al obtener las ventas para el turno con ID: ${id}`,
+      error
+    );
+    throw error;
+  }
+};

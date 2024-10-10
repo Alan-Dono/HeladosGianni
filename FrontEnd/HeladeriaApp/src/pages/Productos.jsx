@@ -7,31 +7,6 @@ import ProductFormModal from '../components/ProductFormModal';
 import { productValidationSchema } from '../validations/ProductValidation'; // Asegúrate de que la ruta es correcta
 import { getProductos, crearProducto, actualizarProducto, eliminarProducto } from "../api/ApiProducto";
 
-
-const initialProducts = [
-    { id: 1, nombre: 'Helado de Fresa', categoria: 'Helados', descripcion: 'Delicioso helado de fresa', precio: 3.50 },
-    { id: 2, nombre: 'Café Expreso', categoria: 'Café', descripcion: 'Café intenso y aromático', precio: 2.00 },
-    { id: 3, nombre: 'Torta de Chocolate', categoria: 'Postres', descripcion: 'Torta húmeda de chocolate', precio: 4.00 },
-    { id: 4, nombre: 'Galletas de Avena', categoria: 'Galletas', descripcion: 'Galletas crujientes de avena', precio: 1.50 },
-    { id: 5, nombre: 'Jugo de Naranja', categoria: 'Bebidas', descripcion: 'Jugo fresco de naranja', precio: 2.50 },
-    { id: 6, nombre: 'Sorbete de Limón', categoria: 'Helados', descripcion: 'Sorbete refrescante de limón', precio: 3.00 },
-    { id: 7, nombre: 'Cappuccino', categoria: 'Café', descripcion: 'Café cremoso con espuma de leche', precio: 2.75 },
-    { id: 8, nombre: 'Pastel de Zanahoria', categoria: 'Postres', descripcion: 'Pastel húmedo de zanahoria', precio: 4.50 },
-    { id: 9, nombre: 'Galletas de Chocolate', categoria: 'Galletas', descripcion: 'Galletas suaves con chispas de chocolate', precio: 1.80 },
-    { id: 10, nombre: 'Batido de Frutilla', categoria: 'Bebidas', descripcion: 'Batido cremoso de frutilla', precio: 3.50 },
-    { id: 11, nombre: 'Helado de Vainilla', categoria: 'Helados', descripcion: 'Clásico helado de vainilla', precio: 3.20 },
-    { id: 12, nombre: 'Mocha', categoria: 'Café', descripcion: 'Café con chocolate y leche', precio: 3.00 },
-    { id: 13, nombre: 'Tarta de Manzana', categoria: 'Postres', descripcion: 'Tarta crujiente de manzana', precio: 4.00 },
-    { id: 14, nombre: 'Galletas de Almendra', categoria: 'Galletas', descripcion: 'Galletas crocantes de almendra', precio: 2.00 },
-    { id: 15, nombre: 'Limonada', categoria: 'Bebidas', descripcion: 'Refrescante limonada natural', precio: 2.20 },
-    { id: 16, nombre: 'Helado de Menta', categoria: 'Helados', descripcion: 'Helado fresco de menta', precio: 3.60 },
-    { id: 17, nombre: 'Café Latte', categoria: 'Café', descripcion: 'Café con mucha leche', precio: 3.00 },
-    { id: 18, nombre: 'Panna Cotta', categoria: 'Postres', descripcion: 'Postre italiano cremoso', precio: 4.80 },
-    { id: 19, nombre: 'Galletas de Ajonjolí', categoria: 'Galletas', descripcion: 'Galletas crujientes de ajonjolí', precio: 2.50 },
-    { id: 20, nombre: 'Jugo de Piña', categoria: 'Bebidas', descripcion: 'Jugo natural de piña', precio: 2.80 },
-];
-
-
 const Productos = () => {
 
     const [productos, setProductos] = useState([]);
