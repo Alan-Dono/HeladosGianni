@@ -70,7 +70,7 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         
-
+         
         // Método para iniciar una caja
         [HttpPost("iniciar")]
         public async Task<IActionResult> IniciarCaja([FromBody] IniciarCajaDtoReq iniciarCajaDtoReq)
@@ -84,7 +84,7 @@ namespace HeladeriaGianniAPI.Controllers
             return Created("Cierre de caja iniciado exitosamente", null); // Mensaje de éxito, puedes modificar según necesites
         }
 
-        [HttpPost("cambiarresponsable/{id}")]
+        [HttpPost("cambiarresponsable/{id}")] // ID del cierre anterior
         public async Task<IActionResult> CambiarResponsable(int id, [FromBody] IniciarCajaDtoReq iniciarCajaDto)
         {
             try
@@ -97,6 +97,22 @@ namespace HeladeriaGianniAPI.Controllers
             {
                 return StatusCode(500, $"Error en la capa de datos: {ex.Message}");
             }
+        }
+
+
+        // Método para obtener cierre de caja activo 
+        [HttpGet("activo")]
+        public async Task<IActionResult> ObtenerCierreActivo()
+        {
+            var cierre = await _cierreCajaService.ObtenerCierreActivo();
+
+            if (cierre == null)
+            {
+                return NotFound($"No se encontró un cierre de caja");
+            }
+
+            var cierreDtoRes = _mapper.Map<CierreCajaDtoRes>(cierre);
+            return Ok(cierreDtoRes);
         }
 
     }

@@ -9,8 +9,7 @@ import {
 import { Edit as EditIcon, Delete as DeleteIcon, Add } from '@mui/icons-material';
 import MuiAlert from '@mui/material/Alert';
 import EmpleadoFormModal from '../components/EmpleadoFormModal';
-import { getEmpleados, createEmpleado, updateEmpleado, deleteEmpleado } from '../api/ApiEmpleado';
-
+import EmpleadoService from "../services/EmpleadoService";
 
 const Empleados = () => {
     const [empleados, setEmpleados] = useState([]);
@@ -24,7 +23,7 @@ const Empleados = () => {
 
     const fetchEmpleados = useCallback(async () => {
         try {
-            const empleadosData = await getEmpleados();
+            const empleadosData = await EmpleadoService.obtenerEmpleados();
             setEmpleados(empleadosData);
         } catch (error) {
             console.error("Error al obtener empleados", error);
@@ -49,13 +48,13 @@ const Empleados = () => {
         try {
             let updatedEmpleado;
             if (empleado.id) {
-                updatedEmpleado = await updateEmpleado(empleado.id, empleado);
+                updatedEmpleado = await EmpleadoService.editarEmpleado(empleado.id, empleado);
                 setEmpleados((prevEmpleados) =>
                     prevEmpleados.map((e) => (e.id === updatedEmpleado.id ? updatedEmpleado : e))
                 );
                 showSnackbar('Empleado actualizado con éxito', 'success');
             } else {
-                updatedEmpleado = await createEmpleado(empleado);
+                updatedEmpleado = await EmpleadoService.registrarEmpleado(empleado);
                 setEmpleados((prevEmpleados) => [...prevEmpleados, updatedEmpleado]);
                 showSnackbar('Empleado añadido con éxito', 'success');
             }
@@ -78,7 +77,7 @@ const Empleados = () => {
 
     const confirmDelete = async () => {
         try {
-            await deleteEmpleado(deleteConfirm.id);
+            await EmpleadoService.eliminarEmpleado(deleteConfirm.id);
             setEmpleados((prevEmpleados) => prevEmpleados.filter((e) => e.id !== deleteConfirm.id));
             showSnackbar('Empleado eliminado con éxito', 'success');
             fetchEmpleados();
@@ -159,7 +158,7 @@ const Empleados = () => {
                 </Grid>
             </Grid>
 
-        
+
             <TableContainer component={Paper}>
                 <Table>
                     <TableHead>

@@ -4,29 +4,37 @@ import OrdenCompra from '../components/OrdenCompra';
 import { Box } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import CategoriaProductoService from '../services/CategoriaProductoService';
+import CierreCajaService from '../services/CierreCajaService';
 
 const Ventas = () => {
 
     const [carrito, setCarrito] = useState([]);
     const [descuento, setDescuento] = useState(0);
     const [categorias, setCategorias] = useState([]);
+    const [cierre, setCierre] = useState(0);
     const [subtotal, setSubtotal] = useState(0); // Estado para subtotal
     const [total, setTotal] = useState(0); // Estado para total
+    const [cierreActivo, setCierreActivo] = useState(null);
     const theme = useTheme();
 
 
     // Función para obtener todas las categorías y productos
     useEffect(() => {
-        const fetchCategoriasConProductos = async () => {
+        const fetchData = async () => {
             try {
-                const categorias = await CategoriaProductoService.obtenerCategoriasConProductos();
+                const [categorias, cierre] = await Promise.all([
+                    CategoriaProductoService.obtenerCategoriasConProductos(),
+                    CierreCajaService.obtenerActivo()
+                ]);
                 setCategorias(categorias);
+                setCierreActivo(cierre);
             } catch (error) {
-                console.error('Error al obtener las categorías y productos', error);
+                console.error('Error al obtener datos:', error);
             }
         };
-        fetchCategoriasConProductos();
+        fetchData();
     }, []);
+
 
     // Lógica de carrito
     const agregarProducto = (producto) => {
@@ -100,6 +108,7 @@ const Ventas = () => {
                     agregar={agregarProducto}
                     restar={restarProducto}
                     eliminar={eliminarProducto}
+                    cierreActivo={cierreActivo}
                 />
             </Box>
         </Box>

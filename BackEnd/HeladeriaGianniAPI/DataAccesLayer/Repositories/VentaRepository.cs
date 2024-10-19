@@ -4,81 +4,120 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 
 namespace DataAccesLayer.Repositories
 {
     public class VentaRepository : IVentaRepository
     {
-        private readonly HeladeriaDbContext context;
+        private readonly HeladeriaDbContext _context;
 
         public VentaRepository(HeladeriaDbContext context)
         {
-            this.context = context;
+            _context = context;
         }
+
         public async Task RegistrarVenta(Venta venta)
         {
-            context.Add(venta);
-            await context.SaveChangesAsync();
+            try
+            {
+                venta.FechaDeVenta = DateTime.Now;
+                _context.Add(venta);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en la capa de datos al registrar la venta.", ex);
+            }
         }
 
         public async Task<Venta> ObtenerVentaPorId(int id)
         {
-            var existe = await context.Ventas
-                .Include(x => x.DetallesVentas)
-                    .ThenInclude(x => x.Producto)
-                .FirstOrDefaultAsync(x => x.Id == id);
-
-            if (existe == null)
+            try
             {
-                throw new Exception("No se encontro la venta");
+                var venta = await _context.Ventas
+                    .Include(x => x.DetallesVentas)
+                        .ThenInclude(x => x.Producto)
+                    .FirstOrDefaultAsync(x => x.Id == id);
+
+                if (venta == null)
+                    throw new Exception("No se encontró la venta.");
+
+                return venta;
             }
-            return existe;
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la capa de datos al obtener la venta con ID {id}.", ex);
+            }
         }
 
         public async Task<ICollection<Venta>> ObtenerVentas()
         {
-            var ventas = await context.Ventas
-                .Include(x => x.DetallesVentas)
-                    .ThenInclude(x => x.Producto)
-                .ToListAsync();
-            return ventas;
+            try
+            {
+                return await _context.Ventas
+                    .Include(x => x.DetallesVentas)
+                        .ThenInclude(x => x.Producto)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en la capa de datos al obtener todas las ventas.", ex);
+            }
         }
 
         public async Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime fechaDesde, DateTime fechaHasta)
         {
-            var ventas = await context.Ventas
-                .Include(x => x.DetallesVentas)
-                    .ThenInclude(x => x.Producto)
-                .Where(x => x.FechaDeVenta >= fechaDesde && x.FechaDeVenta <= fechaHasta)             
-                .ToListAsync();
-            return ventas;
+            try
+            {
+                return await _context.Ventas
+                    .Include(x => x.DetallesVentas)
+                        .ThenInclude(x => x.Producto)
+                    .Where(x => x.FechaDeVenta >= fechaDesde && x.FechaDeVenta <= fechaHasta)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en la capa de datos al obtener ventas entre fechas.", ex);
+            }
         }
 
         public async Task AnularVenta(int id)
         {
-            var existe = await context.Ventas.FindAsync(id);
-            if (existe != null)
+            try
             {
-                // Desactivar la venta
-                existe.Activa = false;
-                // Establecer un valor en otra propiedad
-                existe.FechaAnulacion = DateTime.UtcNow; // Ejemplo: estableciendo la fecha de anulación
-                // Guardar los cambios en la base de datos
-                await context.SaveChangesAsync();
+                var venta = await _context.Ventas.FindAsync(id);
+                if (venta != null)
+                {
+                    venta.Activa = false;
+                    venta.FechaAnulacion = DateTime.UtcNow;
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    throw new Exception("No se encontró la venta para anular.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la capa de datos al anular la venta con ID {id}.", ex);
             }
         }
 
         public async Task<ICollection<Venta>> ObtenerPorCierreCaja(int id)
         {
-            var ventas = await context.Ventas
-                .Include(x => x.DetallesVentas)
-                    .ThenInclude(x => x.Producto)
-                .Where(x => x.IdCierreCaja == id)
-                .ToListAsync();
-            return ventas;
+            try
+            {
+                return await _context.Ventas
+                    .Include(x => x.DetallesVentas)
+                        .ThenInclude(x => x.Producto)
+                    .Where(x => x.IdCierreCaja == id)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la capa de datos al obtener ventas para el cierre de caja con ID {id}.", ex);
+            }
         }
     }
 }

@@ -5,6 +5,7 @@ import {
   finalizarTurno,
   obtenerTurnoPorId,
   obtenerTodosLosTurnos,
+  obtenerTurnoActivo,
 } from "../api/ApiTurnos";
 
 class TurnoService {
@@ -22,9 +23,9 @@ class TurnoService {
     }
   }
 
-  async finalizar(id, fechaFin) {
+  async finalizar(id) {
     try {
-      await finalizarTurno(id, fechaFin);
+      await finalizarTurno(id);
       console.log(`Turno con ID: ${id} finalizado con éxito.`);
     } catch (error) {
       console.error(`Error al finalizar el turno con ID: ${id}`, error);
@@ -51,6 +52,19 @@ class TurnoService {
       throw error;
     }
   }
+
+    async obtenerTurnoActivo() {
+    try {
+      const turnos = await obtenerTurnoActivo();
+      return turnos;
+    } catch (error) {
+      console.error("Error al obtener todos los turnos", error);
+      throw error;
+    }
+  }
+
+
+  
 }
 
 const turnoService = new TurnoService();

@@ -46,28 +46,49 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<DetalleVenta, DetalleVentaDtoRes>().ReverseMap();
 
             CreateMap<DetalleVentaDtoReq, DetalleVenta>().ReverseMap();
-                //.ForMember(dest => dest.Subtotal, opt => opt.MapFrom(src => src.Cantidad * src.PrecioUnitario)).ReverseMap();
+
 
             // Mapeos para CierreCaja
-            CreateMap<CierreCaja, CierreCajaDtoRes>();
-
+            CreateMap<CierreCaja, CierreCajaDtoRes>()
+            .ForMember(dest => dest.IdsVentas, opt => opt.MapFrom(MapIdsVentas))
+            .ForMember(dest => dest.CantidadDeVentas, opt => opt.MapFrom(src => src.Ventas.Count))
+            .ForMember(dest => dest.TotalDeVentas, opt => opt.MapFrom(src => src.Ventas.Sum(v => v.TotalVenta)))
+            .ForMember(dest => dest.TotalDescuentos, opt => opt.MapFrom(src => src.Ventas.Sum(x => x.Descuentos)))
+            .ForMember(dest => dest.IdsVentas, opt => opt.MapFrom(MapIdsVentas));
 
             CreateMap<IniciarCajaDtoReq, CierreCaja>();
 
             // Mapeos para Turno
             CreateMap<Turno, TurnoDtoRes>()
-                .ForMember(dest => dest.IdsCierresCaja, opt => opt.MapFrom(MapIdsCierreCajas));
+                .ForMember(dest => dest.IdsCierresCaja, opt => opt.MapFrom(MapIdsCierreCajasEnTurno))
+                .ForMember(dest => dest.CantidadCierresParciales, opt => opt.MapFrom(src => src.CierreCajas.Count))
+                .ForMember(dest => dest.TotalVentas, opt => opt.MapFrom(src => src.CierreCajas.Sum(SumarVentas)))
+                .ForMember(dest => dest.TotalDescuentos, opt => opt.MapFrom(src => src.CierreCajas.Sum(SumarDescuentos)))
+                .ForMember(dest => dest.CantidadDeVentas, opt => opt.MapFrom(src => src.CierreCajas.Sum(ContarVentas)));
+
 
             CreateMap<TurnoDtoReq, Turno>();
 
         }
 
-        private List<int> MapIdsCierreCajas(Turno turno , TurnoDtoRes dto)
+        private List<int> MapIdsCierreCajasEnTurno(Turno turno , TurnoDtoRes dto)
         {
             var lista = new List<int>();
             foreach(var cierre in turno.CierreCajas)
             {
                 lista.Add(cierre.Id);
+            }
+            return lista;
+        }
+        private List<int> MapIdsVentas(CierreCaja cierreCaja, CierreCajaDtoRes cierreCajaDtoRes)
+        {
+            var lista = new List<int>();
+            if (cierreCaja?.Ventas != null)
+            {
+                foreach (var venta in cierreCaja.Ventas)
+                {
+                    lista.Add(venta.Id);
+                }
             }
             return lista;
         }
@@ -82,5 +103,30 @@ namespace HeladeriaGianniAPI.Mapper
             return lista;
         }
 
+ 
+        private double SumarVentas(CierreCaja cierreCaja)
+        {
+            double Total = 0;
+            foreach(var venta in cierreCaja.Ventas)
+            {
+                Total += venta.TotalVenta;
+            }
+            return Total;
+        }
+
+        private double SumarDescuentos(CierreCaja cierreCaja)
+        {
+            double Total = 0;
+            foreach(var venta in cierreCaja.Ventas)
+            {
+                Total += venta.Descuentos;
+            }
+            return Total;
+        }
+
+        private int ContarVentas(CierreCaja cierreCaja)
+        {
+            return cierreCaja.Ventas.Count();
+        }
     }
 }

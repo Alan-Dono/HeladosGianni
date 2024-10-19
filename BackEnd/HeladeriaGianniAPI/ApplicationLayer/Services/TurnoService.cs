@@ -34,11 +34,16 @@ namespace ApplicationLayer.Services
             await _turnoRepositorio.IniciarTurnoAsync(turno);
         }
 
-        public async Task FinalizarTurno(int idTurno, DateTime fechaFin)
+        public async Task FinalizarTurno(int idTurno)
         {
-            await _turnoRepositorio.FinalizarTurno(idTurno, fechaFin);
+            await _turnoRepositorio.FinalizarTurno(idTurno);
         }
 
-       
+        public async Task<Turno> ObtenerTurnoActivo()
+        {
+            return await _turnoRepositorio.ObtenerTurnoActivo();
+        }
+
+
     }
 }

@@ -18,9 +18,9 @@ export const iniciarTurno = async (turnoDtoReq) => {
 };
 
 // Función para finalizar un turno
-export const finalizarTurno = async (id, fechaFin) => {
+export const finalizarTurno = async (id) => {
   try {
-    const response = await apiClient.post(`/turnos/finalizar/${id}`, fechaFin);
+    const response = await apiClient.post(`/turnos/finalizar/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error al finalizar el turno con ID: ${id}`, error);
@@ -46,6 +46,17 @@ export const obtenerTodosLosTurnos = async () => {
     return response.data;
   } catch (error) {
     console.error("Error al obtener todos los turnos", error);
+    throw error;
+  }
+};
+
+// Función para obtener turnos activo
+export const obtenerTurnoActivo = async () => {
+  try {
+    const response = await apiClient.get("/turnos/activo");
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener el turno activo", error);
     throw error;
   }
 };

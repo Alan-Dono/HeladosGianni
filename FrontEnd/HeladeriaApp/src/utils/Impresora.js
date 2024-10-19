@@ -1,3 +1,3 @@
-export const imprimirTicket = () => {
-  console.log("Imprime el tiket");
+export const imprimirTicket = (venta) => {
+  console.log("Imprime el tiket", venta);
 };

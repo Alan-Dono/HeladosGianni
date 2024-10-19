@@ -55,18 +55,19 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// Configuracion de cors 
 // Configuración de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", builder =>
     {
-        builder.WithOrigins("http://localhost:5173") // La URL del frontend
-               .AllowAnyMethod() // Permite cualquier método HTTP (GET, POST, PUT, etc.)
-               .AllowAnyHeader(); // Permite cualquier encabezado (headers)
-
+        builder.WithOrigins("http://localhost:5173") // Asegúrate de que esta URL sea correcta
+               .AllowAnyMethod()
+               .AllowAnyHeader();
     });
 });
+
+
+
 var app = builder.Build();
 
 #region VerificarConexionDB

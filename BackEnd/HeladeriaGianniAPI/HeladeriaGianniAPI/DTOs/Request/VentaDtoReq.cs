@@ -8,7 +8,6 @@ namespace HeladeriaGianniAPI.DTOs.Request
         public double TotalVenta { get; set; }
         public double? Descuentos { get; set; }
         public int IdCierreCaja { get; set; }
-        public int IdTurno { get; set; }
         public ICollection<DetalleVentaDtoReq> DetallesVentas { get; set; }
     }
 }

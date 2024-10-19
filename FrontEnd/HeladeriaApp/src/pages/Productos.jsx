@@ -4,33 +4,25 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typogra
 import { Add, Edit, Delete } from '@mui/icons-material';
 import MuiAlert from '@mui/material/Alert';
 import ProductFormModal from '../components/ProductFormModal';
-import { productValidationSchema } from '../validations/ProductValidation'; // Asegúrate de que la ruta es correcta
-import { getProductos, crearProducto, actualizarProducto, eliminarProducto } from "../api/ApiProducto";
+import { productValidationSchema } from '../validations/ProductValidation';
+import ProductoService from '../services/ProductoService'; // Asegúrate de que la ruta sea correcta
 
 const Productos = () => {
-
     const [productos, setProductos] = useState([]);
     const [openModal, setOpenModal] = useState(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [snackbarAbierto, setSnackbarAbierto] = useState(false);
-    const [mensajeSnackbar, setMensajeSnackbar] = useState('');
-    const [tipoAlerta, setTipoAlerta] = useState('success');
+    const [snackbarInfo, setSnackbarInfo] = useState({ open: false, message: '', severity: 'success' });
     const [searchTerm, setSearchTerm] = useState('');
-    const [paginationModel, setPaginationModel] = useState({
-        pageSize: 5,
-        page: 0,
-    });
+    const [paginationModel, setPaginationModel] = useState({ pageSize: 5, page: 0 });
 
-    // Obtener todos los productos al cargar el componente
     useEffect(() => {
         fetchProductos();
     }, []);
 
-
     const fetchProductos = async () => {
         try {
-            const productosObtenidos = await getProductos();
+            const productosObtenidos = await ProductoService.obtenerProductos();
             setProductos(productosObtenidos);
         } catch (error) {
             console.error("Error al obtener productos", error);
@@ -41,35 +33,29 @@ const Productos = () => {
         setSearchTerm(event.target.value);
     };
 
-    // Método asincrónico para guardar el producto
     const handleSaveProduct = async (newProduct) => {
-        if (selectedProduct) {
-            try {
-                // Editar producto existente
-                await actualizarProducto(selectedProduct.id, newProduct);
-                setProductos(prevProducts =>
-                    prevProducts.map(p => (p.id === selectedProduct.id ? { ...p, ...newProduct } : p))
-                );
-                abrirAlerta('Producto actualizado exitosamente', 'success');
-            } catch (error) {
-                console.error("Error al actualizar el producto", error);
-                abrirAlerta('Error al actualizar el producto', 'error');
-            }
-        } else {
-            // Crear nuevo producto
-            try {
-                console.log('estamos aca', newProduct);
+        const productAction = selectedProduct ? ProductoService.editarProducto : ProductoService.registrarProducto;
+        const actionMessage = selectedProduct ? 'actualizado' : 'creado';
 
-                const productoCreado = await crearProducto(newProduct);
-                setProductos([...productos, productoCreado]); // Agrega el nuevo producto a la lista
-                abrirAlerta('Producto creado exitosamente', 'success');
-            } catch (error) {
-                console.error("Error al crear el producto", error);
-                abrirAlerta('Error al crear el producto', 'error');
-            }
+        try {
+            const productoResponse = selectedProduct
+                ? await productAction(selectedProduct.id, newProduct)
+                : await productAction(newProduct);
+            setProductos(prevProducts => {
+                if (selectedProduct) {
+                    return prevProducts.map(p => (p.id === selectedProduct.id ? { ...p, ...newProduct } : p));
+                } else {
+                    return [...prevProducts, productoResponse]; // Agrega el nuevo producto a la lista
+                }
+            });
+            abrirAlerta(`Producto ${actionMessage} exitosamente`, 'success');
+        } catch (error) {
+            console.error(`Error al ${actionMessage} el producto`, error);
+            abrirAlerta(`Error al ${actionMessage} el producto`, 'error');
+        } finally {
+            fetchProductos();
+            setOpenModal(false);
         }
-        fetchProductos();
-        setOpenModal(false);
     };
 
     const handleEditClick = (product) => {
@@ -84,59 +70,51 @@ const Productos = () => {
 
     const confirmDelete = async () => {
         try {
-            await eliminarProducto(selectedProduct.id);
-            console.log('log', selectedProduct);
-
-            setProductos(productos.filter((prod) => prod.id !== selectedProduct.id)); // Remueve el producto de la lista
+            await ProductoService.eliminar(selectedProduct.id);
+            setProductos(productos.filter(prod => prod.id !== selectedProduct.id));
             abrirAlerta('Producto eliminado exitosamente', 'success');
         } catch (error) {
             console.error("Error al eliminar el producto", error);
             abrirAlerta('Error al eliminar el producto', 'error');
+        } finally {
+            fetchProductos();
+            setOpenDeleteDialog(false);
         }
-        fetchProductos();
-        setOpenDeleteDialog(false);
     };
 
     const abrirAlerta = (mensaje, tipo) => {
-        setMensajeSnackbar(mensaje);
-        setTipoAlerta(tipo);
-        setSnackbarAbierto(true);
+        setSnackbarInfo({ open: true, message: mensaje, severity: tipo });
     };
 
     const cerrarAlerta = () => {
-        setSnackbarAbierto(false);
+        setSnackbarInfo({ ...snackbarInfo, open: false });
     };
 
-    const rows = productos.filter(product => {
+    const filteredRows = productos.filter(product => {
+        const lowerCaseSearchTerm = searchTerm.toLowerCase();
         return (
-            product.nombreProducto.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            product.nombreProducto.toLowerCase().includes(lowerCaseSearchTerm) ||
             product.precio.toString().includes(searchTerm) ||
-            product.descripcion.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            product.productoCategoriaDtoRes.nombreCategoria.toLowerCase().includes(searchTerm.toLowerCase())
+            product.descripcion.toLowerCase().includes(lowerCaseSearchTerm) ||
+            product.productoCategoriaDtoRes.nombreCategoria.toLowerCase().includes(lowerCaseSearchTerm)
         );
     });
 
-
-    const colums = [
+    const columns = [
         { field: 'id', headerName: 'ID', flex: 0.2 },
         { field: 'nombreProducto', headerName: 'Nombre', flex: 1 },
-        //{ field: 'nombreCategoria', headerName: 'Categoría', flex: 1 },
         {
             field: 'productoCategoriaDtoRes',
             headerName: 'Categoría',
             flex: 1,
-            valueGetter: (params) => {
-                return params.nombreCategoria || 'N/A'; // Usando optional chaining
-            }
-        }, // Mapea correctamente
+            valueGetter: (params)  => params.nombreCategoria || 'N/A', 
+        },
         { field: 'descripcion', headerName: 'Descripción', flex: 2 },
         {
             field: 'precio',
             headerName: 'Precio',
             flex: 0.5,
-            renderCell: (params) => {
-                return `$${params.value.toFixed(2)}`;
-            },
+            renderCell: (params) => `$${params.value.toFixed(2)}`,
         },
         {
             field: 'acciones',
@@ -153,8 +131,7 @@ const Productos = () => {
                 </>
             ),
         },
-    ]
-
+    ];
 
     return (
         <Box sx={{
@@ -162,7 +139,7 @@ const Productos = () => {
             height: '100vh',
             display: 'flex',
             flexDirection: 'column',
-            overflow: 'hidden' // Asegura que no haya scroll en el contenedor principal
+            overflow: 'hidden'
         }}>
             <Typography variant="h4" mb={2}>Gestión de Productos</Typography>
 
@@ -191,22 +168,18 @@ const Productos = () => {
                 </Grid>
             </Grid>
 
-            <Box sx={{ flexGrow: 1, height: 'calc(100% - 120px)', width: '100%' }}> {/* Ajusta la altura para ocupar el espacio restante */}
+            <Box sx={{ flexGrow: 1, height: 'calc(100% - 120px)', width: '100%' }}>
                 <DataGrid
-                    rows={rows}
-                    columns={colums}
+                    rows={filteredRows}
+                    columns={columns}
                     paginationModel={paginationModel}
                     onPaginationModelChange={setPaginationModel}
                     pageSizeOptions={[5, 10, 15, 25, 50]}
                     pagination
                     autoHeight={false}
                     sx={{
-                        '& .MuiDataGrid-root': {
-                            border: 'none',
-                        },
-                        '& .MuiDataGrid-cell': {
-                            borderBottom: 'none',
-                        },
+                        '& .MuiDataGrid-root': { border: 'none' },
+                        '& .MuiDataGrid-cell': { borderBottom: 'none' },
                         '& .MuiDataGrid-columnHeaders': {
                             backgroundColor: 'background.neutral',
                             borderBottom: 'none',
@@ -222,7 +195,6 @@ const Productos = () => {
                 />
             </Box>
 
-            {/* Modal para Crear/Editar Producto */}
             <ProductFormModal
                 open={openModal}
                 onClose={() => setOpenModal(false)}
@@ -235,11 +207,7 @@ const Productos = () => {
                 }}
             />
 
-            {/* Diálogo de Confirmación de Eliminación */}
-            <Dialog
-                open={openDeleteDialog}
-                onClose={() => setOpenDeleteDialog(false)}
-            >
+            <Dialog open={openDeleteDialog} onClose={() => setOpenDeleteDialog(false)}>
                 <DialogTitle>Confirmar Eliminación</DialogTitle>
                 <DialogContent>
                     <Typography>¿Estás seguro de que deseas eliminar este producto?</Typography>
@@ -251,16 +219,15 @@ const Productos = () => {
             </Dialog>
 
             <Snackbar
-                open={snackbarAbierto}
+                open={snackbarInfo.open}
                 autoHideDuration={3000}
                 onClose={cerrarAlerta}
-                anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // Posicionar arriba a la derecha
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             >
-                <MuiAlert elevation={6} variant="filled" severity={tipoAlerta} onClose={cerrarAlerta}>
-                    {mensajeSnackbar}
+                <MuiAlert elevation={6} variant="filled" severity={snackbarInfo.severity} onClose={cerrarAlerta}>
+                    {snackbarInfo.message}
                 </MuiAlert>
             </Snackbar>
-
         </Box>
     );
 };

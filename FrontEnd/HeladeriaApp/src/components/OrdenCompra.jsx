@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Slide from '@mui/material/Slide';
-
 import { TextField, Typography, Box, Button, Snackbar } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
 import ProductTiket from './ProductTiket';
@@ -8,8 +7,10 @@ import { useTheme } from '@emotion/react';
 import MuiAlert from '@mui/material/Alert';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { imprimirTicket } from '../utils/Impresora';
+import VentaService from '../services/VentaService';
 
-const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, setDescuento, agregar, restar, eliminar }) => {
+const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo }) => {
 
     const [codigoDescuento, setCodigoDescuento] = useState('');
     const [mostrarDescuento, setMostrarDescuento] = useState(false);
@@ -19,6 +20,8 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, setDescuento,
     const [mensajeSnackbar, setMensajeSnackbar] = useState("");
     const [tipoAlerta, setTipoAlerta] = useState("error");
     const [confirmarVentaAbierto, setConfirmarVentaAbierto] = useState(false);
+
+
 
     const theme = useTheme();
 
@@ -60,6 +63,10 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, setDescuento,
         setMensajeSnackbar(`Descuento de ${valor}% aplicado!`);
         setTipoAlerta("success");
         setSnackbarAbierto(true);
+        console.log('montoDescuento', descuento);
+        console.log('descuentoValor', descuentoValor);
+
+
     };
 
     const toggleDescuentos = () => {
@@ -87,19 +94,47 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, setDescuento,
         }
         setConfirmarVentaAbierto(true);
     };
-    
-    const confirmarVenta = () => {
-        setCarrito([]);
-        setSubtotal(0);
-        setCodigoDescuento('');
-        setMostrarDescuento(false);
-        setDescuentoValor(0);
-        setDescuentosHabilitados(false);
-        setMensajeSnackbar('Venta realizada con éxito!');
-        setTipoAlerta("success");
-        setSnackbarAbierto(true);
-        setConfirmarVentaAbierto(false);
+
+    const confirmarVenta = async () => {
+        try {
+            // Crear objeto de venta con la estructura necesaria
+            const ventaData = {
+                totalVenta: totalConDescuento,          // Total de la venta
+                Descuentos: montoDescuento || 0,        // Descuentos aplicados (default a 0 si no se proporciona)
+                IdCierreCaja: cierreActivo.id,                     // Puedes asignar el ID del cierre de caja aquí si es necesario
+                detallesVentas: carrito.map((producto) => ({
+                    productoId: producto.id,            // ID del producto en el carrito
+                    cantidad: producto.cantidad,        // Cantidad del producto
+                    precioUnitario: producto.precio,    // Precio del producto
+                })),
+            };
+            console.log('decuento', descuentoValor);
+
+            console.log("log en order", ventaData);
+
+            // Llamar a la función del servicio para registrar la venta
+            const response = await VentaService.registrarVenta(ventaData);
+            imprimirTicket(ventaData)
+            // Limpiar los estados y mostrar mensaje de éxito
+            setCarrito([]);
+            setSubtotal(0);
+            setCodigoDescuento('');
+            setMostrarDescuento(false);
+            setDescuentoValor(0);
+            setDescuentosHabilitados(false);
+            setMensajeSnackbar('Venta realizada con éxito!');
+            setTipoAlerta("success");
+            setSnackbarAbierto(true);
+            setConfirmarVentaAbierto(false);
+
+        } catch (error) {
+            setTipoAlerta("error");
+            setMensajeSnackbar("Error al registrar la venta. Por favor, intente nuevamente.");
+            setSnackbarAbierto(true);
+        }
     };
+
+
 
 
 

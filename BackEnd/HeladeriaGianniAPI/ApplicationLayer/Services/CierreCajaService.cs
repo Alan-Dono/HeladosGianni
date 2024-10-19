@@ -36,6 +36,11 @@ namespace ApplicationLayer.Services
         public async Task CambiarResponsable(int idCierre, CierreCaja cajaNueva)
         {
             await cierreCajaRepository.CambiarResponsable(idCierre, cajaNueva);
-        }  
+        }
+
+        public async Task<CierreCaja> ObtenerCierreActivo()
+        {
+            return await cierreCajaRepository.ObtenerCierreActivo();
+        }
     }
 }

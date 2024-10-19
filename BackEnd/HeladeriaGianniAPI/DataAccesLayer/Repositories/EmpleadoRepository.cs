@@ -3,8 +3,6 @@ using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccesLayer.Repositories
@@ -20,35 +18,69 @@ namespace DataAccesLayer.Repositories
 
         public async Task<IEnumerable<Empleado>> ObtenerTodosAsync()
         {
-            return await _context.Empleado.ToListAsync();
+            try
+            {
+                return await _context.Empleados.ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en la capa de datos al obtener todos los empleados.", ex);
+            }
         }
 
         public async Task<Empleado> ObtenerPorIdAsync(int id)
         {
-            return await _context.Empleado.FindAsync(id);
+            try
+            {
+                return await _context.Empleados.FindAsync(id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la capa de datos al obtener el empleado con ID {id}.", ex);
+            }
         }
 
         public async Task AgregarAsync(Empleado empleado)
         {
-            await _context.Empleado.AddAsync(empleado);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Empleados.AddAsync(empleado);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en la capa de datos al agregar un empleado.", ex);
+            }
         }
 
         public async Task ActualizarAsync(Empleado empleado)
         {
-            _context.Empleado.Update(empleado);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Empleados.Update(empleado);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error en la capa de datos al actualizar un empleado.", ex);
+            }
         }
 
         public async Task EliminarAsync(int id)
         {
-            var empleado = await _context.Empleado.FindAsync(id);
-            if (empleado != null)
+            try
             {
-                _context.Empleado.Remove(empleado);
-                await _context.SaveChangesAsync();
+                var empleado = await _context.Empleados.FindAsync(id);
+                if (empleado != null)
+                {
+                    _context.Empleados.Remove(empleado);
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error en la capa de datos al eliminar el empleado con ID {id}.", ex);
             }
         }
     }
 }
-

@@ -19,7 +19,7 @@ namespace HeladeriaGianniAPI.Controllers
             _turnoService = turnoService;
             _mapper = mapper;
         }
-        
+
         [HttpPost("iniciar")]
         public async Task<IActionResult> IniciarTurno([FromBody] TurnoDtoReq turnoDtoReq)
         {
@@ -30,11 +30,11 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         [HttpPost("finalizar/{id}")]
-        public async Task<IActionResult> FinalizarTurno(int id, [FromBody] DateTime fechaFin)
+        public async Task<IActionResult> FinalizarTurno(int id)
         {
             try
             {
-                await _turnoService.FinalizarTurno(id, fechaFin);
+                await _turnoService.FinalizarTurno(id);
                 return NoContent();
             }
             catch (KeyNotFoundException)
@@ -59,6 +59,7 @@ namespace HeladeriaGianniAPI.Controllers
         {
             var turnos = await _turnoService.ObtenerTodosAsync();
             var turnosDto = _mapper.Map<ICollection<TurnoDtoRes>>(turnos);
+
             return Ok(turnosDto);
         }
 
@@ -70,6 +71,13 @@ namespace HeladeriaGianniAPI.Controllers
             return Ok(turnosDto);
         }
 
+        [HttpGet("activo")]
+        public async Task<IActionResult> ObtenerTurnoActivo()
+        {
+            var turnoActivo = await _turnoService.ObtenerTurnoActivo();
+            var turnoDto = _mapper.Map<TurnoDtoRes>(turnoActivo);
+            return Ok(turnoDto);
+        }
         
     }
 

@@ -18,8 +18,7 @@ namespace DomainLayer.Models
         public DateTime? FechaAnulacion { get; set; } // Se usa para registrar el momento de la posible anulacion
         public bool Activa { get; set; } = true; // Se usa para no eliminar la venta de la db
         // Propiedades de navegacion
-        public CierreCaja CierreCaja { get; set; }
-        public List<DetalleVenta> DetallesVentas { get; set; }
+        public List<DetalleVenta> DetallesVentas { get; set; } = new List<DetalleVenta>();
     }
 }
  

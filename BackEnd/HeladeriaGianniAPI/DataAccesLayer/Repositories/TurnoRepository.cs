@@ -1,4 +1,4 @@
-﻿using DomainLayer.Interface;
+﻿  using DomainLayer.Interface;
 using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,14 +17,31 @@ namespace DataAccesLayer.Repositories
             _context = context;
         }
 
-        public async Task FinalizarTurno(int idTurno, DateTime fecha)
+        public async Task FinalizarTurno(int idTurno)
         {
             try
             {
+                // Definir la zona horaria de Argentina
+                var zonaHorariaArgentina = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
+
                 var turnoActivo = await _context.Turnos.FindAsync(idTurno);
                 if (turnoActivo != null)
                 {
-                    turnoActivo.FechaFin = fecha;
+                    // Termina el cierre activo
+                    var cierre = await _context.CierreCajas.FirstOrDefaultAsync(x => x.EstaActivo == true);
+                    if (cierre != null)
+                    {
+                        // Convertir la fecha UTC a la hora local de Argentina
+                        cierre.FechaFin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaHorariaArgentina);
+                        cierre.EstaActivo = false;
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException("No hay un cierre activo para finalizar.");
+                    }
+                    // Finaliza el turno
+                    turnoActivo.FechaFin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaHorariaArgentina);
+                    turnoActivo.EstaActivo = false;
                     await _context.SaveChangesAsync();
                 }
                 else
@@ -37,6 +54,8 @@ namespace DataAccesLayer.Repositories
                 throw new Exception($"Error al finalizar el turno en la capa de datos: {ex.Message}", ex);
             }
         }
+
+
 
         public async Task IniciarTurnoAsync(Turno turno)
         {
@@ -69,7 +88,9 @@ namespace DataAccesLayer.Repositories
         {
             try
             {
-                var turno = await _context.Turnos.FindAsync(id);
+                var turno = await _context.Turnos
+                    .Include(t => t.CierreCajas)
+                    .FirstOrDefaultAsync(x => x.Id == id);
                 if (turno == null)
                 {
                     throw new KeyNotFoundException($"No se encontró un turno con el ID {id}.");
@@ -87,7 +108,10 @@ namespace DataAccesLayer.Repositories
         {
             try
             {
-                var turnos = await _context.Turnos.ToListAsync();
+                var turnos = await _context.Turnos
+                    .Include(x => x.CierreCajas)
+                        .ThenInclude(x => x.Ventas)
+                    .ToListAsync();
                 return turnos;
             }
             catch (Exception ex)
@@ -96,6 +120,23 @@ namespace DataAccesLayer.Repositories
             }
         }
 
+        public async Task<Turno> ObtenerTurnoActivo()
+        {
+            try
+            {
+                var turno = await _context.Turnos
+                    .Include(t => t.CierreCajas)
+                        .ThenInclude(c => c.Ventas)
+                    .Include(t => t.CierreCajas)
+                        .ThenInclude(c => c.Empleado)
+                    .FirstOrDefaultAsync(t => t.EstaActivo == true);
+                return turno;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener turno activo en la capa de datos.", ex);
+            }
+        }
 
     }
 }

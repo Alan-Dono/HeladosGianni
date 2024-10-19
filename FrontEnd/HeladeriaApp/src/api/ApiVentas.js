@@ -3,7 +3,7 @@ import apiClient from "../api/ApiCliente"; // Asegúrate de que la ruta sea corr
 // Función para obtener todas las ventas
 export const getVentas = async () => {
   try {
-    const response = await apiClient.get("/ventas");
+    const response = await apiClient.get("/api/ventas");
     return response.data;
   } catch (error) {
     console.error("Error al obtener las ventas", error);
@@ -14,7 +14,7 @@ export const getVentas = async () => {
 // Función para obtener una venta por ID
 export const getVentaById = async (id) => {
   try {
-    const response = await apiClient.get(`/ventas/${id}`);
+    const response = await apiClient.get(`/api/ventas/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener la venta con ID: ${id}`, error);
@@ -25,7 +25,7 @@ export const getVentaById = async (id) => {
 // Función para obtener ventas entre fechas
 export const getVentasEntreFechas = async (desde, hasta) => {
   try {
-    const response = await apiClient.get("/ventas/entre-fechas", {
+    const response = await apiClient.get("/api/ventas/entre-fechas", {
       params: {desde, hasta},
     });
     return response.data;
@@ -42,16 +42,18 @@ export const getVentasEntreFechas = async (desde, hasta) => {
 export const crearVenta = async (venta) => {
   try {
     const ventaObj = {
-      EmpleadoId: venta.empleadoId,
       FechaDeVenta: venta.fechaDeVenta,
       TotalVenta: venta.totalVenta,
-      DetallesVentas: venta.detallesVentas.map((detalle) => ({
+      Descuentos: venta.Descuentos || 0,
+      IdCierreCaja: venta.IdCierreCaja,
+      detallesVentas: venta.detallesVentas.map((detalle) => ({
         ProductoId: detalle.productoId,
         Cantidad: detalle.cantidad,
         PrecioUnitario: detalle.precioUnitario,
-        Subtotal: detalle.subtotal,
       })),
     };
+    console.log("log api/", ventaObj);
+
     const response = await apiClient.post("/ventas", ventaObj);
     return response.data;
   } catch (error) {
@@ -60,25 +62,25 @@ export const crearVenta = async (venta) => {
   }
 };
 
-// Función para eliminar una venta por ID
-export const eliminarVenta = async (id) => {
+// Función para eliminar una venta (anular)
+export const anularVenta = async (id) => {
   try {
-    const response = await apiClient.delete(`/ventas/${id}`);
+    const response = await apiClient.put(`/api/ventas/${id}`);
     return response.data;
   } catch (error) {
-    console.error(`Error al eliminar la venta con ID: ${id}`, error);
+    console.error(`Error al anular la venta con ID: ${id}`, error);
     throw error;
   }
 };
 
-// Función para obtener ventas por ID de turno
-export const getVentasPorTurno = async (id) => {
+// Función para obtener ventas por ID de turno (o cierre de caja)
+export const getVentasPorCierreCaja = async (id) => {
   try {
-    const response = await apiClient.get(`/ventas/obtenerportuno${id}`);
+    const response = await apiClient.get(`/api/ventas/cierres/${id}`);
     return response.data;
   } catch (error) {
     console.error(
-      `Error al obtener las ventas para el turno con ID: ${id}`,
+      `Error al obtener las ventas para el cierre de caja con ID: ${id}`,
       error
     );
     throw error;
