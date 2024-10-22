@@ -1,8 +1,6 @@
-﻿using DomainLayer.Models;
-
-namespace HeladeriaGianniAPI.DTOs.Response
+﻿namespace HeladeriaGianniAPI.DTOs.Response
 {
-    public class VentaDtoRes
+    public class VentaProductosDtoRes
     {
         public int Id { get; set; }
         public DateTime FechaDeVenta { get; set; }
@@ -10,6 +8,6 @@ namespace HeladeriaGianniAPI.DTOs.Response
         public double Descuentos { get; set; }
         public int IdCierreCaja { get; set; }
         public bool Activa { get; set; }
-        public List<int> IdsDetalleVentas { get; set; } = new List<int>();
+        public List<DetalleVentaDtoRes> DetalleVenta { get; set; } = new List<DetalleVentaDtoRes>();
     }
 }

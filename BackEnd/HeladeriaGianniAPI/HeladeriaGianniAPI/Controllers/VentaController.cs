@@ -40,7 +40,7 @@ namespace HeladeriaGianniAPI.Controllers
             if (venta == null)
                 return NotFound();
 
-            var ventaDto = _mapper.Map<VentaDtoRes>(venta);
+            var ventaDto = _mapper.Map<VentaProductosDtoRes>(venta);
             return Ok(ventaDto);
         }
 

@@ -1,78 +1,93 @@
+import React, { useEffect, useState } from 'react';
+import { Box, Typography, Modal, Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import VentaService from '../services/VentaService';
 
-import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Modal
-} from '@mui/material';
+const DetalleCompraModal = ({ abierto, cerrar, venta }) => {
 
-
-
-// Componente para el modal de detalles de ventas
-const DetallesVentasModal = ({ abierto, cerrar, turnoId }) => {
-  const [ventas, setVentas] = useState([]);
+  const [ventaDetalle, setVentaDetalle] = useState(null);
 
   useEffect(() => {
-    if (abierto) {
-      cargarVentas();
-    }
-  }, [abierto, turnoId]);
+    const cargarVentaDetalle = async () => {
+      if (abierto && venta) {
+        try {
+          const response = await VentaService.obtenerPorId(venta.id);
+          setVentaDetalle(response);
+        } catch (error) {
+          console.error('Error al cargar el detalle de la venta:', error);
+        }
+      }
+    };
+    cargarVentaDetalle();
+  }, [abierto, venta]);
 
-  const cargarVentas = async () => {
-    // Aquí deberías implementar la lógica para obtener las ventas del turno
-    // Por ejemplo: const ventasTurno = await VentaService.obtenerVentasPorTurno(turnoId);
-    // setVentas(ventasTurno);
-  };
+  if (!ventaDetalle) return null;
 
   return (
-    <Modal open={abierto} onClose={cerrar}>
-      <Box sx={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 600,
-        bgcolor: 'background.paper',
-        boxShadow: 24,
-        p: 4,
-      }}>
-        <Typography variant="h6" component="h2">
-          Detalle de Ventas
+    <Modal
+      open={abierto}
+      onClose={cerrar}
+      aria-labelledby="detalle-compra-modal"
+    >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: '80%',
+          maxWidth: 800,
+          bgcolor: 'background.paper',
+          boxShadow: 24,
+          p: 4,
+          maxHeight: '80vh',
+          overflow: 'auto',
+        }}
+      >
+        <Typography variant="h6" component="h2" gutterBottom>
+          Detalle de la Compra N° {ventaDetalle.id}
         </Typography>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Fecha</TableCell>
-                <TableCell>Descuento</TableCell>
-                <TableCell>Total</TableCell>
-                <TableCell>Estado</TableCell>
+        <Typography variant="subtitle1" gutterBottom>
+          Fecha y hora: {new Intl.DateTimeFormat('es-ES', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+          }).format(new Date(ventaDetalle.fechaDeVenta))}
+        </Typography>
+
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Producto</TableCell>
+              <TableCell>Cantidad</TableCell>
+              <TableCell>Precio Unitario</TableCell>
+              <TableCell>Subtotal</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {ventaDetalle.detalleVenta.map((detalle, index) => (
+              <TableRow key={index}>
+                <TableCell>{detalle.producto?.nombreProducto || 'Producto no disponible'}</TableCell>
+                <TableCell>{detalle.cantidad}</TableCell>
+                <TableCell>{detalle.precioUnitario.toFixed(2)}</TableCell>
+                <TableCell>{(detalle.cantidad * detalle.precioUnitario).toFixed(2)}</TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {ventas.map((venta) => (
-                <TableRow key={venta.id}>
-                  <TableCell>{venta.id}</TableCell>
-                  <TableCell>{new Date(venta.fecha).toLocaleString()}</TableCell>
-                  <TableCell>{venta.descuento}</TableCell>
-                  <TableCell>{venta.total}</TableCell>
-                  <TableCell>{venta.estado ? 'Activa' : 'Anulada'}</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+            ))}
+          </TableBody>
+        </Table>
+
+        <Box mt={4} display="flex" justifyContent="space-between">
+          <Typography variant="subtitle1">
+            Descuento: {ventaDetalle.descuentos?.toFixed(2) || 0}
+          </Typography>
+          <Typography variant="h6">
+            Total: {ventaDetalle.totalVenta.toFixed(2)}
+          </Typography>
+        </Box>
       </Box>
     </Modal>
   );
 };
 
-export default DetallesVentasModal;
+export default DetalleCompraModal;

@@ -106,7 +106,7 @@ const PanelCierre = ({ onUpdate }) => {
       }
     }
   };
-  console.log('cierreACtual', cierreActual);
+
 
   return (
     <Box sx={{ p: 3 }}>

@@ -40,6 +40,10 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<Venta, VentaDtoRes>()
                 .ForMember(dest => dest.IdsDetalleVentas, opt => opt.MapFrom(MapIdsDetallesVentas));
 
+            CreateMap<Venta, VentaProductosDtoRes>()
+                .ForMember(dest => dest.DetalleVenta, opt => opt.MapFrom(src => src.DetallesVentas));
+
+
             CreateMap<VentaDtoReq, Venta>().ReverseMap();
 
             // Mapeos para DetalleVenta
@@ -102,8 +106,18 @@ namespace HeladeriaGianniAPI.Mapper
             }
             return lista;
         }
+/*
+        private List<DetalleVenta> MapDetalleVentas(Venta venta, VentaProductosDtoRes productosDtoRes)
+        {
+            var lista = new List<DetalleVenta>();
+            foreach(var detalle in venta.DetallesVentas)
+            {
+                lista.Add(detalle);
+            }
+            return lista;
+        }*/
 
- 
+
         private double SumarVentas(CierreCaja cierreCaja)
         {
             double Total = 0;

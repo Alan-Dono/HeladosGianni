@@ -3,7 +3,7 @@ import apiClient from "../api/ApiCliente"; // Asegúrate de que la ruta sea corr
 // Función para obtener todas las ventas
 export const getVentas = async () => {
   try {
-    const response = await apiClient.get("/api/ventas");
+    const response = await apiClient.get("/ventas");
     return response.data;
   } catch (error) {
     console.error("Error al obtener las ventas", error);
@@ -14,7 +14,9 @@ export const getVentas = async () => {
 // Función para obtener una venta por ID
 export const getVentaById = async (id) => {
   try {
-    const response = await apiClient.get(`/api/ventas/${id}`);
+    const response = await apiClient.get(`/ventas/${id}`);
+    console.log("repuestaAPi", response.data);
+
     return response.data;
   } catch (error) {
     console.error(`Error al obtener la venta con ID: ${id}`, error);
@@ -25,7 +27,7 @@ export const getVentaById = async (id) => {
 // Función para obtener ventas entre fechas
 export const getVentasEntreFechas = async (desde, hasta) => {
   try {
-    const response = await apiClient.get("/api/ventas/entre-fechas", {
+    const response = await apiClient.get("/ventas/entre-fechas", {
       params: {desde, hasta},
     });
     return response.data;
@@ -65,7 +67,7 @@ export const crearVenta = async (venta) => {
 // Función para eliminar una venta (anular)
 export const anularVenta = async (id) => {
   try {
-    const response = await apiClient.put(`/api/ventas/${id}`);
+    const response = await apiClient.put(`/ventas/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error al anular la venta con ID: ${id}`, error);
@@ -73,14 +75,14 @@ export const anularVenta = async (id) => {
   }
 };
 
-// Función para obtener ventas por ID de turno (o cierre de caja)
+// Función para obtener ventas por ID de cierre de caja
 export const getVentasPorCierreCaja = async (id) => {
   try {
-    const response = await apiClient.get(`/api/ventas/cierres/${id}`);
+    const response = await apiClient.get(`/ventas/cierres/${id}`);
     return response.data;
   } catch (error) {
     console.error(
-      `Error al obtener las ventas para el cierre de caja con ID: ${id}`,
+      `Error al obtener las ventas para el cierre de caja en API con ID: ${id}`,
       error
     );
     throw error;

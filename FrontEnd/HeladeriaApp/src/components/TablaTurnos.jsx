@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import DetalleTurnoModal from './DetalleTurnoModal';
 import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import DetalleTurnoModal from './DetalleTurnosModal';
 
-const TablaTurnos = ({ turnos, onUpdate }) => {
+const TablaTurnos = ({ turnos }) => {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'id', headerName: 'Turno', width: 70 },
     {
       field: 'fechaInicio',
       headerName: 'Fecha Inicio',
@@ -67,7 +67,8 @@ const TablaTurnos = ({ turnos, onUpdate }) => {
         <IconButton
           color="primary"
           onClick={() => {
-            setTurnoSeleccionado(params.row);
+            // Establece el turno seleccionado y pasa toda la información del turno
+            setTurnoSeleccionado(params.row.id);
             setModalAbierto(true);
           }}
         >
@@ -76,6 +77,8 @@ const TablaTurnos = ({ turnos, onUpdate }) => {
       ),
     },
   ];
+
+  console.log('TablaTurnos', turnos);
 
   const handleRowClick = (params) => {
     // Solo marca visualmente la fila sin seleccionar
@@ -87,8 +90,6 @@ const TablaTurnos = ({ turnos, onUpdate }) => {
       <DataGrid
         rows={turnos}
         columns={columns}
-        pageSize={5}
-        rowsPerPageOptions={[5, 10, 20]}
         disableSelectionOnClick
         onRowClick={handleRowClick} // Mantiene la función para marcar la fila visualmente
         getRowId={(row) => row.id} // Asegúrate de que haya una propiedad única para cada fila
@@ -97,7 +98,6 @@ const TablaTurnos = ({ turnos, onUpdate }) => {
         abierto={modalAbierto}
         cerrar={() => setModalAbierto(false)}
         turno={turnoSeleccionado}
-        onUpdate={onUpdate}
       />
     </Box>
   );
