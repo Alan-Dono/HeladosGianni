@@ -20,7 +20,9 @@ namespace DataAccesLayer.Repositories
         {
             try
             {
-                return await _context.Empleados.ToListAsync();
+                return await _context.Empleados
+                    .Where(x => x.Activo == true)
+                    .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -73,7 +75,7 @@ namespace DataAccesLayer.Repositories
                 var empleado = await _context.Empleados.FindAsync(id);
                 if (empleado != null)
                 {
-                    _context.Empleados.Remove(empleado);
+                    empleado.Activo = false; // No eliminamos el registro para preservar la integridad de los datos
                     await _context.SaveChangesAsync();
                 }
             }

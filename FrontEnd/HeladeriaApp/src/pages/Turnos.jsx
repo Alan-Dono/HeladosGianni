@@ -15,6 +15,8 @@ export const Turnos = () => {
   const cargarTurnos = async () => {
     try {
       const listaTurnos = await TurnoService.obtenerTodos();
+      console.log('turnos', listaTurnos);
+
       setTurnos(listaTurnos);
     } catch (error) {
       console.error('Error al cargar turnos:', error);

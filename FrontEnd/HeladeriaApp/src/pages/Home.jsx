@@ -75,12 +75,12 @@ const Home = () => {
                     zIndex: 1, // Aseguramos que los iconos estén sobre la imagen
                 }}
             >
-                <Link href="https://github.com/tuusuario" target="_blank" rel="noopener noreferrer">
+                <Link href="https://github.com/Alan-Dono" target="_blank" rel="noopener noreferrer">
                     <IconButton sx={{ color: 'white', opacity: 0.7, '&:hover': { opacity: 1 } }}>
                         <GitHub />
                     </IconButton>
                 </Link>
-                <Link href="https://linkedin.com/in/tuusuario" target="_blank" rel="noopener noreferrer">
+                <Link href="https://www.linkedin.com/in/alan-nicolas-dono/" target="_blank" rel="noopener noreferrer">
                     <IconButton sx={{ color: 'white', opacity: 0.7, '&:hover': { opacity: 1 } }}>
                         <LinkedIn />
                     </IconButton>

@@ -19,6 +19,7 @@ namespace DomainLayer.Models
 
         public DateTime? FechaContratacion { get; set; }  // Nullable para permitir fechas no definidas
 
+        public bool Activo { get; set; } = true;
 
     }
 }
