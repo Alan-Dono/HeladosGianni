@@ -108,9 +108,6 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                     precioUnitario: producto.precio,    // Precio del producto
                 })),
             };
-            console.log('decuento', descuentoValor);
-
-            console.log("log en order", ventaData);
 
             // Llamar a la función del servicio para registrar la venta
             const response = await VentaService.registrarVenta(ventaData);

@@ -5,6 +5,9 @@ import {
   getProductos,
   actualizarProducto,
   getProductoByCategory,
+  agregarAFavoritos,
+  eliminarDeFavoritos,
+  obtenerFavoritos,
 } from "../api/ApiProducto"; // Asegúrate de que la ruta sea correcta
 
 const ProductoService = {
@@ -74,6 +77,45 @@ const ProductoService = {
         `Error al obtener productos de la categoría con ID: ${id}`,
         error
       );
+      throw error; // Re-lanzar el error para que pueda ser manejado en el componente
+    }
+  },
+
+  // Función para agregar un producto a favoritos
+  agregarAFavoritos: async (id) => {
+    try {
+      const respuesta = await agregarAFavoritos(id);
+      return respuesta; // Retorna la respuesta de agregar a favoritos
+    } catch (error) {
+      console.error(
+        `Error al agregar el producto con ID: ${id} a favoritos`,
+        error
+      );
+      throw error; // Re-lanzar el error para que pueda ser manejado en el componente
+    }
+  },
+
+  // Función para eliminar un producto de favoritos
+  eliminarDeFavoritos: async (id) => {
+    try {
+      const respuesta = await eliminarDeFavoritos(id);
+      return respuesta; // Retorna la respuesta de eliminar de favoritos
+    } catch (error) {
+      console.error(
+        `Error al eliminar el producto con ID: ${id} de favoritos`,
+        error
+      );
+      throw error; // Re-lanzar el error para que pueda ser manejado en el componente
+    }
+  },
+
+  // Función para obtener todos los productos favoritos
+  obtenerFavoritos: async () => {
+    try {
+      const favoritos = await obtenerFavoritos();
+      return favoritos; // Retorna la lista de productos favoritos
+    } catch (error) {
+      console.error("Error al obtener los productos favoritos", error);
       throw error; // Re-lanzar el error para que pueda ser manejado en el componente
     }
   },

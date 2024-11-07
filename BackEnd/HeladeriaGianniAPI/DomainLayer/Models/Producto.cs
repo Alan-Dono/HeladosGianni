@@ -17,10 +17,10 @@ namespace DomainLayer.Models
         public double Precio { get; set; }
         [MaxLength(150)]
         public string? Descripcion { get; set; }
-
+        public bool EsFavorito { get; set; } = false;
 
         // Propiedades de navegacion
-        public ProductoCategoria ProductoCategoria { get; set; }
+        public ProductoCategoria? ProductoCategoria { get; set; }
         //public Proveedor? Proveedor { get; set; } 
     }
 }

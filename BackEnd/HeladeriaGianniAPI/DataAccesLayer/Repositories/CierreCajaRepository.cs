@@ -95,16 +95,19 @@ namespace DataAccesLayer.Repositories
             {
                 var cierre = await context.CierreCajas
                     .Include(x => x.Empleado)
-                    .Include(x => x.Ventas)
-                        .ThenInclude(x => x.DetallesVentas)
+                    .Include(x => x.Ventas
+                        .Where(v => v.Activa == true)) // Filtra solo las ventas activas
+                        .ThenInclude(v => v.DetallesVentas)
                     .FirstOrDefaultAsync(x => x.EstaActivo == true);
+
                 return cierre;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("Error al obtener cierre en la capa de datos", ex);
             }
         }
+
 
         public async Task<CierreCaja> ObtenerCierrePorId(int id)
         {

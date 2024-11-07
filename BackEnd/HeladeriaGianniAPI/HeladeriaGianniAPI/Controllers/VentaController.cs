@@ -16,11 +16,13 @@ namespace HeladeriaGianniAPI.Controllers
     {
         private readonly VentaService _ventaService;
         private readonly IMapper _mapper;
+        private readonly ImpresoraTicketService impresoraTicketService;
 
-        public VentaController(VentaService ventaService, IMapper mapper)
+        public VentaController(VentaService ventaService, IMapper mapper, ImpresoraTicketService impresoraTicketService)
         {
             _ventaService = ventaService;
             _mapper = mapper;
+            this.impresoraTicketService = impresoraTicketService;
         }
 
         // Obtener todas las ventas
@@ -68,6 +70,7 @@ namespace HeladeriaGianniAPI.Controllers
             var venta = _mapper.Map<Venta>(ventaDtoReq);
             await _ventaService.RegistrarVenta(venta);
             venta = await _ventaService.ObtenerVentaPorId(venta.Id);
+            impresoraTicketService.ImprimirTicketVenta(venta);
             var ventaDto = _mapper.Map<VentaDtoRes>(venta);
             return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
         }

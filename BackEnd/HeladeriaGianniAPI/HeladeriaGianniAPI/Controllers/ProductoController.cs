@@ -143,6 +143,53 @@ namespace HeladeriaGianniAPI.Controllers
 
         }
 
+        [HttpPost("{id}/favorito", Name = "AgregarAFavoritos")]
+        public async Task<IActionResult> AgregarAFavoritos(int id)
+        {
+            try
+            {
+                await productoService.AgregarAFavorito(id);
+                return Ok(new { mensaje = "Producto agregado a favoritos" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { mensaje = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Error al agregar a favoritos");
+            }
+        }
+
+        [HttpDelete("{id}/favorito", Name = "EliminarDeFavoritos")]
+        public async Task<IActionResult> EliminarDeFavoritos(int id)
+        {
+            try
+            {
+                await productoService.EliminarDeFavorito(id);
+                return Ok(new { mensaje = "Producto eliminado de favoritos" });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { mensaje = ex.Message });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Error al eliminar de favoritos");
+            }
+        }
+
+        [HttpGet("favoritos", Name = "ObtenerFavoritos")]
+        public async Task<ActionResult<List<ProductoDtoRes>>> ObtenerFavoritos()
+        {
+            var favoritos = await productoService.ObtenerFavoritos();
+            if (favoritos == null)
+            {
+                return NotFound("No hay productos marcados como favoritos.");
+            }
+            var productosDto = mapper.Map<IEnumerable<ProductoDtoRes>>(favoritos);
+            return Ok(productosDto);
+        }
 
 
     }

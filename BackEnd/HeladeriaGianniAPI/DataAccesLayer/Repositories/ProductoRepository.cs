@@ -18,6 +18,26 @@ namespace DataAccesLayer.Repositories
             this.context = context;
         }
 
+        public async Task AgregarFavorito(int id)
+        {
+            var existe = await context.Productos.FindAsync(id);
+            if (existe != null)
+            {
+                existe.EsFavorito = true;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task EliminarFavorito(int id)
+        {
+            var existe = await context.Productos.FindAsync(id);
+            if (existe != null)
+            {
+                existe.EsFavorito = false;
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task AgregarProducto(Producto producto)
         {
             var existe = await context.Productos.AnyAsync(x => x.NombreProducto == producto.NombreProducto);
@@ -27,26 +47,8 @@ namespace DataAccesLayer.Repositories
             }
             await context.Productos.AddAsync(producto);
             await context.SaveChangesAsync();
-
         }
 
-        /*    public async Task EditarProducto(Producto producto, int id)
-            {
-                var productoExistente = await context.Productos.FindAsync(id);
-
-                if (productoExistente == null)
-                {
-                    throw new Exception("Producto no encontrado");
-                }
-                productoExistente.NombreProducto = producto.NombreProducto;
-                productoExistente.Precio = producto.Precio;
-                productoExistente.Descripcion = producto.Descripcion;
-                productoExistente.ProductoCategoriaId = producto.ProductoCategoriaId;
-                productoExistente.ProveedorId = producto.ProveedorId;
-
-                context.Update(productoExistente);
-                await context.SaveChangesAsync();
-            }*/
         public async Task EditarProducto(int id, Producto producto)
         {
             // Buscar el producto existente en la base de datos
@@ -68,7 +70,6 @@ namespace DataAccesLayer.Repositories
             // Guardar los cambios en la base de datos
             await context.SaveChangesAsync();
         }
-
 
         public async Task EliminarProducto(int id)
         {
@@ -117,6 +118,15 @@ namespace DataAccesLayer.Repositories
                 //.Where(x => x.ProveedorId == idProveedor)
                 .ToListAsync();
             return productos;
+        }
+
+        public async Task<IEnumerable<Producto>> ObtenerFavoritos()
+        {
+            var favoritos = await context.Productos
+                .Include(x => x.ProductoCategoria)
+                .Where(x => x.EsFavorito == true)
+                .ToListAsync();
+            return favoritos;
         }
     }
 }

@@ -44,6 +44,7 @@ namespace DataAccesLayer
                 .HasOne(p => p.ProductoCategoria)
                 .WithMany()
                 .HasForeignKey(p => p.ProductoCategoriaId);
+
         }
 
         public DbSet<ProductoCategoria> ProductoCategorias { get; set; }
@@ -53,5 +54,6 @@ namespace DataAccesLayer
         public DbSet<Empleado> Empleados { get; set; } 
         public DbSet<DetalleVenta> DetallesVentas { get; set; } 
         public DbSet<CierreCaja> CierreCajas { get; set; }
+
     }
 }

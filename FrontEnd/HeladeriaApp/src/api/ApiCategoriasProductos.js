@@ -8,7 +8,8 @@ export const getProductosCategorias = async () => {
     const ordenCategorias = {
       Heladeria: 1,
       Cafeteria: 2,
-      Chocolateria: 3,
+      Confiteria: 3,
+      Promociones: 4,
       // Agrega más categorías si es necesario
     };
 
@@ -19,7 +20,7 @@ export const getProductosCategorias = async () => {
         (ordenCategorias[b.nombreCategoria] || Infinity)
       );
     });
-    
+
     return categoriasOrdenadas;
   } catch (error) {
     console.error("Error al obtener los productos", error);

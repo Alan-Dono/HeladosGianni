@@ -51,5 +51,22 @@ namespace ApplicationLayer.Services
         {
             await productoRepository.EliminarProducto(id);
         }
+
+        public async Task AgregarAFavorito(int id)
+        {
+            await productoRepository.AgregarFavorito(id);
+        }
+
+        public async Task EliminarDeFavorito(int id)
+        {
+            await productoRepository.EliminarFavorito(id);
+        }
+
+        public async Task<IEnumerable<Producto>> ObtenerFavoritos()
+        {
+            return await productoRepository.ObtenerFavoritos();
+        }
+
+
     }
 }

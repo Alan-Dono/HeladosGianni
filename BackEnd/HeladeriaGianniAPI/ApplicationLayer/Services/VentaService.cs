@@ -11,10 +11,12 @@ namespace ApplicationLayer.Services
     public class VentaService
     {
         private readonly IVentaRepository ventaRepository;
+        private readonly ImpresoraTicketService impresoraTicketService;
 
-        public VentaService( IVentaRepository ventaRepository)
+        public VentaService( IVentaRepository ventaRepository, ImpresoraTicketService impresoraTicketService)
         {
             this.ventaRepository = ventaRepository;
+            this.impresoraTicketService = impresoraTicketService;
         }
 
         public async Task<ICollection<Venta>> ObtenerVentas()
@@ -41,6 +43,7 @@ namespace ApplicationLayer.Services
         public async Task RegistrarVenta(Venta venta)
         {
             await ventaRepository.RegistrarVenta(venta);
+            
         }
 
         public async Task AnularVenta(int id)

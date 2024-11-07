@@ -3,16 +3,16 @@
   "WorkspaceRootPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\dataacceslayer\\repositories\\empleadorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\repositories\\empleadorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\dataacceslayer\\repositories\\ventarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\repositories\\ventarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\impresoratiketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\impresoratiketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -34,40 +34,42 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EmpleadoRepository.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\EmpleadoRepository.cs",
-              "RelativeDocumentMoniker": "DataAccesLayer\\Repositories\\EmpleadoRepository.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\EmpleadoRepository.cs",
-              "RelativeToolTip": "DataAccesLayer\\Repositories\\EmpleadoRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAA5AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T22:58:36.536Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "VentaRepository.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\VentaRepository.cs",
-              "RelativeDocumentMoniker": "DataAccesLayer\\Repositories\\VentaRepository.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\VentaRepository.cs",
-              "RelativeToolTip": "DataAccesLayer\\Repositories\\VentaRepository.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAiwFQAAAAaAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T22:57:20.563Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "VentaController.cs",
               "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
               "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
               "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
               "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "ViewState": "AQIAADkAAAAAAAAAAAAowE4AAAArAAAA",
+              "ViewState": "AQIAADwAAAAAAAAAAAAowE0AAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-10-24T22:57:00.884Z"
+              "WhenOpened": "2024-11-06T22:29:09.231Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "VentaService.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\VentaService.cs",
+              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\VentaService.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\VentaService.cs",
+              "RelativeToolTip": "ApplicationLayer\\Services\\VentaService.cs",
+              "ViewState": "AQIAACMAAAAAAAAAAAAuwC0AAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-06T22:20:44.133Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "ImpresoraTiketService.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\ImpresoraTiketService.cs",
+              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\ImpresoraTiketService.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\ImpresoraTiketService.cs",
+              "RelativeToolTip": "ApplicationLayer\\Services\\ImpresoraTiketService.cs",
+              "ViewState": "AQIAAGMAAAAAAAAAAAAwwHIAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-06T22:13:47.761Z",
+              "EditorCaption": ""
             }
           ]
         },

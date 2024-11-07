@@ -85,3 +85,42 @@ export const getProductoByCategory = async (id) => {
     throw error;
   }
 };
+
+// Función para agregar un producto a favoritos
+export const agregarAFavoritos = async (id) => {
+  try {
+    const response = await apiClient.post(`/productos/${id}/favorito`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al agregar el producto con ID: ${id} a favoritos`,
+      error
+    );
+    throw error;
+  }
+};
+
+// Función para eliminar un producto de favoritos
+export const eliminarDeFavoritos = async (id) => {
+  try {
+    const response = await apiClient.delete(`/productos/${id}/favorito`);
+    return response.data;
+  } catch (error) {
+    console.error(
+      `Error al eliminar el producto con ID: ${id} de favoritos`,
+      error
+    );
+    throw error;
+  }
+};
+
+// Función para obtener todos los productos favoritos
+export const obtenerFavoritos = async () => {
+  try {
+    const response = await apiClient.get("/productos/favoritos");
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener los productos favoritos", error);
+    throw error;
+  }
+};

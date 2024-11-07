@@ -19,6 +19,12 @@ builder.Services.AddDbContext<HeladeriaDbContext>(options =>
         b => b.MigrationsAssembly("DataAccesLayer"))); // Especifica el ensamblado para las migraciones
 
 // Inyección de dependencias
+
+/*builder.Services.AddScoped<ImpresoraTicketService>(sp =>
+    new ImpresoraTicketService("COM1")); // Ajusta el puerto COM según tu configuración
+*/
+builder.Services.AddScoped<ImpresoraTicketService>();
+
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();
 builder.Services.AddScoped<EmpleadoService>();
 
@@ -43,6 +49,7 @@ builder.Services.AddScoped<CierreCajaService>();
 //builder.Services.AddScoped<CalculadoraVentas>();
 // Configuración de AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
 
 // Configuración de Newtonsoft.Json para usar la cultura invariante
 builder.Services.AddControllers()

@@ -12,11 +12,13 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle
+  DialogTitle,
+  TextField
 } from '@mui/material';
 import CierreCajaService from '../services/CierreCajaService';
 import EmpleadoService from '../services/EmpleadoService';
 import TurnoService from '../services/TurnoService';
+import VentaService from '../services/VentaService';
 
 const PanelCierre = ({ onUpdate }) => {
   const [turnoActual, setTurnoActual] = useState(null);
@@ -26,6 +28,9 @@ const PanelCierre = ({ onUpdate }) => {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [dialogoCambioAbierto, setDialogoCambioAbierto] = useState(false);
   const [dialogoFinalizarAbierto, setDialogoFinalizarAbierto] = useState(false);
+  const [dialogoAnulacionVentaAbierto, setDialogoAnulacionVentaAbierto] = useState(false);
+  const [codigoVenta, setCodigoVenta] = useState('');
+  const [ventaData, setVentaData] = useState(null);
 
   useEffect(() => {
     cargarEmpleados();
@@ -107,6 +112,26 @@ const PanelCierre = ({ onUpdate }) => {
     }
   };
 
+  const cargarVenta = async () => {
+    try {
+      const venta = await VentaService.obtenerPorId(codigoVenta); // Servicio para obtener la venta por ID
+      setVentaData(venta);
+    } catch (error) {
+      console.error("Error al cargar datos de la venta:", error);
+    }
+  };
+
+  const anularVenta = async () => {
+    try {
+      await VentaService.anular(codigoVenta); // Servicio para anular la venta
+      setDialogoAnulacionVentaAbierto(false);
+      onUpdate(); // Actualizar datos
+    } catch (error) {
+      console.error("Error al anular venta:", error);
+    }
+    cargarCierreActual();
+  };
+
 
   return (
     <Box sx={{ p: 3 }}>
@@ -124,22 +149,38 @@ const PanelCierre = ({ onUpdate }) => {
                   minute: '2-digit'
                 })}
               </Typography>
-
-              <Typography>Responsable: {cierreActual.empleado.nombreEmpleado + " " + cierreActual.empleado.apellidoEmpleado} </Typography>
+              <Typography>Responsable: {cierreActual.empleado.nombreEmpleado + " " + cierreActual.empleado.apellidoEmpleado}</Typography>
             </Box>
             <Box>
               <Typography>Ventas: {cierreActual.cantidadDeVentas}</Typography>
-              <Typography>Descuento Total: ${cierreActual.totalDescuentos}</Typography>
-              <Typography>Total: ${cierreActual.totalDeVentas}</Typography>
+              <Typography>Descuento Total: ${cierreActual.totalDescuentos.toFixed(2)}</Typography>
+              <Typography>Total: ${cierreActual.totalDeVentas.toFixed(2)}</Typography>
             </Box>
             <Box>
-              <Button variant="contained" onClick={() => setDialogoCambioAbierto(true)} sx={{ mr: 1 }}>
+              <Button
+                variant="contained"
+                onClick={() => setDialogoCambioAbierto(true)}
+                sx={{ mr: 1 }}
+              >
                 Cambiar Responsable
               </Button>
-              <Button variant="contained" color="secondary" onClick={() => setDialogoFinalizarAbierto(true)}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => setDialogoFinalizarAbierto(true)}
+                sx={{ mr: 1 }}
+              >
                 Finalizar Turno
               </Button>
+              <Button
+                variant="contained"
+                color="error" // Color para destacar el botón de anulación
+                onClick={() => setDialogoAnulacionVentaAbierto(true)} // Definir el estado de anulación aquí
+              >
+                Anular Venta
+              </Button>
             </Box>
+
           </>
         ) : (
           <Button variant="contained" onClick={() => setModalAbierto(true)}>
@@ -215,6 +256,41 @@ const PanelCierre = ({ onUpdate }) => {
           <Button onClick={finalizarTurno} variant="contained" color="secondary">Finalizar</Button>
         </DialogActions>
       </Dialog>
+
+      {/* Diálogo para anular una venta */}
+      <Dialog open={dialogoAnulacionVentaAbierto} onClose={() => setDialogoAnulacionVentaAbierto(false)}>
+        <DialogTitle>Anular Venta</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Ingrese el código de la venta que desea anular.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Código de Venta"
+            fullWidth
+            value={codigoVenta}
+            onChange={(e) => setCodigoVenta(e.target.value)}
+          />
+          <Button onClick={cargarVenta} variant="contained" color="primary" sx={{ mt: 2 }}>
+            Buscar Venta
+          </Button>
+          {ventaData && (
+            <Box sx={{ mt: 2 }}>
+              <Typography>Responsable: {cierreActual.empleado.nombreEmpleado + " " + cierreActual.empleado.apellidoEmpleado}</Typography>
+              <Typography>Total: ${ventaData.totalVenta}</Typography>
+              <Typography>Fecha: {new Date(ventaData.fechaDeVenta).toLocaleString()}</Typography>
+            </Box>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialogoAnulacionVentaAbierto(false)}>Cancelar</Button>
+          <Button onClick={anularVenta} variant="contained" color="error" disabled={!ventaData}>
+            Eliminar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </Box>
   );
 };

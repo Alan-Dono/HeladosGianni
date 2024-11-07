@@ -8,11 +8,21 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="8.0.8" />
+    <PackageReference Include="System.Drawing.Common" Version="8.0.10" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DataAccesLayer\DataAccesLayer.csproj" />
     <ProjectReference Include="..\DomainLayer\DomainLayer.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.PointOfService.Service">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Point Of Service\Microsoft.PointOfService.Service.exe</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.PointOfService.WMI">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Microsoft Point Of Service\Microsoft.PointOfService.WMI.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

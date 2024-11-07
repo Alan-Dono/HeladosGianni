@@ -16,7 +16,7 @@ namespace DomainLayer.Models
         public double PrecioUnitario { get; set; }
 
         // Propiedades de navegacion
-        public Producto Producto { get; set; }
+        public Producto? Producto { get; set; }
 
         #endregion
     }

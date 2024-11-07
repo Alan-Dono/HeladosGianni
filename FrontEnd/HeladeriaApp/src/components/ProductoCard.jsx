@@ -1,50 +1,79 @@
-// src/components/ProductoCard.js
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, Typography, Box } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
-const ProductoCard = ({ producto, agregar }) => {
+const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
     const theme = useTheme();
+    const [clicProlongado, setClicProlongado] = useState(false);
+    const [temporizador, setTemporizador] = useState(null);
+
+    // Maneja el clic prolongado para agregar/eliminar de favoritos (3 segundos)
+    const handleMouseDown = () => {
+        // Inicia el temporizador para el clic prolongado
+        const temporizadorFavorito = setTimeout(async () => {
+            await toggleFavorito(producto); // Acción de favorito
+            setClicProlongado(true); // Marca que el clic prolongado se activó
+        }, 3000);
+
+        setTemporizador(temporizadorFavorito);
+    };
+
+    // Maneja el clic simple para agregar al carrito
+    const handleClick = () => {
+        if (!clicProlongado) {
+            agregar(producto); // Solo se agrega al carrito si no fue clic prolongado
+        }
+        setClicProlongado(false); // Restablece el estado para el próximo clic
+    };
+
+    // Cancela el temporizador si el mouse es liberado antes de los 3 segundos
+    const handleMouseUp = () => {
+        if (!clicProlongado) {
+            clearTimeout(temporizador); // Cancela el temporizador si el clic fue rápido
+        }
+    };
 
     return (
         <Card
             sx={{
-                height: '80px', // Altura ajustada
-                width: '70px', // Ancho ajustado
+                height: '80px',
+                width: '70px',
                 display: 'flex',
                 flexDirection: 'column',
-                justifyContent: 'center', // Centrar contenido verticalmente
+                justifyContent: 'center',
                 alignItems: 'center',
                 position: 'relative',
                 cursor: 'pointer',
                 mr: 0.5,
                 mb: 0.5,
-                backgroundColor: theme.palette.background.componentes, // Color de fondo para la tarjeta
-                color: theme.palette.text.secondary, // Color del texto
-                overflow: 'visible', // Permitir que el contenido desbordado sea visible
-                transition: 'transform 0.2s ease, z-index 0.2s ease', // Transición suave para el hover
+                backgroundColor: producto.favorito ? theme.palette.primary.main : theme.palette.background.componentes,
+                color: producto.favorito ? 'black' : theme.palette.text.secondary,
+                overflow: 'visible',
+                transition: 'transform 0.2s ease, z-index 0.2s ease',
                 '&:hover': {
                     color: 'black',
-                    backgroundColor: theme.palette.primary.main, // Cambio de fondo al pasar el mouse
-                    transform: 'scale(1.2)', // Agrandar la tarjeta al hacer hover
-                    zIndex: 10, // Asegurarte de que esté por encima de otros componentes
+                    backgroundColor: theme.palette.primary.main,
+                    transform: 'scale(1.2)',
+                    zIndex: 10,
                 }
             }}
-            onClick={() => agregar(producto)} // Función para agregar el producto al hacer clic
+            onMouseDown={handleMouseDown} // Detecta el inicio de un clic prolongado
+            onMouseUp={handleMouseUp} // Detecta cuando se suelta el clic
+            onClick={handleClick} // Maneja el clic simple para agregar al carrito
         >
             <Box
                 sx={{
-                    textAlign: 'center', // Centrar texto
-                    overflow: 'hidden', // Mantener el desbordamiento oculto en estado normal
+                    textAlign: 'center',
+                    overflow: 'hidden',
                 }}
             >
                 <Typography
                     sx={{
                         fontSize: '0.85rem',
                         fontWeight: 'bold',
-                        wordBreak: 'break-word', // Permitir que las palabras se rompan
+                        wordBreak: 'break-word',
                     }}
-                    noWrap={false} // Permitir el ajuste de línea
+                    noWrap={false}
                 >
                     {producto.nombreProducto}
                 </Typography>
@@ -53,10 +82,10 @@ const ProductoCard = ({ producto, agregar }) => {
                     sx={{
                         fontSize: '0.8rem',
                         fontWeight: 'bold',
-                        wordBreak: 'break-word', // Permitir que las palabras se rompan
+                        wordBreak: 'break-word',
                     }}
                 >
-                    ${producto.precio.toFixed(2)} {/* Formato de precio */}
+                    ${producto.precio.toFixed(2)}
                 </Typography>
             </Box>
         </Card>
