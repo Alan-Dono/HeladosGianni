@@ -10,6 +10,8 @@ namespace ApplicationLayer.Services
         private const string NOMBRE_IMPRESORA = "GianniPrinter";
         private const int ANCHO_TICKET = 280;
         private Venta _ventaActual;
+        private Venta _ventaHelados = new Venta();
+        private Venta _ventacafeteria = new Venta();
 
         public ImpresoraTicketService()
         {
@@ -29,27 +31,55 @@ namespace ApplicationLayer.Services
             }
         }
 
-        public void ImprimirTicketVenta(Venta venta)
+        public void ImprimirTicketVenta(Venta venta, string AclaracionCafeteria, string AclaracionHeladeria)
         {
             try
             {
                 _ventaActual = venta;
+
+                // Llamar al método que obtiene los detalles de venta
+                ProductosCageteria(_ventaActual);
+                // Crear las impresoras
                 PrintDocument pd = new PrintDocument();
+                // Configurar las impresoras
                 pd.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
 
+                // Validar impresora
                 if (!pd.PrinterSettings.IsValid)
                 {
                     throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
                 }
 
+                // Imprimir los productos para la cafetería
+                if(_ventacafeteria.DetallesVentas.Count > 0)
+                {
+                    PrintDocument tiketCafe = new PrintDocument();
+                    tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
+                    // Usamos el evento PrintPage para el método de impresión
+                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e);
+                    tiketCafe.Print();
+                }
+                if (_ventaHelados.DetallesVentas.Count > 0)
+                {
+                    PrintDocument tiketHelado = new PrintDocument();
+                    tiketHelado.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
+                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e);
+                    tiketHelado.Print();
+                }
+    
+                // Configurar el método para la impresión general
                 pd.PrintPage += Pd_PrintPage;
+
+                // Realizar la impresión
                 pd.Print();
+
             }
             catch (Exception ex)
             {
                 throw new Exception($"Error al imprimir: {ex.Message}", ex);
             }
         }
+
 
         private void Pd_PrintPage(object sender, PrintPageEventArgs e)
         {
@@ -181,8 +211,102 @@ namespace ApplicationLayer.Services
             }
         }
 
+        private void ImprimirTicketProductos(List<DetalleVenta> detallesVenta, string aclaracion, PrintPageEventArgs e)
+        {
+            try
+            {
+                using (Font fuenteNormal = new Font("Arial", 10))
+                using (Font fuenteGrande = new Font("Arial", 13, FontStyle.Bold))
+                using (Font fuentePequena = new Font("Arial", 9))
+                using (Font fuenteLeyenda = new Font("Arial", 8, FontStyle.Italic))
+                {
+                    Graphics g = e.Graphics;
+                    float yPos = 10;
+                    float leftMargin = 5;
+                    float rightMargin = ANCHO_TICKET - 5;
+
+                    // Título
+                    string titulo = "TICKET DE VENTA";
+                    SizeF tituloSize = g.MeasureString(titulo, fuenteGrande);
+                    g.DrawString(titulo, fuenteGrande, Brushes.Black,
+                        (ANCHO_TICKET - tituloSize.Width) / 2, yPos);
+                    yPos += tituloSize.Height + 5;
+
+                    // Información de la venta
+                    g.DrawString($"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm}",
+                        fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += 20;
+
+                    g.DrawString($"Total productos: {detallesVenta.Count}",
+                        fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += 25;
+
+                    // Línea separadora
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Encabezados de columnas
+                    g.DrawString("Descripción", fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    g.DrawString("Cant", fuenteNormal, Brushes.Black, 115, yPos);  // Desplazado más a la derecha
+                    yPos += 20;
+
+                    // Línea separadora
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Detalles de productos
+                    foreach (var detalle in detallesVenta)
+                    {
+                        string nombreProducto = detalle.Producto.NombreProducto;
+                        if (nombreProducto.Length > 20)
+                            nombreProducto = nombreProducto.Substring(0, 17) + "...";
+
+                        g.DrawString(nombreProducto,
+                            fuenteNormal, Brushes.Black, leftMargin, yPos);
+
+                        g.DrawString(detalle.Cantidad.ToString(),
+                            fuenteNormal, Brushes.Black, 125, yPos);  // Desplazado más a la derecha
+
+                        yPos += 20;
+                    }
+
+                    // Si hay aclaración, imprimirla
+                    if (!string.IsNullOrEmpty(aclaracion))
+                    {
+                        yPos += 10;
+                        g.DrawString($"Aclaración: {aclaracion}",
+                            fuenteGrande, Brushes.Black, leftMargin, yPos);
+                        yPos += 20;
+                    }
+                    // **Agregar espacio vacío adicional al final**
+                    yPos += 10;
+
+                    // Indicar que no hay más páginas
+                    e.HasMorePages = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al generar la página del ticket: {ex.Message}", ex);
+            }
+        }
 
 
+        private void ProductosCageteria(Venta venta)
+        {   
+            foreach(var detalle in venta.DetallesVentas)
+            {
+                if(detalle.Producto.ProductoCategoriaId == 1)
+                {
+                    _ventacafeteria.DetallesVentas.Add(detalle);
+                }
+                if(detalle.Producto.ProductoCategoriaId == 2)
+                {
+                    _ventaHelados.DetallesVentas.Add(detalle);
+                }
+            }
+
+        }
 
 
     }

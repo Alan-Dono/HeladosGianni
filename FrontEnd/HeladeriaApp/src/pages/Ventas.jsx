@@ -7,6 +7,7 @@ import CategoriaProductoService from '../services/CategoriaProductoService';
 import CierreCajaService from '../services/CierreCajaService';
 import ProductoService from '../services/ProductoService';
 import MuiAlert from '@mui/material/Alert';
+import AclaracionModal from '../components/AclaracionModal';
 
 const Ventas = () => {
     const [carrito, setCarrito] = useState([]);
@@ -20,6 +21,24 @@ const Ventas = () => {
     const [snackbarAbierto, setSnackbarAbierto] = useState(false);
     const [mensajeSnackbar, setMensajeSnackbar] = useState('');
     const [tipoAlerta, setTipoAlerta] = useState('success');
+
+    const [aclaracionCafeteria, setAclaracionCafeteria] = useState("");
+    const [aclaracionHeladeria, setAclaracionHeladeria] = useState("");
+    const [modalCafeteriaOpen, setModalCafeteriaOpen] = useState(false);
+    const [modalHeladeriaOpen, setModalHeladeriaOpen] = useState(false);
+
+    const abrirModalCafeteria = () => setModalCafeteriaOpen(true);
+    const cerrarModalCafeteria = () => setModalCafeteriaOpen(false);
+    const abrirModalHeladeria = () => setModalHeladeriaOpen(true);
+    const cerrarModalHeladeria = () => setModalHeladeriaOpen(false);
+
+    const handleSaveCafeteria = (aclaracion) => {
+        setAclaracionCafeteria(aclaracion);
+    };
+
+    const handleSaveHeladeria = (aclaracion) => {
+        setAclaracionHeladeria(aclaracion);
+    };
 
 
     const [productos, setProductos] = useState({
@@ -80,7 +99,6 @@ const Ventas = () => {
     }, []);
 
     useEffect(() => {
-        console.log("Productos favoritos actualizados:", productos.favoritos);
     }, [productos.favoritos]);
 
     const agregarProducto = (producto) => {
@@ -127,7 +145,7 @@ const Ventas = () => {
                     favoritos: [...favoritos, producto],
                 };
             }
-   
+
         });
     };
 
@@ -212,7 +230,7 @@ const Ventas = () => {
 
                 <Box sx={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(5, 1fr)',
+                    gridTemplateColumns: 'repeat(7, 1fr)',
                     gap: '8px',
                     p: 1,
                     backgroundColor: 'background.paper',
@@ -226,14 +244,59 @@ const Ventas = () => {
                             onClick={() => setVistaActual(categoria)}
                             sx={{
                                 height: '100%',
-                                fontSize: '1.2rem',
-                                fontWeight: 'bold'
+                                fontSize: { xs: '0.7rem', sm: '1rem' }, // reducir la fuente en pantallas pequeñas
+                                fontWeight: 'medium',
+                                borderRadius: '4px',
+                                textTransform: 'capitalize',
+                                padding: { xs: '2px', sm: '6px' }, // menor padding en pantallas pequeñas
                             }}
                         >
-                            {categoria.charAt(0).toUpperCase() + categoria.slice(1)}
+                            {categoria}
                         </Button>
                     ))}
+                    {/* Botón Nota Cafe */}
+                    <Button
+                        variant='contained'
+                        sx={{
+                            height: '100%',
+                            fontSize: { xs: '0.7rem', sm: '1rem' },
+                            fontWeight: 'medium',
+                            borderRadius: '4px',
+                            textTransform: 'capitalize',
+                            padding: { xs: '2px', sm: '6px' },
+                            backgroundColor: '#FF7043', // Rojo anaranjado (Color en hex)
+                            '&:hover': {
+                                backgroundColor: '#FF5722', // Un tono más fuerte en el hover
+                            }
+                        }}
+                        onClick={() => abrirModalCafeteria()}
+                    >
+                        Nota Cafe
+                    </Button>
+                    {/* Botón Nota Helados */}
+                    <Button
+                        variant='contained'
+                        sx={{
+                            height: '100%',
+                            fontSize: { xs: '0.7rem', sm: '1rem' },
+                            fontWeight: 'medium',
+                            borderRadius: '4px',
+                            textTransform: 'capitalize',
+                            padding: { xs: '2px', sm: '6px' },
+                            backgroundColor: '#FF7043', // Rojo anaranjado (Color en hex)
+                            '&:hover': {
+                                backgroundColor: '#FF5722', // Un tono más fuerte en el hover
+                            }
+                        }}
+                        onClick={() => abrirModalHeladeria()}
+                    >
+                        Nota Helados
+                    </Button>
+
+
                 </Box>
+
+
             </Box>
 
             <Box sx={{ width: '30%' }}>
@@ -250,6 +313,10 @@ const Ventas = () => {
                     restar={restarProducto}
                     eliminar={eliminarProducto}
                     cierreActivo={cierreActivo}
+                    aclaracionCafeteria={aclaracionCafeteria}
+                    setAclaracionCafeteria={setAclaracionCafeteria}
+                    aclaracionHeladeria={aclaracionHeladeria}
+                    setAclaracionHeladeria={setAclaracionHeladeria}
                 />
             </Box>
 
@@ -269,6 +336,20 @@ const Ventas = () => {
                     {mensajeSnackbar}
                 </MuiAlert>
             </Snackbar>
+
+            <AclaracionModal
+                open={modalCafeteriaOpen}
+                onClose={cerrarModalCafeteria}
+                onSave={handleSaveCafeteria}
+                tipo="cafeteria"
+            />
+
+            <AclaracionModal
+                open={modalHeladeriaOpen}
+                onClose={cerrarModalHeladeria}
+                onSave={handleSaveHeladeria}
+                tipo="heladeria"
+            />
         </Box>
     );
 };

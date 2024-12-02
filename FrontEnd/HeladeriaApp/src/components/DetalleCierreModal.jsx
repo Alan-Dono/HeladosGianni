@@ -97,8 +97,6 @@ const DetalleCierreModal = ({ abierto, cerrar, cierre }) => {
     }
   ];
 
-  console.log('VentaSelec', ventaSeleccionada);
-
 
   return (
     <>

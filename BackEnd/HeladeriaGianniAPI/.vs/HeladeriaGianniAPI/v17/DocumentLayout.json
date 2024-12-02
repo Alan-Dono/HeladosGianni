@@ -3,16 +3,24 @@
   "WorkspaceRootPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\impresoratiketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\impresoratiketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\wsfeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\wsfeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\afipservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\afipservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\ventaservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\applicationlayer\\helper\\logintiket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\helper\\logintiket.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\afipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\afipcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,41 +42,67 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "VentaController.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "ViewState": "AQIAADwAAAAAAAAAAAAowE0AAAAdAAAA",
+              "DocumentIndex": 4,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Program.cs",
+              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Program.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Program.cs",
+              "RelativeToolTip": "HeladeriaGianniAPI\\Program.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAmwEQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-06T22:29:09.231Z",
+              "WhenOpened": "2024-12-02T14:49:27.288Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "VentaService.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\VentaService.cs",
-              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\VentaService.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\VentaService.cs",
-              "RelativeToolTip": "ApplicationLayer\\Services\\VentaService.cs",
-              "ViewState": "AQIAACMAAAAAAAAAAAAuwC0AAAAMAAAA",
+              "Title": "LoginTiket.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Helper\\LoginTiket.cs",
+              "RelativeDocumentMoniker": "ApplicationLayer\\Helper\\LoginTiket.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Helper\\LoginTiket.cs",
+              "RelativeToolTip": "ApplicationLayer\\Helper\\LoginTiket.cs",
+              "ViewState": "AQIAAKMAAAAAAAAAAIAwwLQAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-06T22:20:44.133Z",
+              "WhenOpened": "2024-12-02T14:44:03.825Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "ImpresoraTiketService.cs",
-              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "RelativeToolTip": "ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "ViewState": "AQIAAGMAAAAAAAAAAAAwwHIAAAAAAAAA",
+              "Title": "WSFEService.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\WSFEService.cs",
+              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\WSFEService.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\WSFEService.cs",
+              "RelativeToolTip": "ApplicationLayer\\Services\\WSFEService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-11-06T22:13:47.761Z",
+              "WhenOpened": "2024-12-02T14:44:36.923Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AfipService.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\AfipService.cs",
+              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\AfipService.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\AfipService.cs",
+              "RelativeToolTip": "ApplicationLayer\\Services\\AfipService.cs",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAlwCkAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-12-02T14:44:23.784Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AfipController.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\AfipController.cs",
+              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\AfipController.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\AfipController.cs",
+              "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\AfipController.cs",
+              "ViewState": "AQIAADIAAAAAAAAAAAAgwD0AAABNAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-11-30T15:21:19.762Z",
               "EditorCaption": ""
             }
           ]

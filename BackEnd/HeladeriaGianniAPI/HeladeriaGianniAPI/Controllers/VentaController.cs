@@ -67,10 +67,12 @@ namespace HeladeriaGianniAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<VentaDtoRes>> CrearVenta([FromBody] VentaDtoReq ventaDtoReq)
         {
+            string? notaCafe = ventaDtoReq.AclaracionCafeteria;
+            string? notaHelado = ventaDtoReq.AclaracionHeladeria;
             var venta = _mapper.Map<Venta>(ventaDtoReq);
             await _ventaService.RegistrarVenta(venta);
             venta = await _ventaService.ObtenerVentaPorId(venta.Id);
-            impresoraTicketService.ImprimirTicketVenta(venta);
+            impresoraTicketService.ImprimirTicketVenta(venta, ventaDtoReq.AclaracionCafeteria, ventaDtoReq.AclaracionHeladeria);
             var ventaDto = _mapper.Map<VentaDtoRes>(venta);
             return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
         }

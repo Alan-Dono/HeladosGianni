@@ -275,7 +275,7 @@ const PanelCierre = ({ onUpdate }) => {
           <Button onClick={cargarVenta} variant="contained" color="primary" sx={{ mt: 2 }}>
             Buscar Venta
           </Button>
-          {ventaData && (
+          {ventaData && cierreActual (
             <Box sx={{ mt: 2 }}>
               <Typography>Responsable: {cierreActual.empleado.nombreEmpleado + " " + cierreActual.empleado.apellidoEmpleado}</Typography>
               <Typography>Total: ${ventaData.totalVenta}</Typography>

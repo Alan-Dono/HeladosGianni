@@ -1,3 +1,4 @@
+using ApplicationLayer.Helper;
 using ApplicationLayer.Services;
 using DataAccesLayer;
 using DataAccesLayer.Repositories;
@@ -20,9 +21,58 @@ builder.Services.AddDbContext<HeladeriaDbContext>(options =>
 
 // Inyección de dependencias
 
-/*builder.Services.AddScoped<ImpresoraTicketService>(sp =>
-    new ImpresoraTicketService("COM1")); // Ajusta el puerto COM según tu configuración
-*/
+
+// Configuración del AfipService con inyección de dependencias
+// Configuración del LoginTicket como dependencia
+builder.Services.AddScoped<LoginTicket>();
+
+// Configuración del AfipService con inyección de dependencias
+builder.Services.AddScoped<AfipService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+
+    // Validación de configuraciones requeridas
+    string certificatePath = configuration["Afip:CertificatePath"] ?? "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
+    string certPassword = configuration["Afip:CertPassword"] ?? "12345678";
+    string wsaaUrl = configuration["Afip:WsaaUrl"] ?? "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
+
+    // Validar configuración mínima
+    if (string.IsNullOrWhiteSpace(certificatePath) || string.IsNullOrWhiteSpace(certPassword) || string.IsNullOrWhiteSpace(wsaaUrl))
+    {
+        throw new Exception("Faltan configuraciones requeridas para el servicio AFIP en el archivo appsettings.json.");
+    }
+
+    var loginTicket = provider.GetRequiredService<LoginTicket>();
+
+    // Configurar el servicio AFIP con los valores adecuados
+    return new AfipService(configuration, loginTicket);
+});
+
+// Configuración de WSFEService con dependencias
+builder.Services.AddScoped<WSFEService>(provider =>
+{
+    var configuration = provider.GetRequiredService<IConfiguration>();
+    var afipService = provider.GetRequiredService<AfipService>();
+
+    // Leer configuración para CUIT y PUNTO_VENTA
+    string cuit = configuration["Afip:CUIT"];
+    int puntoVenta = int.Parse(configuration["Afip:PuntoVenta"]);
+
+    // Validar configuración de CUIT y PUNTO_VENTA
+    if (string.IsNullOrWhiteSpace(cuit) || puntoVenta <= 0)
+    {
+        throw new Exception("Faltan configuraciones requeridas para el servicio WSFE en el archivo appsettings.json.");
+    }
+
+    return new WSFEService(cuit, puntoVenta, afipService);
+});
+
+
+
+
+// Agregar configuración para leer el archivo appsettings.json
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
 builder.Services.AddScoped<ImpresoraTicketService>();
 
 builder.Services.AddScoped<IEmpleadoRepository, EmpleadoRepository>();

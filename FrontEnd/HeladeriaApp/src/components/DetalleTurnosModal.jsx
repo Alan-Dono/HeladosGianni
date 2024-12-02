@@ -116,7 +116,7 @@ const DetalleTurnoModal = ({ abierto, cerrar, turno }) => {
   ];
 
   console.log('DetalleTurno', cierres);
-  
+
 
   return (
     <>
@@ -150,6 +150,9 @@ const DetalleTurnoModal = ({ abierto, cerrar, turno }) => {
               columns={columns}
               disableSelectionOnClick
               getRowId={(row) => row.id}
+              sortingMode='client'
+              sortingOrder={'desc'}
+
             />
           </Box>
         </Box>

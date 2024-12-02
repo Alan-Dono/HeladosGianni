@@ -7,10 +7,9 @@ import { useTheme } from '@emotion/react';
 import MuiAlert from '@mui/material/Alert';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import { imprimirTicket } from '../utils/Impresora';
 import VentaService from '../services/VentaService';
 
-const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo }) => {
+const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria }) => {
 
     const [codigoDescuento, setCodigoDescuento] = useState('');
     const [mostrarDescuento, setMostrarDescuento] = useState(false);
@@ -107,11 +106,13 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                     cantidad: producto.cantidad,        // Cantidad del producto
                     precioUnitario: producto.precio,    // Precio del producto
                 })),
+                AclaracionCafeteria: aclaracionCafeteria,
+                AclaracionHeladeria: aclaracionHeladeria
             };
+            console.log("ventaData", ventaData);
 
             // Llamar a la función del servicio para registrar la venta
             const response = await VentaService.registrarVenta(ventaData);
-            imprimirTicket(ventaData)
             // Limpiar los estados y mostrar mensaje de éxito
             setCarrito([]);
             setSubtotal(0);
@@ -123,6 +124,8 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             setTipoAlerta("success");
             setSnackbarAbierto(true);
             setConfirmarVentaAbierto(false);
+            setAclaracionCafeteria('');
+            setAclaracionHeladeria('');
 
         } catch (error) {
             setTipoAlerta("error");
@@ -140,7 +143,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     };
 
     return (
-        <Box sx={{ border: '1px solid #ccc', borderRadius: '4px', padding: 2, height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ border: '1px solid #ccc', borderRadius: '4px', padding: 1, height: '100%', display: 'flex', flexDirection: 'column' }}>
             <Typography variant="h6" sx={{ marginBottom: 2 }}>Orden de Compra</Typography>
             <Box sx={{ flex: 1, overflowY: 'auto', marginBottom: 2 }}>
                 {carrito.length === 0 ? (
@@ -157,6 +160,8 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                     ))
                 )}
             </Box>
+
+
 
             <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
                 <TextField
@@ -180,6 +185,8 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                     Aplicar
                 </Button>
             </Box>
+
+
 
             <Box sx={{ marginBottom: 2 }}>
                 <Typography variant="h6">Subtotal: ${subtotal.toFixed(2)}</Typography>

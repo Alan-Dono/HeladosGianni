@@ -45,6 +45,7 @@ namespace DataAccesLayer
                 .WithMany()
                 .HasForeignKey(p => p.ProductoCategoriaId);
 
+   
         }
 
         public DbSet<ProductoCategoria> ProductoCategorias { get; set; }

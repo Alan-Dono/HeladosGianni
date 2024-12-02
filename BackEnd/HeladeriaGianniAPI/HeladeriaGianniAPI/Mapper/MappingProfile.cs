@@ -3,6 +3,8 @@ using DomainLayer.Models;
 using HeladeriaGianniAPI.DTOs.Request;
 using HeladeriaGianniAPI.DTOs.Response;
 
+
+
 namespace HeladeriaGianniAPI.Mapper
 {
     public class MappingProfile : Profile
@@ -73,6 +75,8 @@ namespace HeladeriaGianniAPI.Mapper
 
             CreateMap<TurnoDtoReq, Turno>();
 
+
+
         }
 
         private List<int> MapIdsCierreCajasEnTurno(Turno turno , TurnoDtoRes dto)
@@ -142,5 +146,7 @@ namespace HeladeriaGianniAPI.Mapper
         {
             return cierreCaja.Ventas.Count();
         }
+
+
     }
 }
