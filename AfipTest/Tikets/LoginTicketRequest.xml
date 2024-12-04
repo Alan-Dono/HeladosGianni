@@ -1,8 +1,8 @@
 <loginTicketRequest>
   <header>
     <uniqueId>1</uniqueId>
-    <generationTime>2024-12-02T12:18:02</generationTime>
-    <expirationTime>2024-12-02T12:38:02</expirationTime>
+    <generationTime>2024-12-04T12:44:34</generationTime>
+    <expirationTime>2024-12-04T13:04:34</expirationTime>
   </header>
   <service>wsfe</service>
 </loginTicketRequest>

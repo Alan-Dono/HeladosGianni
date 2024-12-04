@@ -13,6 +13,13 @@ namespace ApplicationLayer.Helper
 {
     public class LoginTicket
     {
+        // Valores por defecto, globales en esta clase
+        const string url = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
+        const string servicio = "wsfe";
+        const string certificado = "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
+        string plainPassword = "12345678";
+
+
         public UInt32 UniqueId; // Entero de 32 bits sin signo que identifica el requerimiento
         public DateTime GenerationTime; // Momento en que fue generado el requerimiento
         public DateTime ExpirationTime; // Momento en el que expira la solicitud
@@ -24,6 +31,18 @@ namespace ApplicationLayer.Helper
         public string RutaDelCertificadoFirmante;
         public string XmlStrLoginTicketRequestTemplate = "<loginTicketRequest><header><uniqueId></uniqueId><generationTime></generationTime><expirationTime></expirationTime></header><service></service></loginTicketRequest>";
         private static UInt32 _globalUniqueID = 0; // OJO! NO ES THREAD-SAFE
+
+        public async Task<TokenResult> ObtenerCredenciales()
+        {
+            var token = new TokenResult();
+            var esValido = await ValidarFechaExpiracionAsync();
+            if (!esValido)
+            {
+                await ObtenerLoginTicketResponse(servicio, url, certificado, plainPassword);
+            }
+            token = await ObtenerTokenYFirma();
+            return token;
+        }
 
         /// <summary>
         /// Construye un Login Ticket obtenido del WSAA
@@ -212,6 +231,8 @@ namespace ApplicationLayer.Helper
                 return false;
             }
         }
+
+
 
 
 

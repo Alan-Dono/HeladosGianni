@@ -48,6 +48,8 @@ builder.Services.AddScoped<AfipService>(provider =>
     return new AfipService(configuration, loginTicket);
 });
 
+
+
 // Configuración de WSFEService con dependencias
 builder.Services.AddScoped<WSFEService>(provider =>
 {

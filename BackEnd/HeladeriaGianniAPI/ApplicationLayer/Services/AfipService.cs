@@ -31,17 +31,32 @@ namespace ApplicationLayer.Services
             this.loginTicket = loginTicket;
         }
 
+        public async Task<TokenResult> ObtenerCredenciales()
+        {
+            return await loginTicket.ObtenerCredenciales(); 
+        }
+
+        /// <summary>
+        /// Metodo para testear
+        /// </summary>
+        /// <returns></returns>
         public async Task<string> ObtenerNuevoTokenYfirma() // Solicitud a WSAA de AFIP
         {
             return await loginTicket.ObtenerLoginTicketResponse(servicio, url,certificado, plainPassword );
         }
-
+        /// <summary>
+        /// Metodo para testear
+        /// </summary>
+        /// <returns></returns>
         public async Task<TokenResult> ObtenerTokenYFirma() // Lee y valida el tiket response del archivo local. Devuelve token y sign
         {
             return await loginTicket.ObtenerTokenYFirma();
         }
-
-       public async Task<bool> ValidarExpiracion() // Valida la fechan de expiracion devuelve true o false
+        /// <summary>
+        /// Metodo para testear
+        /// </summary>
+        /// <returns></returns>
+        public async Task<bool> ValidarExpiracion() // Valida la fechan de expiracion devuelve true o false
         {
             return await loginTicket.ValidarFechaExpiracionAsync();
         }

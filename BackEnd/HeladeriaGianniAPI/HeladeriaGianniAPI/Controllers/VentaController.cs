@@ -63,9 +63,9 @@ namespace HeladeriaGianniAPI.Controllers
             return Ok(ventasDto);
         }
 
-        // Crear una nueva venta
-        [HttpPost]
-        public async Task<ActionResult<VentaDtoRes>> CrearVenta([FromBody] VentaDtoReq ventaDtoReq)
+        // Crear una nueva venta normal
+        [HttpPost("crear-venta-normal", Name = "CrearVentaNormal")]
+        public async Task<ActionResult<VentaDtoRes>> CrearVentaNormal([FromBody] VentaDtoReq ventaDtoReq)
         {
             string? notaCafe = ventaDtoReq.AclaracionCafeteria;
             string? notaHelado = ventaDtoReq.AclaracionHeladeria;
@@ -76,6 +76,21 @@ namespace HeladeriaGianniAPI.Controllers
             var ventaDto = _mapper.Map<VentaDtoRes>(venta);
             return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
         }
+
+        // Crear una nueva venta fiscal
+        [HttpPost("crear-venta-fiscal", Name = "CrearVentaFiscal")]
+        public async Task<ActionResult<VentaDtoRes>> CrearVentaFiscal([FromBody] VentaDtoReq ventaDtoReq)
+        {
+            string? notaCafe = ventaDtoReq.AclaracionCafeteria;
+            string? notaHelado = ventaDtoReq.AclaracionHeladeria;
+            var venta = _mapper.Map<Venta>(ventaDtoReq);
+            await _ventaService.RegistrarVenta(venta);
+            venta = await _ventaService.ObtenerVentaPorId(venta.Id);
+            impresoraTicketService.ImprimirTicketVentaFiscal(venta, ventaDtoReq.AclaracionCafeteria, ventaDtoReq.AclaracionHeladeria);
+            var ventaDto = _mapper.Map<VentaDtoRes>(venta);
+            return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
+        }
+
 
         // Eliminar una venta
         [HttpPut("{id}")]

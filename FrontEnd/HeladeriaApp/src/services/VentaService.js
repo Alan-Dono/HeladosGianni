@@ -4,6 +4,7 @@ import {
   anularVenta,
   getVentaById,
   getVentasPorCierreCaja,
+  crearVentaFiscal,
 } from "../api/ApiVentas";
 
 const VentaService = {
@@ -12,6 +13,22 @@ const VentaService = {
     try {
       // Llamar a la API para guardar la venta en la base de datos
       const response = await crearVenta(ventaData);
+      const ventaCreada = response;
+
+      // Imprimir el ticket
+      imprimirTicket(ventaCreada);
+
+      //return ventaCreada; // Retorna la venta creada
+    } catch (error) {
+      console.error("Error al crear la venta", error);
+      throw error; // Re-lanzar el error para que pueda ser manejado en el componente
+    }
+  },
+
+  registrarVentaFiscal: async (ventaData) => {
+    try {
+      // Llamar a la API para guardar la venta en la base de datos
+      const response = await crearVentaFiscal(ventaData);
       const ventaCreada = response;
 
       // Imprimir el ticket

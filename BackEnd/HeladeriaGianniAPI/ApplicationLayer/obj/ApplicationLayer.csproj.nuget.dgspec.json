@@ -65,6 +65,10 @@
               "target": "Package",
               "version": "[1.9.0, )"
             },
+            "QRCoder": {
+              "target": "Package",
+              "version": "[1.6.0, )"
+            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[8.0.10, )"
@@ -96,6 +100,10 @@
             "System.ServiceModel.Security": {
               "target": "Package",
               "version": "[6.0.*, )"
+            },
+            "ZXing.Net": {
+              "target": "Package",
+              "version": "[0.16.9, )"
             }
           },
           "imports": [

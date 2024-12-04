@@ -11,7 +11,7 @@ namespace ApplicationLayer.Services
         private readonly string CUIT;
         private readonly int PUNTO_VENTA;
         private readonly AfipService afipService;
-        private TokenResult Credenciales = null;
+        private TokenResult Credenciales;
 
         public WSFEService(string cuit, int puntoVenta, AfipService afipService )
         {
@@ -20,19 +20,14 @@ namespace ApplicationLayer.Services
             this.afipService = afipService;
         }
 
-        private async void ObtenerCredenciales()
+        private async Task ObtenerCredenciales()
         {
-            var esValido = await afipService.ValidarExpiracion();
-            if (!esValido)
-            {
-                await afipService.ObtenerNuevoTokenYfirma();
-            }
-            Credenciales = await afipService.ObtenerTokenYFirma();
+            Credenciales = await afipService.ObtenerCredenciales();
         }
 
         public async Task<FacturaResponse> GenerarFacturaConsumidorFinal(decimal montoTotal, string concepto = "Productos")
         {
-            ObtenerCredenciales();
+            await ObtenerCredenciales();
             try
             {
                 // 1. Preparar autenticación

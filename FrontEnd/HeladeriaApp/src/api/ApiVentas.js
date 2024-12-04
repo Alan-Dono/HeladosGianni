@@ -43,7 +43,8 @@ export const getVentasEntreFechas = async (desde, hasta) => {
 // Función para crear una nueva venta
 export const crearVenta = async (ventaData) => {
   try {
-    {/*
+    {
+      /*
     const ventaObj = {
       FechaDeVenta: venta.fechaDeVenta,
       TotalVenta: venta.totalVenta,
@@ -55,10 +56,15 @@ export const crearVenta = async (ventaData) => {
         PrecioUnitario: detalle.precioUnitario,
       })),
     };
-    */}
+    */
+    }
     console.log("log api/", ventaData);
+    const response = await apiClient.post(
+      "/ventas/crear-venta-normal",
+      ventaData
+    );
 
-    const response = await apiClient.post("/ventas", ventaData);
+    //const response = await apiClient.post("/ventas", ventaData);
     return response.data;
   } catch (error) {
     console.error("Error al crear la venta", error);
@@ -66,6 +72,22 @@ export const crearVenta = async (ventaData) => {
   }
 };
 
+// Función para crear una nueva venta
+export const crearVentaFiscal = async (ventaData) => {
+  try {
+    console.log("log api/", ventaData);
+    const response = await apiClient.post(
+      "/ventas/crear-venta-fiscal",
+      ventaData
+    );
+
+    //const response = await apiClient.post("/ventas", ventaData);
+    return response.data;
+  } catch (error) {
+    console.error("Error al crear la venta", error);
+    throw error;
+  }
+};
 // Función para eliminar una venta (anular)
 export const anularVenta = async (id) => {
   try {

@@ -8,6 +8,7 @@ import MuiAlert from '@mui/material/Alert';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VentaService from '../services/VentaService';
+import { use } from 'framer-motion/client';
 
 const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria }) => {
 
@@ -19,8 +20,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     const [mensajeSnackbar, setMensajeSnackbar] = useState("");
     const [tipoAlerta, setTipoAlerta] = useState("error");
     const [confirmarVentaAbierto, setConfirmarVentaAbierto] = useState(false);
-
-
+    const [esFiscal, setEsFiscal] = useState(false);
 
     const theme = useTheme();
 
@@ -82,7 +82,10 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             setSnackbarAbierto(true);
             return;
         }
+        setEsFiscal(false);
         setConfirmarVentaAbierto(true);
+
+
     };
     const manejarTiketFiscal = () => {
         if (carrito.length === 0) {
@@ -91,7 +94,9 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             setSnackbarAbierto(true);
             return;
         }
+        setEsFiscal(true)
         setConfirmarVentaAbierto(true);
+
     };
 
     const confirmarVenta = async () => {
@@ -111,8 +116,14 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             };
             console.log("ventaData", ventaData);
 
-            // Llamar a la función del servicio para registrar la venta
-            const response = await VentaService.registrarVenta(ventaData);
+            if (esFiscal) {
+                const response = await VentaService.registrarVentaFiscal(ventaData);
+            }
+            else {
+                // Llamar a la función del servicio para registrar la venta
+                const response = await VentaService.registrarVenta(ventaData);
+            }
+
             // Limpiar los estados y mostrar mensaje de éxito
             setCarrito([]);
             setSubtotal(0);
@@ -133,9 +144,6 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             setSnackbarAbierto(true);
         }
     };
-
-
-
 
 
     const cerrarAlerta = () => {
