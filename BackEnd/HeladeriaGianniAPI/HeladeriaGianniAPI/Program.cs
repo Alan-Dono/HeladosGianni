@@ -119,7 +119,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp", builder =>
     {
-        builder.WithOrigins("http://localhost:5173") // Asegúrate de que esta URL sea correcta
+        builder.WithOrigins("http://localhost:5175") // Asegúrate de que esta URL sea correcta
                .AllowAnyMethod()
                .AllowAnyHeader();
     });
@@ -146,6 +146,7 @@ using (var scope = app.Services.CreateScope())
     }
 }
 #endregion
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

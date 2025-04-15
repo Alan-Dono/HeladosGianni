@@ -20,7 +20,7 @@ namespace ApplicationLayer.Services
         // Valores por defecto, globales en esta clase
         const string url = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
         const string servicio = "wsfe";
-        const string certificado = "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
+        const string certificado = "C:\\Users\\LENOVO\\Desktop\\Proyecto\\HeladosGianni\\DatosARCA\\certificado.pfx";
 
 
        

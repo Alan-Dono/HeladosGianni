@@ -22,9 +22,7 @@
           "System.ServiceModel.Http": "6.0.0",
           "System.ServiceModel.NetTcp": "6.0.0",
           "System.ServiceModel.Security": "6.0.0",
-          "ZXing.Net": "0.16.9",
-          "Microsoft.PointOfService.Service": "1.14.1.0",
-          "Microsoft.PointOfService.WMI": "1.14.1.0"
+          "ZXing.Net": "0.16.9"
         },
         "runtime": {
           "ApplicationLayer.dll": {}
@@ -1272,7 +1270,10 @@
           "System.Drawing.Common": "8.0.10"
         },
         "runtime": {
-          "DataAccesLayer.dll": {}
+          "DataAccesLayer.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "DomainLayer/1.0.0": {
@@ -1288,22 +1289,9 @@
           "System.ServiceModel.Security": "6.0.0"
         },
         "runtime": {
-          "DomainLayer.dll": {}
-        }
-      },
-      "Microsoft.PointOfService.Service/1.14.1.0": {
-        "runtime": {
-          "Microsoft.PointOfService.Service.exe": {
-            "assemblyVersion": "1.14.1.0",
-            "fileVersion": "1.14.1.0"
-          }
-        }
-      },
-      "Microsoft.PointOfService.WMI/1.14.1.0": {
-        "runtime": {
-          "Microsoft.PointOfService.WMI.dll": {
-            "assemblyVersion": "1.14.1.0",
-            "fileVersion": "1.14.1.0"
+          "DomainLayer.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
           }
         }
       }
@@ -2169,16 +2157,6 @@
     },
     "DomainLayer/1.0.0": {
       "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Microsoft.PointOfService.Service/1.14.1.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Microsoft.PointOfService.WMI/1.14.1.0": {
-      "type": "reference",
       "serviceable": false,
       "sha512": ""
     }

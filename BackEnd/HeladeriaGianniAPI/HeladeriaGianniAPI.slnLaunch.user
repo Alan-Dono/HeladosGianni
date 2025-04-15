@@ -1,0 +1,11 @@
+[
+  {
+    "Name": "Nuevo perfil",
+    "Projects": [
+      {
+        "Path": "HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
