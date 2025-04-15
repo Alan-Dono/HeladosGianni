@@ -32,6 +32,7 @@ FrontEnd/HeladeriaApp/lerna-debug.log*
 
 # Archivos locales
 FrontEnd/HeladeriaApp/*.local
+DatosARCA/
 
 # Directorios y archivos de editores
 FrontEnd/HeladeriaApp/.vscode/
