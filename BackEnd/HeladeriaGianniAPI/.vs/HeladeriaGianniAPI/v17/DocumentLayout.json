@@ -1,0 +1,72 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\dataacceslayer\\heladeriadbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\heladeriadbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2B804759-1C5C-400E-9AF9-17042C9CF338}|DomainLayer\\DomainLayer.csproj|c:\\www\\heladeria-gianni\\backend\\heladeriagianniapi\\domainlayer\\models\\facturaafip.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{2B804759-1C5C-400E-9AF9-17042C9CF338}|DomainLayer\\DomainLayer.csproj|solutionrelative:domainlayer\\models\\facturaafip.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "HeladeriaDbContext.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\HeladeriaDbContext.cs",
+              "RelativeDocumentMoniker": "DataAccesLayer\\HeladeriaDbContext.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\HeladeriaDbContext.cs",
+              "RelativeToolTip": "DataAccesLayer\\HeladeriaDbContext.cs",
+              "ViewState": "AQIAADYAAAAAAAAAAAAYwEMAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-09T14:30:26.043Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "FacturaAfip.cs",
+              "DocumentMoniker": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\Models\\FacturaAfip.cs",
+              "RelativeDocumentMoniker": "DomainLayer\\Models\\FacturaAfip.cs",
+              "ToolTip": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\Models\\FacturaAfip.cs",
+              "RelativeToolTip": "DomainLayer\\Models\\FacturaAfip.cs",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAAAsAAAApAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-07-09T14:25:51.567Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 89,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{eefa5220-e298-11d0-8f78-00a0c9110057}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

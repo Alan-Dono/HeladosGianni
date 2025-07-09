@@ -1,0 +1,24 @@
+{
+  "ExtendedData": {
+    "inputs": [
+      "https://wsaahomo.afip.gov.ar/ws/services/LoginCms"
+    ],
+    "collectionTypes": [
+      "System.Array",
+      "System.Collections.Generic.Dictionary`2"
+    ],
+    "namespaceMappings": [
+      "*, AfipWSAA"
+    ],
+    "references": [
+      "Microsoft.AspNetCore.JsonPatch, {Microsoft.AspNetCore.JsonPatch, 8.0.8}",
+      "Microsoft.AspNetCore.Mvc.NewtonsoftJson, {Microsoft.AspNetCore.Mvc.NewtonsoftJson, 8.0.8}",
+      "Microsoft.Win32.SystemEvents, {Microsoft.Win32.SystemEvents, 8.0.0}",
+      "Newtonsoft.Json, {Newtonsoft.Json, 13.0.3}",
+      "Newtonsoft.Json.Bson, {Newtonsoft.Json.Bson, 1.0.2}",
+      "System.Drawing.Common, {System.Drawing.Common, 8.0.10}"
+    ],
+    "targetFramework": "net8.0",
+    "typeReuseMode": "All"
+  }
+}
