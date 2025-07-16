@@ -58,35 +58,35 @@ const Nav = ({ isDarkMode, toggleTheme }) => {
                     {open && <ListItemText primary="MENU" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
                 </ListItemButton>
 
-                <ListItemButton  component={Link} to="/">
+                <ListItemButton component={Link} to="/">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <Home sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="HOME" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
                 </ListItemButton>
 
-                <ListItemButton  component={Link} to="/ventas">
+                <ListItemButton component={Link} to="/ventas">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <ShoppingCart sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="VENTAS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
                 </ListItemButton>
 
-                <ListItemButton  component={Link} to="/productos">
+                <ListItemButton component={Link} to="/productos">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <Store sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="PRODUCTOS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
                 </ListItemButton>
 
-                <ListItemButton  component={Link} to="/empleados">
+                <ListItemButton component={Link} to="/empleados">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <People sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>
                     {open && <ListItemText primary="EMPLEADOS" sx={{ marginLeft: 2, fontSize: 20, color: textColor }} />}
                 </ListItemButton>
 
-                <ListItemButton  component={Link} to="/turnos">
+                <ListItemButton component={Link} to="/turnos">
                     <ListItemIcon sx={{ minWidth: 0, justifyContent: 'center' }}>
                         <Today sx={{ fontSize: 40, color: textColor }} />
                     </ListItemIcon>

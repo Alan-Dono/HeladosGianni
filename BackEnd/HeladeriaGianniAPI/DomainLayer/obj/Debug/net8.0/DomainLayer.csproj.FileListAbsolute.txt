@@ -6,6 +6,7 @@ C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\DomainLayer.AssemblyInfoInputs.cache
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\DomainLayer.AssemblyInfo.cs
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\DomainLayer.csproj.CoreCompileInputs.cache
+C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\DomainLayer.sourcelink.json
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\DomainLayer.dll
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\refint\DomainLayer.dll
 C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Debug\net8.0\DomainLayer.pdb

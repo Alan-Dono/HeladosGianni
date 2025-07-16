@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import ProductoCard from '../components/ProductoCard';
 import OrdenCompra from '../components/OrdenCompra';
-import { Box, Button, Slide, Snackbar } from '@mui/material';
+import { Box, Button, Slide, Snackbar, Typography, CircularProgress, Fade } from '@mui/material';
 import { useTheme } from '@emotion/react';
 import CategoriaProductoService from '../services/CategoriaProductoService';
 import CierreCajaService from '../services/CierreCajaService';
 import ProductoService from '../services/ProductoService';
 import MuiAlert from '@mui/material/Alert';
 import AclaracionModal from '../components/AclaracionModal';
+import { useNavigate } from 'react-router-dom';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const Ventas = () => {
+
+    const theme = useTheme();
+    const navigate = useNavigate();
     const [carrito, setCarrito] = useState([]);
     const [descuento, setDescuento] = useState(0);
     const [categorias, setCategorias] = useState([]);
@@ -17,28 +22,48 @@ const Ventas = () => {
     const [total, setTotal] = useState(0);
     const [cierreActivo, setCierreActivo] = useState(null);
     const [vistaActual, setVistaActual] = useState('favoritos');
-
+    const [cargando, setCargando] = useState(true);
     const [snackbarAbierto, setSnackbarAbierto] = useState(false);
     const [mensajeSnackbar, setMensajeSnackbar] = useState('');
     const [tipoAlerta, setTipoAlerta] = useState('success');
-
     const [aclaracionCafeteria, setAclaracionCafeteria] = useState("");
     const [aclaracionHeladeria, setAclaracionHeladeria] = useState("");
     const [modalCafeteriaOpen, setModalCafeteriaOpen] = useState(false);
     const [modalHeladeriaOpen, setModalHeladeriaOpen] = useState(false);
 
+    // Funciones para abrir modales
     const abrirModalCafeteria = () => setModalCafeteriaOpen(true);
-    const cerrarModalCafeteria = () => setModalCafeteriaOpen(false);
     const abrirModalHeladeria = () => setModalHeladeriaOpen(true);
-    const cerrarModalHeladeria = () => setModalHeladeriaOpen(false);
 
+    // Funciones para cerrar modales (con limpieza)
+    const cerrarModalCafeteria = () => {
+        setModalCafeteriaOpen(false);
+    };
+
+    const cerrarModalHeladeria = () => {
+        setModalHeladeriaOpen(false);
+    };
+
+    // Funciones para guardar las aclaraciones
     const handleSaveCafeteria = (aclaracion) => {
-        setAclaracionCafeteria(aclaracion);
+        setAclaracionCafeteria(aclaracion); // Guardar directamente
+        cerrarModalCafeteria();
     };
 
     const handleSaveHeladeria = (aclaracion) => {
-        setAclaracionHeladeria(aclaracion);
+        setAclaracionHeladeria(aclaracion); // Guardar directamente
+        cerrarModalHeladeria();
     };
+
+    // Funciones de cancelación específicas (para usar en el modal)
+    const handleCancelCafeteria = () => {
+        setAclaracionCafeteria("");
+    };
+
+    const handleCancelHeladeria = () => {
+        setAclaracionHeladeria("");
+    };
+
 
 
     const [productos, setProductos] = useState({
@@ -49,20 +74,10 @@ const Ventas = () => {
         promociones: []
     });
 
-    // Función para cerrar la alerta
-    const cerrarAlerta = (event, reason) => {
-        // Evitar el cierre del Snackbar si se cierra debido a un clic fuera del Snackbar
-        if (reason === 'clickaway') {
-            return;
-        }
-        setSnackbarAbierto(false);
-    };
-
-
-
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setCargando(true);
                 const [categoriasData, cierre, favoritosData] = await Promise.all([
                     CategoriaProductoService.obtenerCategoriasConProductos(),
                     CierreCajaService.obtenerActivo(),
@@ -92,14 +107,20 @@ const Ventas = () => {
                 setProductos(productosPorCategoria);
             } catch (error) {
                 console.error('Error al obtener datos:', error);
+            } finally {
+                setCargando(false);
             }
         };
 
         fetchData();
     }, []);
 
-    useEffect(() => {
-    }, [productos.favoritos]);
+    const cerrarAlerta = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarAbierto(false);
+    };
 
     const agregarProducto = (producto) => {
         if (!producto || !producto.id) return;
@@ -116,37 +137,50 @@ const Ventas = () => {
     };
 
     const toggleFavorito = async (producto) => {
-        if (!producto || !producto.id) {
+        if (!producto?.id) {
             console.error("Producto no válido:", producto);
             return;
         }
 
-        setProductos((prevProductos) => {
-            const favoritos = [...prevProductos.favoritos];
-            const productoExistente = favoritos.find((fav) => fav?.id === producto.id);
+        try {
+            // Optimización: Usar `prevProductos` para evitar dependencias externas
+            setProductos((prevProductos) => {
+                const esFavorito = prevProductos.favoritos.some(fav => fav.id === producto.id);
 
-            if (productoExistente) {
-                ProductoService.eliminarDeFavoritos(producto.id);
-                // Configurar mensaje y tipo de alerta
-                setMensajeSnackbar(`Eliminado de favoritos.`);
-                setTipoAlerta('warning'); // Puedes usar 'warning' para un color naranja
+                // Llamada a la API (debe ser await, pero dentro de una función async aparte)
+                const actualizarFavoritos = async () => {
+                    if (esFavorito) {
+                        await ProductoService.eliminarDeFavoritos(producto.id);
+                    } else {
+                        await ProductoService.agregarAFavoritos(producto.id);
+                    }
+                };
+
+                // Ejecutar la actualización sin bloquear la UI
+                actualizarFavoritos().catch(console.error);
+
+                // Feedback visual inmediato (optimista)
+                setMensajeSnackbar(
+                    esFavorito
+                        ? "Eliminado de favoritos"
+                        : "Agregado a favoritos"
+                );
+                setTipoAlerta(esFavorito ? "warning" : "success");
                 setSnackbarAbierto(true);
+
                 return {
                     ...prevProductos,
-                    favoritos: favoritos.filter((fav) => fav?.id !== producto.id),
+                    favoritos: esFavorito
+                        ? prevProductos.favoritos.filter(fav => fav.id !== producto.id)
+                        : [...prevProductos.favoritos, producto]
                 };
-            } else {
-                ProductoService.agregarAFavoritos(producto.id);
-                setMensajeSnackbar(`Agregado a favoritos`);
-                setTipoAlerta('success'); // Puedes usar 'success' o 'info'
-                setSnackbarAbierto(true);
-                return {
-                    ...prevProductos,
-                    favoritos: [...favoritos, producto],
-                };
-            }
-
-        });
+            });
+        } catch (error) {
+            console.error("Error al actualizar favoritos:", error);
+            setMensajeSnackbar("Error al actualizar favoritos");
+            setTipoAlerta("error");
+            setSnackbarAbierto(true);
+        }
     };
 
     const restarProducto = (id) => {
@@ -207,132 +241,208 @@ const Ventas = () => {
         setAclaracionHeladeria("");
     };
 
-
     return (
         <Box sx={{
             display: 'flex',
             height: '100vh',
             p: 1,
-            gap: 1
+            gap: 1,
+            position: 'relative'
         }}>
-            <Box sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                height: '100%',
-                gap: 1
-            }}>
+            {/* 1. Estado de carga */}
+            <Fade in={cargando} timeout={{ enter: 300, exit: 200 }}>
                 <Box sx={{
-                    flex: 1,
-                    backgroundColor: 'background.paper',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.7)',
+                    zIndex: 2000,
                     display: 'flex',
-                    flexDirection: 'column'
+                    justifyContent: 'center',
+                    alignItems: 'center',
                 }}>
-                    {renderizarVistaActual()}
+                    <CircularProgress size={80} color="primary" />
                 </Box>
+            </Fade>
 
+            {/* 2. Estado sin cierre activo */}
+            {!cargando && !cierreActivo && (
                 <Box sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(7, 1fr)',
-                    gap: '8px',
-                    p: 1,
-                    backgroundColor: 'background.paper',
-                    borderRadius: '4px',
-                    height: '60px'
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    backgroundColor: 'rgba(0,0,0,0.85)',
+                    zIndex: 1000,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    color: 'white',
+                    gap: 3,
+                    p: 4,
+                    textAlign: 'center'
                 }}>
-                    {['favoritos', 'cafeteria', 'heladeria', 'confiteria', 'promociones'].map((categoria) => (
-                        <Button
-                            key={categoria}
-                            variant={vistaActual === categoria ? 'contained' : 'outlined'}
-                            onClick={() => setVistaActual(categoria)}
-                            sx={{
-                                height: '100%',
-                                fontSize: { xs: '0.7rem', sm: '1rem' }, // reducir la fuente en pantallas pequeñas
-                                fontWeight: 'medium',
-                                borderRadius: '4px',
-                                textTransform: 'capitalize',
-                                padding: { xs: '2px', sm: '6px' }, // menor padding en pantallas pequeñas
-                            }}
-                        >
-                            {categoria}
-                        </Button>
-                    ))}
-                    {/* Botón Nota Cafe */}
+                    <Box sx={{
+                        bgcolor: 'error.main',
+                        p: 2,
+                        borderRadius: '50%',
+                        mb: 2
+                    }}>
+                        <WarningIcon sx={{ fontSize: 60 }} />
+                    </Box>
+                    <Typography variant="h4" sx={{ fontWeight: 'bold' }}>
+                        Turno no iniciado
+                    </Typography>
+                    <Typography variant="h6">
+                        No se pueden registrar ventas sin un turno activo
+                    </Typography>
+                    <Typography sx={{ mb: 3 }}>
+                        Por favor, inicie un nuevo turno en el Panel de Caja
+                    </Typography>
                     <Button
-                        variant='contained'
+                        variant="contained"
+                        size="large"
+                        color="warning"
+                        onClick={() => navigate('/turnos')}
                         sx={{
-                            height: '100%',
-                            fontSize: { xs: '0.7rem', sm: '1rem' },
-                            fontWeight: 'medium',
-                            borderRadius: '4px',
-                            textTransform: 'capitalize',
-                            padding: { xs: '2px', sm: '6px' },
-                            backgroundColor: '#FF7043', // Rojo anaranjado (Color en hex)
-                            '&:hover': {
-                                backgroundColor: '#FF5722', // Un tono más fuerte en el hover
-                            }
+                            fontSize: '1.2rem',
+                            px: 4,
+                            py: 1.5,
+                            fontWeight: 'bold'
                         }}
-                        onClick={() => abrirModalCafeteria()}
                     >
-                        Nota Cafe
+                        Ir a Panel de Cierre
                     </Button>
-                    {/* Botón Nota Helados */}
-                    <Button
-                        variant='contained'
-                        sx={{
-                            height: '100%',
-                            fontSize: { xs: '0.7rem', sm: '1rem' },
-                            fontWeight: 'medium',
-                            borderRadius: '4px',
-                            textTransform: 'capitalize',
-                            padding: { xs: '2px', sm: '6px' },
-                            backgroundColor: '#FF7043', // Rojo anaranjado (Color en hex)
-                            '&:hover': {
-                                backgroundColor: '#FF5722', // Un tono más fuerte en el hover
-                            }
-                        }}
-                        onClick={() => abrirModalHeladeria()}
-                    >
-                        Nota Helados
-                    </Button>
-
-
                 </Box>
+            )}
 
+            {/* 3. Estado con contenido */}
+            {!cargando && cierreActivo && (
+                <>
+                    <Box sx={{
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        height: '100%',
+                        gap: 1,
+                        opacity: cargando ? 0 : 1,
+                        transition: 'opacity 0.5s ease'
+                    }}>
+                        <Box sx={{
+                            flex: 1,
+                            backgroundColor: 'background.paper',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}>
+                            {renderizarVistaActual()}
+                        </Box>
 
-            </Box>
+                        <Box sx={{
+                            display: 'grid',
+                            gridTemplateColumns: 'repeat(7, 1fr)',
+                            gap: '8px',
+                            p: 1,
+                            backgroundColor: 'background.paper',
+                            borderRadius: '4px',
+                            height: '60px'
+                        }}>
+                            {['favoritos', 'cafeteria', 'heladeria', 'confiteria', 'promociones'].map((categoria) => (
+                                <Button
+                                    key={categoria}
+                                    variant={vistaActual === categoria ? 'contained' : 'outlined'}
+                                    onClick={() => setVistaActual(categoria)}
+                                    sx={{
+                                        height: '100%',
+                                        fontSize: { xs: '0.7rem', sm: '1rem' },
+                                        fontWeight: 'medium',
+                                        borderRadius: '4px',
+                                        textTransform: 'capitalize',
+                                        padding: { xs: '2px', sm: '6px' },
+                                    }}
+                                >
+                                    {categoria}
+                                </Button>
+                            ))}
+                            <Button
+                                variant='contained'
+                                sx={{
+                                    height: '100%',
+                                    fontSize: { xs: '0.7rem', sm: '1rem' },
+                                    fontWeight: 'medium',
+                                    borderRadius: '4px',
+                                    textTransform: 'capitalize',
+                                    padding: { xs: '2px', sm: '6px' },
+                                    backgroundColor: theme.palette.warning.main,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.warning.dark || theme.palette.warning.main,
+                                    }
+                                }}
+                                onClick={() => abrirModalCafeteria()}
+                            >
+                                Nota Cafe
+                            </Button>
+                            <Button
+                                variant='contained'
+                                sx={{
+                                    height: '100%',
+                                    fontSize: { xs: '0.7rem', sm: '1rem' },
+                                    fontWeight: 'medium',
+                                    borderRadius: '4px',
+                                    textTransform: 'capitalize',
+                                    padding: { xs: '2px', sm: '6px' },
+                                    backgroundColor: theme.palette.warning.main,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.warning.dark || theme.palette.warning.main,
+                                    }
+                                }}
+                                onClick={() => abrirModalHeladeria()}
+                            >
+                                Nota Helados
+                            </Button>
+                        </Box>
+                    </Box>
 
-            <Box sx={{ width: '30%' }}>
-                <OrdenCompra
-                    carrito={carrito}
-                    setCarrito={setCarrito}
-                    subtotal={subtotal}
-                    setSubtotal={setSubtotal}
-                    descuento={descuento}
-                    total={total}
-                    setTotal={setTotal}
-                    setDescuento={setDescuento}
-                    agregar={agregarProducto}
-                    restar={restarProducto}
-                    eliminar={eliminarProducto}
-                    cierreActivo={cierreActivo}
-                    aclaracionCafeteria={aclaracionCafeteria}
-                    setAclaracionCafeteria={setAclaracionCafeteria}
-                    aclaracionHeladeria={aclaracionHeladeria}
-                    setAclaracionHeladeria={setAclaracionHeladeria}
-                    reiniciarAclaraciones={reiniciarAclaraciones}  // <-- Nueva prop
-                />
-            </Box>
+                    <Box sx={{
+                        width: '30%',
+                        opacity: cargando ? 0 : 1,
+                        transition: 'opacity 0.5s ease'
+                    }}>
+                        <OrdenCompra
+                            carrito={carrito}
+                            setCarrito={setCarrito}
+                            subtotal={subtotal}
+                            setSubtotal={setSubtotal}
+                            descuento={descuento}
+                            total={total}
+                            setTotal={setTotal}
+                            setDescuento={setDescuento}
+                            agregar={agregarProducto}
+                            restar={restarProducto}
+                            eliminar={eliminarProducto}
+                            cierreActivo={cierreActivo}
+                            aclaracionCafeteria={aclaracionCafeteria}
+                            setAclaracionCafeteria={setAclaracionCafeteria}
+                            aclaracionHeladeria={aclaracionHeladeria}
+                            setAclaracionHeladeria={setAclaracionHeladeria}
+                            reiniciarAclaraciones={reiniciarAclaraciones}
+                        />
+                    </Box>
+                </>
+            )}
 
-            {/* Snackbar para la alerta de favoritos */}
+            {/* Snackbar y modales */}
             <Snackbar
                 open={snackbarAbierto}
                 autoHideDuration={3000}
                 onClose={cerrarAlerta}
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-                TransitionComponent={Slide} // Animación de deslizamiento
+                TransitionComponent={Slide}
             >
                 <MuiAlert
                     onClose={cerrarAlerta}
@@ -343,10 +453,12 @@ const Ventas = () => {
                 </MuiAlert>
             </Snackbar>
 
+
             <AclaracionModal
                 open={modalCafeteriaOpen}
                 onClose={cerrarModalCafeteria}
                 onSave={handleSaveCafeteria}
+                onCancel={handleCancelCafeteria}
                 tipo="cafeteria"
             />
 
@@ -354,6 +466,7 @@ const Ventas = () => {
                 open={modalHeladeriaOpen}
                 onClose={cerrarModalHeladeria}
                 onSave={handleSaveHeladeria}
+                onCancel={handleCancelHeladeria}
                 tipo="heladeria"
             />
         </Box>

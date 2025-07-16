@@ -35,19 +35,14 @@ namespace DataAccesLayer.Repositories
         {
             try
             {
-                var venta = await _context.Ventas
-                    .Include(x => x.DetallesVentas)
-                        .ThenInclude(x => x.Producto)
-                    .FirstOrDefaultAsync(x => x.Id == id);
-
-                if (venta == null)
-                    throw new Exception("No se encontró la venta.");
-
-                return venta;
+                return await _context.Ventas
+                    .Include(v => v.DetallesVentas)
+                        .ThenInclude(dv => dv.Producto)
+                        .FirstOrDefaultAsync(v => v.Id == id);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error en la capa de datos al obtener la venta con ID {id}.", ex);
+                throw new Exception("Error al obtener la venta por ID.", ex);
             }
         }
 

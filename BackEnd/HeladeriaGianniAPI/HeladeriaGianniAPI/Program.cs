@@ -108,7 +108,9 @@ builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
         options.SerializerSettings.Culture = CultureInfo.InvariantCulture;
+        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
     });
+
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -164,7 +166,7 @@ app.UseCors("AllowReactApp");
 
 
 app.UseAuthorization();
-
+ 
 app.MapControllers();
 
 app.Run();

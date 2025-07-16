@@ -1,8 +1,16 @@
-// components/AclaracionModal.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Button } from '@mui/material';
 
-const AclaracionModal = ({ open, onClose, onSave, tipo }) => {
+const AclaracionModal = ({ open, onClose, onSave, tipo, onCancel }) => {
+
+  // Reset interno siempre que se cierre
+  useEffect(() => {
+    if (!open) {
+      setAclaracion('');
+    }
+  }, [open]);
+
+
   const [aclaracion, setAclaracion] = useState('');
 
   const handleChange = (event) => {
@@ -10,14 +18,19 @@ const AclaracionModal = ({ open, onClose, onSave, tipo }) => {
   };
 
   const handleSave = () => {
-    onSave(aclaracion);
-    onClose();
+    onSave(aclaracion); // Guarda en el estado padre
+    onClose();          // El useEffect se encargará del reset interno
+  };
+
+  const handleCancel = () => {
+    if (onCancel) onCancel();
+    onClose();          // El useEffect se encargará del reset interno
   };
 
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={handleCancel} // Usar handleCancel en lugar de onClose directo
       aria-labelledby="modal-title"
       aria-describedby="modal-description"
     >
@@ -44,7 +57,7 @@ const AclaracionModal = ({ open, onClose, onSave, tipo }) => {
           sx={{ mb: 2 }}
         />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="outlined" onClick={onClose}>Cancelar</Button>
+          <Button variant="outlined" onClick={handleCancel}>Cancelar</Button>
           <Button variant="contained" onClick={handleSave}>Guardar</Button>
         </Box>
       </Box>

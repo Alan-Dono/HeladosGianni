@@ -49,7 +49,7 @@ const Home = () => {
                 transition={{ duration: 1.5, ease: 'easeOut' }} // Animación suave y más larga
             >
                 <Typography
-                    variant="h2"
+                    variant="h1"
                     component="h2"
                     align="center"
                     sx={{
@@ -59,7 +59,7 @@ const Home = () => {
                         textShadow: '2px 2px 4px rgba(0, 0, 0, 0.5)', // Sombra para destacar en cualquier fondo
                     }}
                 >
-                    ¡Bienvenido a Gianni Helados!
+                    ¡Gianni es Familia!
                 </Typography>
             </motion.div>
 

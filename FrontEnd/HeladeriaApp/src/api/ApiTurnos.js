@@ -45,7 +45,7 @@ export const obtenerTodosLosTurnos = async () => {
     const response = await apiClient.get("/turnos");
     return response.data;
   } catch (error) {
-    console.error("Error al obtener todos los turnos", error);
+    console.error("El servidor no responde", error);
     throw error;
   }
 };
@@ -56,7 +56,7 @@ export const obtenerTurnoActivo = async () => {
     const response = await apiClient.get("/turnos/activo");
     return response.data;
   } catch (error) {
-    console.error("Error al obtener el turno activo", error);
+    console.error("El servidor no responde", error);
     throw error;
   }
 };

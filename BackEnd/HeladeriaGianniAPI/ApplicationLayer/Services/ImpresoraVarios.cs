@@ -23,6 +23,19 @@ namespace ApplicationLayer.Services
         {
             PrintDocument pd = new();
             pd.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
+
+            // BUSCAR EL TAMAÑO DEFINIDO EN EL DRIVER
+            foreach (PaperSize size in pd.PrinterSettings.PaperSizes)
+            {
+                if (size.PaperName.Contains("80 x 3276"))
+                {
+                    pd.DefaultPageSettings.PaperSize = size;
+                    break;
+                }
+            }
+
+            pd.DefaultPageSettings.Margins = new Margins(10, 10, 15, 30);
+
             if (!pd.PrinterSettings.IsValid)
                 throw new Exception($"No se encontró la impresora '{NOMBRE_IMPRESORA}'");
 
@@ -30,10 +43,12 @@ namespace ApplicationLayer.Services
             pd.Print();
         }
 
+
         private void Pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             using Font fuenteNormal = new("Arial", 10);
             using Font fuenteBold = new("Arial", 12, FontStyle.Bold);
+            using Font fuenteBoldSubcategorias = new("Arial", 11, FontStyle.Bold);
             Graphics g = e.Graphics;
 
             float y = 10;
@@ -79,7 +94,7 @@ namespace ApplicationLayer.Services
                     .Where(d => d.Producto?.ProductoCategoria != null)
                     .ToList();
 
-                AgruparYImprimir(detalles, g, fuenteNormal, fuenteBold, ref y, left);
+                AgruparYImprimir(detalles, g, fuenteNormal, fuenteBold, ref y, left, fuenteBoldSubcategorias);
             }
             else if (_cierre != null)
             {
@@ -95,29 +110,28 @@ namespace ApplicationLayer.Services
                 g.DrawString($"Hasta: {_cierre.FechaFin?.ToString("dd/MM/yyyy HH:mm") ?? "Actualmente activo"}", fuenteNormal, Brushes.Black, left, y);
                 y += 25;
 
-                var detalles = _cierre.Ventas
-                    .Where(v => v.Activa)
-                    .SelectMany(v => v.DetallesVentas)
-                    .Where(d => d.Producto?.ProductoCategoria != null)
-                    .ToList();
 
-                AgruparYImprimir(detalles, g, fuenteNormal, fuenteBold, ref y, left);
+                // Detalles
+                var detalles = _cierre.Ventas
+                     .Where(v => v.Activa)
+                     .SelectMany(v => v.DetallesVentas)
+                     .Where(d => d.Producto?.ProductoCategoria != null)
+                     .ToList();
+
+                AgruparYImprimir(detalles, g, fuenteNormal, fuenteBold, ref y, left, fuenteBoldSubcategorias);
             }
 
             // Pie
+            //y += 20;
+            //g.DrawString($"Impreso: {DateTime.Now:dd/MM/yyyy HH:mm}", fuenteNormal, Brushes.Black, left, y);
             y += 20;
-            g.DrawString($"Impreso: {DateTime.Now:dd/MM/yyyy HH:mm}", fuenteNormal, Brushes.Black, left, y);
-            y += 20;
-            g.DrawString("Gracias por su trabajo", fuenteNormal, Brushes.Black, left, y);
+            g.DrawString("¡Gianni es familia!", fuenteNormal, Brushes.Black, left+80, y);
 
             e.HasMorePages = false;
         }
 
 
-        private void AgruparYImprimir(List<DetalleVenta> detalles,Graphics g,Font fuenteNormal,
-            Font fuenteBold,
-            ref float y,
-            float left)
+        private void AgruparYImprimir(List<DetalleVenta> detalles,Graphics g,Font fuenteNormal,Font fuenteBold, ref float y, float left,   Font fuenteBoldSubcategorias)
         {
             var productos = detalles
                 .GroupBy(d => new
@@ -148,7 +162,7 @@ namespace ApplicationLayer.Services
                     // Si cambia la categoría y ya había una activa, imprimimos su subtotal
                     if (categoriaActual != null)
                     {
-                        g.DrawString($"Subtotal {categoriaActual}: {subtotalCategoria.ToString("C0")}", fuenteNormal, Brushes.Black, left + 10, y);
+                        g.DrawString($"Subtotal {categoriaActual}: {subtotalCategoria.ToString("C0")}", fuenteBoldSubcategorias, Brushes.Black, left + 10, y);
                         y += 20;
                         subtotalCategoria = 0;
                     }
@@ -172,7 +186,7 @@ namespace ApplicationLayer.Services
             // Último subtotal
             if (categoriaActual != null)
             {
-                g.DrawString($"Subtotal {categoriaActual}: {subtotalCategoria.ToString("C0")}", fuenteNormal, Brushes.Black, left + 10, y);
+                g.DrawString($"Subtotal {categoriaActual}: {subtotalCategoria.ToString("C0")}", fuenteBoldSubcategorias, Brushes.Black, left + 10, y);
                 y += 25;
             }
 

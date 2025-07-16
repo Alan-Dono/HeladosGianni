@@ -5,7 +5,7 @@ import Nav from '../components/Nav';
 import { useTheme } from '@mui/material/styles';
 
 const Layout = ({ isDarkMode, toggleTheme }) => {
-    
+
     const theme = useTheme();
     const backgroundColor = theme.palette.background.default;
 
@@ -14,7 +14,7 @@ const Layout = ({ isDarkMode, toggleTheme }) => {
             {/* Contenedor del menú */}
             <Box
                 sx={{
-                    zIndex: 1,
+                    zIndex: 1200,
                     position: 'absolute',
                     height: '100%',
                     transition: 'width 0.3s',
@@ -37,7 +37,7 @@ const Layout = ({ isDarkMode, toggleTheme }) => {
                     bgcolor: backgroundColor,
                     overflow: 'hidden', // Cambia a 'hidden' para evitar el scroll
                     marginLeft: '80px', // Este margen iguala el ancho del menú
-                    
+
                 }}
             >
                 <Outlet />

@@ -19,6 +19,7 @@ namespace ApplicationLayer.Services
         private Venta _ventaHelados = new Venta();
         private Venta _ventacafeteria = new Venta();
         private FacturaResponse FacturaResponse;
+        private static int _contadorHeladeria = 98;
 
         public ImpresoraTicketService(WSFEService webService)
         {
@@ -65,14 +66,14 @@ namespace ApplicationLayer.Services
                     PrintDocument tiketCafe = new PrintDocument();
                     tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
                     // Usamos el evento PrintPage para el método de impresión
-                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e);
+                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "CAFETERIA");
                     tiketCafe.Print();
                 }
                 if (_ventaHelados.DetallesVentas.Count > 0)
                 {
                     PrintDocument tiketHelado = new PrintDocument();
                     tiketHelado.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
-                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e);
+                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e, "HELADERIA");
                     tiketHelado.Print();
                 }
     
@@ -116,14 +117,14 @@ namespace ApplicationLayer.Services
                     PrintDocument tiketCafe = new PrintDocument();
                     tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
                     // Usamos el evento PrintPage para el método de impresión
-                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e);
+                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "CAFETERIA");
                     tiketCafe.Print();
                 }
                 if (_ventaHelados.DetallesVentas.Count > 0)
                 {
                     PrintDocument tiketHelado = new PrintDocument();
                     tiketHelado.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
-                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e);
+                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e, "HELADERIA");
                     tiketHelado.Print();
                 }
 
@@ -140,6 +141,7 @@ namespace ApplicationLayer.Services
             }
         }
 
+        #region MetodosPrivaos
         private void Pd_PrintPageFiscal(object sender, PrintPageEventArgs e)
     {
         try
@@ -302,9 +304,6 @@ namespace ApplicationLayer.Services
         }
     }
 
-
-
-
         private void Pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             try
@@ -312,7 +311,7 @@ namespace ApplicationLayer.Services
                 using (Font fuenteNormal = new Font("Arial", 10))
                 using (Font fuenteGrande = new Font("Arial", 13, FontStyle.Bold))
                 using (Font fuentePequena = new Font("Arial", 9))
-                using (Font fuenteLeyenda = new Font("Arial", 8, FontStyle.Italic))
+                using (Font fuenteLeyenda = new Font("Arial", 6, FontStyle.Italic))
                 {
                     Graphics g = e.Graphics;
                     float yPos = 10;
@@ -435,12 +434,13 @@ namespace ApplicationLayer.Services
             }
         }
 
-        private void ImprimirTicketProductos(List<DetalleVenta> detallesVenta, string aclaracion, PrintPageEventArgs e)
+        private void ImprimirTicketProductos(List<DetalleVenta> detallesVenta, string aclaracion, PrintPageEventArgs e, string titulo)
         {
             try
             {
                 using (Font fuenteNormal = new Font("Arial", 10))
-                using (Font fuenteGrande = new Font("Arial", 13, FontStyle.Bold))
+                using (Font fuenteGrande = new Font("Arial", 12)) //FontStyle.Bold
+                using (Font fuenteContador = new Font("Arial", 24, FontStyle.Bold)) // Fuente grande para el contador
                 using (Font fuentePequena = new Font("Arial", 9))
                 using (Font fuenteLeyenda = new Font("Arial", 8, FontStyle.Italic))
                 {
@@ -449,29 +449,37 @@ namespace ApplicationLayer.Services
                     float leftMargin = 5;
                     float rightMargin = ANCHO_TICKET - 5;
 
-                    // Título
-                    string titulo = "TICKET DE VENTA";
+                    // Título centrado
                     SizeF tituloSize = g.MeasureString(titulo, fuenteGrande);
                     g.DrawString(titulo, fuenteGrande, Brushes.Black,
                         (ANCHO_TICKET - tituloSize.Width) / 2, yPos);
-                    yPos += tituloSize.Height + 5;
+                    yPos += tituloSize.Height + 3; // Espacio mínimo después del título
 
-                    // Información de la venta
+                    // Mostrar contador solo para HELADERIA (número grande y centrado)
+                    if (titulo == "HELADERIA")
+                    {
+                        string contador = _contadorHeladeria.ToString("00"); // Formato 00-99
+                        SizeF contadorSize = g.MeasureString(contador, fuenteContador);
+                        g.DrawString(contador, fuenteContador, Brushes.Black,
+                            (ANCHO_TICKET - contadorSize.Width) / 2, yPos);
+                        yPos += contadorSize.Height + 5; // Espacio mínimo después del número
+
+                        // Incrementar y reiniciar contador
+                        _contadorHeladeria = (_contadorHeladeria + 1) % 100;
+                    }
+
+                    // Fecha (alineada a la izquierda)
                     g.DrawString($"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm}",
                         fuenteNormal, Brushes.Black, leftMargin, yPos);
                     yPos += 20;
-
-                    g.DrawString($"Total productos: {detallesVenta.Count}",
-                        fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    yPos += 25;
 
                     // Línea separadora
                     g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
                     yPos += 10;
 
-                    // Encabezados de columnas
+                    // Encabezados de columnas (Descripción | Cant)
                     g.DrawString("Descripción", fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    g.DrawString("Cant", fuenteNormal, Brushes.Black, 115, yPos);  // Desplazado más a la derecha
+                    g.DrawString("Cantidad", fuenteNormal, Brushes.Black, 180, yPos);
                     yPos += 20;
 
                     // Línea separadora
@@ -485,36 +493,31 @@ namespace ApplicationLayer.Services
                         if (nombreProducto.Length > 20)
                             nombreProducto = nombreProducto.Substring(0, 17) + "...";
 
-                        g.DrawString(nombreProducto,
-                            fuenteNormal, Brushes.Black, leftMargin, yPos);
-
-                        g.DrawString(detalle.Cantidad.ToString(),
-                            fuenteNormal, Brushes.Black, 125, yPos);  // Desplazado más a la derecha
-
+                        g.DrawString(nombreProducto, fuenteGrande, Brushes.Black, leftMargin, yPos);
+                        g.DrawString(detalle.Cantidad.ToString(), fuenteGrande, Brushes.Black, 200, yPos);
                         yPos += 20;
                     }
 
-                    // Si hay aclaración, imprimirla
+                    // Aclaración (si existe)
                     if (!string.IsNullOrEmpty(aclaracion))
                     {
                         yPos += 10;
-                        g.DrawString($"Aclaración: {aclaracion}",
-                            fuenteGrande, Brushes.Black, leftMargin, yPos);
+                        g.DrawString($"Aclaración: {aclaracion}", fuenteGrande, Brushes.Black, leftMargin, yPos);
                         yPos += 20;
                     }
-                    // **Agregar espacio vacío adicional al final**
+
+                    // Espacio final mínimo
                     yPos += 10;
 
-                    // Indicar que no hay más páginas
+                    // Fin del ticket
                     e.HasMorePages = false;
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error al generar la página del ticket: {ex.Message}", ex);
+                throw new Exception($"Error al imprimir: {ex.Message}", ex);
             }
         }
-
 
         private void ProductosCageteria(Venta venta)
         {   
@@ -532,6 +535,6 @@ namespace ApplicationLayer.Services
 
         }
 
-
+        #endregion
     }
 }

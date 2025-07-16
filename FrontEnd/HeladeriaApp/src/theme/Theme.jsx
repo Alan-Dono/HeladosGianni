@@ -2,44 +2,46 @@ import { createTheme } from '@mui/material/styles';
 
 const lightTheme = createTheme({
     palette: {
-        mode: 'light', // Modo claro
+        mode: 'light',
         primary: {
-            main: '#3F72AF', // Azul claro
+            main: '#3F72AF',
         },
         secondary: {
-            main: '#DBE2EF', // Azul suave
+            main: '#DBE2EF',
         },
         success: {
-            main: '#A8E6CE', // Verde claro
+            main: '#4CAF50',
         },
         warning: {
-            main: '#FFEB3B', // Amarillo
+            main: '#FFA726',
         },
         error: {
-            main: '#FF6F61', // Rojo suave
+            main: '#F44336',
         },
         background: {
-            default: '#F9F7F7', // Color de fondo claro
-            paper: '#FFFFFF', // Blanco puro para los componentes
+            default: '#F0F2F5', // más suave
+            paper: '#FFFFFF',   // fondo blanco para cajas
+            componentes: '#F7F9FB' // nuevo: para componentes como botones/paneles
         },
         text: {
-            primary: '#262626', // Negro suave para el texto principal
-            secondary: '#8e8e8e', // Gris para el texto secundario
+            primary: '#212121', // texto más oscuro para mejor contraste
+            secondary: '#616161',
         },
     },
     typography: {
-        fontFamily: 'Roboto, Arial, sans-serif', // Fuente Roboto
+        fontFamily: 'Roboto, Arial, sans-serif',
     },
     components: {
         MuiButton: {
             styleOverrides: {
                 root: {
-                    textTransform: 'none', // No usar mayúsculas
+                    textTransform: 'none',
                 },
             },
         },
     },
 });
+
 
 const darkTheme = createTheme({
     palette: {

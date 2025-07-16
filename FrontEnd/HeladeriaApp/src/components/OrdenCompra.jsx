@@ -10,9 +10,9 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VentaService from '../services/VentaService';
 import { use } from 'framer-motion/client';
 
-const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria }) => {
+const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria, reiniciarAclaraciones }) => {
 
-    const [codigoDescuento, setCodigoDescuento] = useState('');
+    //const [codigoDescuento, setCodigoDescuento] = useState('');
     const [mostrarDescuento, setMostrarDescuento] = useState(false);
     const [descuentoValor, setDescuentoValor] = useState(0);
     const [descuentosHabilitados, setDescuentosHabilitados] = useState(false);
@@ -23,7 +23,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     const [esFiscal, setEsFiscal] = useState(false);
 
     const theme = useTheme();
-
+    {/* 
     const descuentosValidos = {
         "helado": true,
         "cafe": true,
@@ -53,7 +53,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
 
         aplicarDescuento(nuevoDescuento);
     };
-
+    */}
     const aplicarDescuento = (valor) => {
         setDescuento(valor);
         setDescuentoValor(valor);
@@ -101,49 +101,67 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
 
     const confirmarVenta = async () => {
         try {
-            // Crear objeto de venta con la estructura necesaria
+            // 1. Construir objeto de venta
             const ventaData = {
-                totalVenta: totalConDescuento,          // Total de la venta
-                Descuentos: montoDescuento || 0,        // Descuentos aplicados (default a 0 si no se proporciona)
-                IdCierreCaja: cierreActivo.id,                     // Puedes asignar el ID del cierre de caja aquí si es necesario
-                detallesVentas: carrito.map((producto) => ({
-                    productoId: producto.id,            // ID del producto en el carrito
-                    cantidad: producto.cantidad,        // Cantidad del producto
-                    precioUnitario: producto.precio,    // Precio del producto
+                FechaDeVenta: new Date().toISOString(),
+                TotalVenta: parseFloat(totalConDescuento.toFixed(2)),
+                Descuentos: montoDescuento > 0 ? parseFloat(montoDescuento.toFixed(2)) : null,
+                IdCierreCaja: cierreActivo.id,
+                DetallesVentas: carrito.map(producto => ({
+                    ProductoId: producto.id,
+                    Cantidad: producto.cantidad,
+                    PrecioUnitario: parseFloat(producto.precio.toFixed(2))
                 })),
-                AclaracionCafeteria: aclaracionCafeteria,
-                AclaracionHeladeria: aclaracionHeladeria
+                AclaracionCafeteria: aclaracionCafeteria?.trim() || null,
+                AclaracionHeladeria: aclaracionHeladeria?.trim() || null
             };
-            console.log("ventaData", ventaData);
 
-            if (esFiscal) {
-                const response = await VentaService.registrarVentaFiscal(ventaData);
-            }
-            else {
-                // Llamar a la función del servicio para registrar la venta
-                const response = await VentaService.registrarVenta(ventaData);
+            // 2. Validación
+            if (!ventaData.DetallesVentas || ventaData.DetallesVentas.length === 0) {
+                throw new Error("El carrito está vacío");
             }
 
-            // Limpiar los estados y mostrar mensaje de éxito
+            // 3. Enviar al backend
+            const response = esFiscal
+                ? await VentaService.registrarVentaFiscal(ventaData)
+                : await VentaService.registrarVenta(ventaData);
+
+
+            // 4. Manejar respuesta (ajustado para ASP.NET Core)
+            if (!response) {
+                throw new Error("No se recibió respuesta del servidor");
+            }
+
+            // La respuesta directa es el VentaDtoRes (no está envuelta en .data)
+            const ventaRegistrada = response;
+
+            console.log("Venta registrada:", ventaRegistrada);
+
+            // 5. Resetear UI
             setCarrito([]);
             setSubtotal(0);
-            setCodigoDescuento('');
-            setMostrarDescuento(false);
+            setDescuento(0);
             setDescuentoValor(0);
-            setDescuentosHabilitados(false);
-            setMensajeSnackbar('Venta realizada con éxito!');
+
+            // 6. Mostrar feedback
+            setMensajeSnackbar('Venta registrada con éxito');
             setTipoAlerta("success");
-            setSnackbarAbierto(true);
-            setConfirmarVentaAbierto(false);
-            setAclaracionCafeteria('');
-            setAclaracionHeladeria('');
-            // Usar la función de reinicio en lugar de asignar valores directamente
-            props.reiniciarAclaraciones(); // O simplemente reiniciarAclaraciones() si desestructuras la prop
+
+            // 7. Resetear aclaraciones
+            reiniciarAclaraciones();
 
         } catch (error) {
+            console.error("[ERROR] En confirmarVenta:", error);
+
+            setMensajeSnackbar(
+                error.response?.data?.message ||
+                error.message ||
+                "Error al procesar la venta"
+            );
             setTipoAlerta("error");
-            setMensajeSnackbar("Error al registrar la venta. Por favor, intente nuevamente.");
+        } finally {
             setSnackbarAbierto(true);
+            setConfirmarVentaAbierto(false);
         }
     };
 
@@ -172,7 +190,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             </Box>
 
 
-
+            {/* 
             <Box sx={{ display: 'flex', alignItems: 'center', marginBottom: 2 }}>
                 <TextField
                     label="Cupón de Descuento"
@@ -195,7 +213,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                     Aplicar
                 </Button>
             </Box>
-
+        */}
 
 
             <Box sx={{ marginBottom: 2 }}>

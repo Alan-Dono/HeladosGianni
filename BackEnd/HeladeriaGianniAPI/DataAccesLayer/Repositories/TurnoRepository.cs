@@ -72,10 +72,19 @@ namespace DataAccesLayer.Repositories
 
         public async Task<ICollection<Turno>> ObtenerPorFechasAsync(DateTime fechaDesde, DateTime fechaHasta)
         {
+            if (fechaDesde > fechaHasta)
+                throw new ArgumentException("La fecha 'desde' no puede ser mayor que la fecha 'hasta'.");
+
             try
             {
+                // Ajusta fechaHasta para incluir todo el día
+                DateTime fechaHastaAjustada = fechaHasta.Date.AddDays(1).AddTicks(-1);
+
                 return await _context.Turnos
-                    .Where(t => t.FechaInicio >= fechaDesde && t.FechaInicio <= fechaHasta)
+                    .Where(t => t.FechaInicio >= fechaDesde.Date && t.FechaInicio <= fechaHastaAjustada)
+                    .Include(x => x.CierreCajas)
+                        .ThenInclude(x => x.Ventas)
+                    .OrderByDescending(x => x.Id)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -83,6 +92,7 @@ namespace DataAccesLayer.Repositories
                 throw new Exception("Error al obtener turnos por fechas en la capa de datos.", ex);
             }
         }
+
 
         public async Task<Turno> ObtenerPorIdAsync(int id)
         {

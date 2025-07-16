@@ -1,36 +1,71 @@
-import React, { useState } from 'react';
-import { Card, Typography, Box } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Card, Typography, Box, LinearProgress } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
 const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
     const theme = useTheme();
-    const [clicProlongado, setClicProlongado] = useState(false);
     const [temporizador, setTemporizador] = useState(null);
+    const [tiempoPresionado, setTiempoPresionado] = useState(0);
+    const [mostrarProgreso, setMostrarProgreso] = useState(false);
+    const [clickInicial, setClickInicial] = useState(null);
+    const [estaActivo, setEstaActivo] = useState(false);
+    const [superoUmbral, setSuperoUmbral] = useState(false); // Nuevo estado
 
-    // Maneja el clic prolongado para agregar/eliminar de favoritos (3 segundos)
+    useEffect(() => {
+        return () => {
+            if (temporizador) clearTimeout(temporizador);
+        };
+    }, [temporizador]);
+
     const handleMouseDown = () => {
-        // Inicia el temporizador para el clic prolongado
-        const temporizadorFavorito = setTimeout(async () => {
-            await toggleFavorito(producto); // Acción de favorito
-            setClicProlongado(true); // Marca que el clic prolongado se activó
-        }, 3000);
+        setClickInicial(Date.now());
+        setEstaActivo(true);
+        setSuperoUmbral(false); // Resetear al iniciar
 
-        setTemporizador(temporizadorFavorito);
+        const delayId = setTimeout(() => {
+            setMostrarProgreso(true);
+            setSuperoUmbral(true); // Marcar que superó el umbral
+            const startTime = Date.now();
+
+            const actualizarProgreso = () => {
+                const elapsed = Date.now() - startTime;
+                setTiempoPresionado((elapsed / 3000) * 100);
+
+                if (elapsed < 3000) {
+                    requestAnimationFrame(actualizarProgreso);
+                }
+            };
+
+            actualizarProgreso();
+
+            setTemporizador(
+                setTimeout(async () => {
+                    await toggleFavorito(producto);
+                    resetearEstado();
+                }, 3000)
+            );
+        }, 2000);
+
+        setTemporizador(delayId);
     };
 
-    // Maneja el clic simple para agregar al carrito
-    const handleClick = () => {
-        if (!clicProlongado) {
-            agregar(producto); // Solo se agrega al carrito si no fue clic prolongado
-        }
-        setClicProlongado(false); // Restablece el estado para el próximo clic
-    };
-
-    // Cancela el temporizador si el mouse es liberado antes de los 3 segundos
     const handleMouseUp = () => {
-        if (!clicProlongado) {
-            clearTimeout(temporizador); // Cancela el temporizador si el clic fue rápido
+        const tiempoTranscurrido = clickInicial ? Date.now() - clickInicial : 0;
+
+        // Solo agregar al carrito si NO superó el umbral de 2 segundos
+        if (tiempoTranscurrido < 2000 && !superoUmbral) {
+            agregar(producto);
         }
+
+        resetearEstado();
+        setEstaActivo(false);
+    };
+
+    const resetearEstado = () => {
+        clearTimeout(temporizador);
+        setMostrarProgreso(false);
+        setTiempoPresionado(0);
+        setClickInicial(null);
     };
 
     return (
@@ -49,31 +84,54 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
                 backgroundColor: producto.favorito ? theme.palette.primary.main : theme.palette.background.componentes,
                 color: producto.favorito ? 'black' : theme.palette.text.secondary,
                 overflow: 'visible',
-                transition: 'transform 0.2s ease, z-index 0.2s ease',
+                transition: 'all 0.2s ease',
+                transform: estaActivo ? 'scale(0.95)' : 'scale(1)',
+                boxShadow: estaActivo ? `0 0 15px ${theme.palette.secondary.light}` : 'none',
                 '&:hover': {
-                    color: 'black',
-                    backgroundColor: theme.palette.primary.main,
-                    transform: 'scale(1.2)',
+                    transform: 'scale(1.1)',
                     zIndex: 10,
+                },
+                '&:active': {
+                    transform: 'scale(0.90)',
                 }
             }}
-            onMouseDown={handleMouseDown} // Detecta el inicio de un clic prolongado
-            onMouseUp={handleMouseUp} // Detecta cuando se suelta el clic
-            onClick={handleClick} // Maneja el clic simple para agregar al carrito
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
         >
-            <Box
-                sx={{
-                    textAlign: 'center',
-                    overflow: 'hidden',
-                }}
-            >
+            {/* Barra de progreso */}
+            {mostrarProgreso && (
+                <LinearProgress
+                    variant="determinate"
+                    value={tiempoPresionado}
+                    sx={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        height: '4px',
+                        backgroundColor: 'transparent',
+                        '& .MuiLinearProgress-bar': {
+                            backgroundColor: theme.palette.secondary.light,
+                            boxShadow: `0 0 10px ${theme.palette.secondary.light}`,
+                        }
+                    }}
+                />
+            )}
+
+            <Box sx={{
+                textAlign: 'center',
+                overflow: 'hidden',
+                width: '100%',
+                px: 0.5,
+                opacity: mostrarProgreso ? 0.8 : 1,
+                transition: 'opacity 0.3s ease'
+            }}>
                 <Typography
                     sx={{
                         fontSize: '0.85rem',
                         fontWeight: 'bold',
-                        wordBreak: 'break-word',
                     }}
-                    noWrap={false}
+                    noWrap
                 >
                     {producto.nombreProducto}
                 </Typography>
@@ -82,7 +140,6 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
                     sx={{
                         fontSize: '0.8rem',
                         fontWeight: 'bold',
-                        wordBreak: 'break-word',
                     }}
                 >
                     ${producto.precio.toFixed(2)}
