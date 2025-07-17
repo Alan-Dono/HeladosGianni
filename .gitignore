@@ -42,7 +42,7 @@ FrontEnd/HeladeriaApp/.idea/
 *.suo
 *.ntvs*
 *.njsproj
-*.sln
+# *.sln
 *.sw?
 
 # Archivos y carpetas comunes a ignorar en frontend y backend
