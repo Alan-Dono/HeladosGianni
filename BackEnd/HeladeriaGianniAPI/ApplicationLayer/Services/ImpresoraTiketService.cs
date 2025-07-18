@@ -153,8 +153,8 @@ namespace ApplicationLayer.Services
             {
                 Graphics g = e.Graphics;
                 float yPos = 10;
-                float leftMargin = 5;
-                float rightMargin = ANCHO_TICKET - 5;
+                float leftMargin = 2;
+                float rightMargin = ANCHO_TICKET - 2;
 
                 // Encabezado
                 string razonSocial = "Razón Social: Heladería Gianni S.A.";
@@ -193,12 +193,13 @@ namespace ApplicationLayer.Services
                 yPos += 10;
 
                 // Ticket y Punto de Venta
-                string ticketNumero = $"Ticket #: {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
                 string puntoVenta = "P.V. N: 001"; // Esto se puede cambiar según corresponda
-                string fechaHora = $"Fecha: {FacturaResponse.FechaEmision:dd/MM/yyyy HH:mm}";
+                string ticketNumero = $"Ticket #: {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
+                    string fechaHora = $"Fecha: {FacturaResponse.FechaEmision:dd/MM/yyyy}         Hora: {FacturaResponse.FechaEmision:HH:mm}";
+                    // Resultado: "Fecha: 18/07/2024 - Hora: 14:30"
 
-                g.DrawString(ticketNumero, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(ticketNumero, fuenteNormal).Width, yPos);
-                yPos += 20;
+                    g.DrawString(ticketNumero, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(ticketNumero, fuenteNormal).Width, yPos);
+                //yPos += 20;
 
                 g.DrawString(puntoVenta, fuenteNormal, Brushes.Black, leftMargin, yPos);
                 yPos += 20;
@@ -212,9 +213,9 @@ namespace ApplicationLayer.Services
 
                 // Encabezados de columnas para los productos
                 g.DrawString("Descripción", fuenteNormal, Brushes.Black, leftMargin, yPos);
-                g.DrawString("Cant", fuenteNormal, Brushes.Black, 115, yPos);  // Desplazado más a la derecha
-                g.DrawString("P.U.", fuenteNormal, Brushes.Black, 160, yPos);  // Desplazado más a la izquierda
-                g.DrawString("Total", fuenteNormal, Brushes.Black, 220, yPos); // Alineado con "P.U." más cerca
+                g.DrawString("Cant", fuenteNormal, Brushes.Black, 135, yPos);  // Desplazado más a la derecha
+                g.DrawString("P.U.", fuenteNormal, Brushes.Black, 180, yPos);  // Desplazado más a la izquierda
+                g.DrawString("Total", fuenteNormal, Brushes.Black, 230, yPos); // Alineado con "P.U." más cerca
                 yPos += 20;
 
                 // Línea separadora antes de los productos
@@ -229,22 +230,24 @@ namespace ApplicationLayer.Services
                         nombreProducto = nombreProducto.Substring(0, 17) + "...";
 
                     g.DrawString(nombreProducto, fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    g.DrawString(detalle.Cantidad.ToString(), fuenteNormal, Brushes.Black, 125, yPos);  // Desplazado más a la derecha
-                    g.DrawString(detalle.PrecioUnitario.ToString("C0"), fuenteNormal, Brushes.Black, 155, yPos);  // Desplazado
-                    g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("C0"), fuenteNormal, Brushes.Black, 215, yPos); // Alineado con "P.U." más cerca
+                    g.DrawString(detalle.Cantidad.ToString(), fuenteNormal, Brushes.Black, 145, yPos);  // Desplazado más a la derecha
+                    g.DrawString(detalle.PrecioUnitario.ToString("C0"), fuenteNormal, Brushes.Black, 165, yPos);  // Desplazado
+                    g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("C0"), fuenteNormal, Brushes.Black, 225, yPos); // Alineado con "P.U." más cerca
                     yPos += 20;
                 }
 
-                // Línea separadora antes del total
-                yPos += 5;
-                g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
-                yPos += 10;
+      
 
-                // Total
-                string total = $"TOTAL: {FacturaResponse.ImporteTotal.ToString("C0")}";
-                SizeF totalSize = g.MeasureString(total, fuenteGrande);
-                g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width, yPos);
-                yPos += totalSize.Height + 20;
+                    // Línea separadora antes del TOTAL
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Total
+                    string total = $"TOTAL: {FacturaResponse.ImporteTotal.ToString("C2")}";
+                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
+                    g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width, yPos);
+                    yPos += totalSize.Height + 20;
+
 
                 // Generar QR
                 string qrText = FacturaResponse.DatosQR;
@@ -268,6 +271,16 @@ namespace ApplicationLayer.Services
 
                 // Liberar recursos
                 qrBitmap.Dispose();
+
+                // Discriminación de IVA
+                string netoGravado = $"Neto Gravado: {FacturaResponse.ImporteNeto.ToString("C2")}";
+                string iva21 = $"IVA 21%: {FacturaResponse.ImporteIVA.ToString("C2")}";
+
+                g.DrawString(netoGravado, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                yPos += 20;
+
+                g.DrawString(iva21, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                yPos += 20;
 
                 // Número de CAE y Fecha de Vencimiento
                 string caeNumero = FacturaResponse.CAE;  // Reemplaza con el número real de CAE
@@ -326,7 +339,9 @@ namespace ApplicationLayer.Services
                     yPos += tituloSize.Height + 5;
 
                     // Información de la venta
-                    g.DrawString($"Fecha: {_ventaActual.FechaDeVenta:dd/MM/yyyy HH:mm}",
+                    string fechaHora = $"Fecha: {_ventaActual.FechaDeVenta:dd/MM/yyyy}         Hora: {_ventaActual.FechaDeVenta:HH:mm}";
+
+                    g.DrawString(fechaHora,
                         fuenteNormal, Brushes.Black, leftMargin, yPos);
                     yPos += 20;
 
@@ -340,11 +355,11 @@ namespace ApplicationLayer.Services
 
                     // Encabezados de columnas
                     g.DrawString("Descripción", fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    g.DrawString("Cant", fuenteNormal, Brushes.Black, 115, yPos);  // Desplazado más a la derecha
-                    g.DrawString("P.U.", fuenteNormal, Brushes.Black, 160, yPos);  // Desplazado más a la izquierda
-                    g.DrawString("Total", fuenteNormal, Brushes.Black, 220, yPos); // Alineado con "P.U." más cerca
+                    g.DrawString("Cant", fuenteNormal, Brushes.Black, 135, yPos);  // Desplazado más a la derecha
+                    g.DrawString("P.U.", fuenteNormal, Brushes.Black, 180, yPos);  // Desplazado más a la izquierda
+                    g.DrawString("Total", fuenteNormal, Brushes.Black, 230, yPos); // Alineado con "P.U." más cerca
                     yPos += 20;
-
+   
                     // Línea separadora
                     g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
                     yPos += 10;
@@ -360,15 +375,15 @@ namespace ApplicationLayer.Services
                             fuenteNormal, Brushes.Black, leftMargin, yPos);
 
                         g.DrawString(detalle.Cantidad.ToString(),
-                            fuenteNormal, Brushes.Black, 125, yPos);  // Desplazado más a la derecha
+                            fuenteNormal, Brushes.Black, 145, yPos);  // Desplazado más a la derecha
 
                         // Mostramos el precio unitario sin decimales y con formato de moneda
                         g.DrawString(detalle.PrecioUnitario.ToString("C0"),
-                            fuenteNormal, Brushes.Black, 155, yPos);  // Desplazado
+                            fuenteNormal, Brushes.Black, 165, yPos);  // Desplazado
 
                         // Mostramos el total sin decimales y con formato de moneda
                         g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("C0"),
-                            fuenteNormal, Brushes.Black, 215, yPos); // Alineado con "P.U." más cerca
+                            fuenteNormal, Brushes.Black, 225, yPos); // Alineado con "P.U." más cerca
                         yPos += 20;
                     }
 
@@ -507,7 +522,7 @@ namespace ApplicationLayer.Services
                     }
 
                     // Espacio final mínimo
-                    yPos += 10;
+                    yPos += 40;
 
                     // Fin del ticket
                     e.HasMorePages = false;

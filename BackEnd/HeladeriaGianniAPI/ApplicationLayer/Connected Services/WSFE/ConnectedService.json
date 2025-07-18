@@ -1,7 +1,7 @@
 {
   "ExtendedData": {
     "inputs": [
-      "https://wswhomo.afip.gov.ar/wsfev1/service.asmx"
+      "https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL"
     ],
     "collectionTypes": [
       "System.Array",
@@ -14,10 +14,8 @@
       "Azure.Core, {Azure.Core, 1.35.0}",
       "Azure.Identity, {Azure.Identity, 1.10.3}",
       "BouncyCastle.Crypto, {BouncyCastle.NetCore, 2.2.1}",
-      "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\bin\\Debug\\net8.0\\DataAccesLayer.dll",
-      "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\bin\\Debug\\net8.0\\DomainLayer.dll",
-      "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\bin\\Debug\\net8.0\\Microsoft.PointOfService.Service.exe",
-      "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\bin\\Debug\\net8.0\\Microsoft.PointOfService.WMI.dll",
+      "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\bin\\Debug\\net8.0\\DataAccesLayer.dll",
+      "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\bin\\Debug\\net8.0\\DomainLayer.dll",
       "Microsoft.AspNetCore.JsonPatch, {Microsoft.AspNetCore.JsonPatch, 8.0.8}",
       "Microsoft.AspNetCore.Mvc.NewtonsoftJson, {Microsoft.AspNetCore.Mvc.NewtonsoftJson, 8.0.8}",
       "Microsoft.Bcl.AsyncInterfaces, {Microsoft.Bcl.AsyncInterfaces, 1.1.1}",
@@ -51,6 +49,7 @@
       "Microsoft.Win32.SystemEvents, {Microsoft.Win32.SystemEvents, 8.0.0}",
       "Newtonsoft.Json, {Newtonsoft.Json, 13.0.3}",
       "Newtonsoft.Json.Bson, {Newtonsoft.Json.Bson, 1.0.2}",
+      "QRCoder, {QRCoder, 1.6.0}",
       "System.Diagnostics.DiagnosticSource, {System.Diagnostics.DiagnosticSource, 6.0.1}",
       "System.Drawing.Common, {System.Drawing.Common, 8.0.10}",
       "System.Formats.Asn1, {System.Formats.Asn1, 8.0.0}",
@@ -84,7 +83,8 @@
       "System.Text.Json, {System.Text.Json, 4.7.2}",
       "System.Threading.Tasks, {System.Threading.Tasks, 4.3.0}",
       "System.Xml.ReaderWriter, {System.Xml.ReaderWriter, 4.3.0}",
-      "System.Xml.XmlDocument, {System.Xml.XmlDocument, 4.3.0}"
+      "System.Xml.XmlDocument, {System.Xml.XmlDocument, 4.3.0}",
+      "zxing, {ZXing.Net, 0.16.9}"
     ],
     "targetFramework": "net8.0",
     "typeReuseMode": "All"

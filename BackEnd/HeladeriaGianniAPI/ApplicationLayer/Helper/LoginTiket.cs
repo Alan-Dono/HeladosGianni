@@ -16,7 +16,7 @@ namespace ApplicationLayer.Helper
         // Valores por defecto, globales en esta clase
         const string url = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
         const string servicio = "wsfe";
-        const string certificado = "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
+        const string certificado = "C:\\inetpub\\wwwroot\\deploy\\certificados\\certificado.pfx";
         string plainPassword = "12345678";
 
 
@@ -82,7 +82,7 @@ namespace ApplicationLayer.Helper
                 this.Service = argServicio;
 
                 // Ruta donde guardarás el archivo
-                string rutaArchivo = @"C:\www\HELADERIA-GIANNI\AfipTest\Tikets\LoginTicketRequest.xml";
+                string rutaArchivo = @"C:\inetpub\wwwroot\deploy\certificados\LoginTicketRequest.xml";
                 // Guardar el archivo XML
                 XmlLoginTicketRequest.Save(rutaArchivo);
             }
@@ -103,7 +103,7 @@ namespace ApplicationLayer.Helper
                 cmsFirmadoBase64 = Convert.ToBase64String(encodedSignedCms);
 
                 // Ruta donde guardarás el archivo firmado
-                string rutaArchivoFirmado = @"C:\www\HELADERIA-GIANNI\AfipTest\Tikets\LoginTicketRequestFirmado.txt";
+                string rutaArchivoFirmado = @"C:\inetpub\wwwroot\deploy\certificados\LoginTicketRequestFirmado.txt";
                 // Escribir el contenido firmado (Base64) en un archivo
                 File.WriteAllText(rutaArchivoFirmado, cmsFirmadoBase64);
             }
@@ -116,7 +116,7 @@ namespace ApplicationLayer.Helper
             try
             {
                 WSAA.LoginCMSClient servicioWsaa = new WSAA.LoginCMSClient();
-               // ClienteLoginCms_CS.Wsaa.LoginCMSService servicioWsaa = new ClienteLoginCms_CS.Wsaa.LoginCMSService();
+                // ClienteLoginCms_CS.Wsaa.LoginCMSService servicioWsaa = new ClienteLoginCms_CS.Wsaa.LoginCMSService();
                 servicioWsaa.Endpoint.Address = new System.ServiceModel.EndpointAddress(argUrlWsaa);
 
                 // Llamar al método async
@@ -145,7 +145,7 @@ namespace ApplicationLayer.Helper
                 this.Token = XmlLoginTicketResponse.SelectSingleNode("//token").InnerText;
 
                 // Ruta para guardar el Login Ticket Response
-                string rutaArchivoResponse = @"C:\www\HELADERIA-GIANNI\AfipTest\Tikets\LoginTicketResponse.xml";
+                string rutaArchivoResponse = @"C:\inetpub\wwwroot\deploy\certificados\LoginTicketResponse.xml";
                 // Guardar el contenido completo del XML en un archivo
                 XmlLoginTicketResponse.Save(rutaArchivoResponse);
 
@@ -163,7 +163,7 @@ namespace ApplicationLayer.Helper
 
             try
             {
-                string rutaArchivoResponse = @"C:\www\HELADERIA-GIANNI\AfipTest\Tikets\LoginTicketResponse.xml";
+                string rutaArchivoResponse = @"C:\inetpub\wwwroot\deploy\certificados\LoginTicketResponse.xml";
 
                 // Verificar si el archivo existe
                 if (!File.Exists(rutaArchivoResponse))
@@ -203,7 +203,7 @@ namespace ApplicationLayer.Helper
         {
             try
             {
-                string rutaArchivoResponse = @"C:\www\HELADERIA-GIANNI\AfipTest\Tikets\LoginTicketResponse.xml";
+                string rutaArchivoResponse = @"C:\inetpub\wwwroot\deploy\certificados\LoginTicketResponse.xml";
 
                 // Verificar si el archivo existe
                 if (!File.Exists(rutaArchivoResponse))

@@ -1270,7 +1270,10 @@
           "System.Drawing.Common": "8.0.10"
         },
         "runtime": {
-          "DataAccesLayer.dll": {}
+          "DataAccesLayer.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       },
       "DomainLayer/1.0.0": {
@@ -1286,7 +1289,10 @@
           "System.ServiceModel.Security": "6.0.0"
         },
         "runtime": {
-          "DomainLayer.dll": {}
+          "DomainLayer.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
         }
       }
     }

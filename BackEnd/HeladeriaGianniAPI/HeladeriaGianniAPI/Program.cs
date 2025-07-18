@@ -119,11 +119,14 @@ builder.Services.AddSwaggerGen();
 // Configuración de CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", builder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        builder.WithOrigins("http://localhost:5173") // Asegúrate de que esta URL sea correcta
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policy.WithOrigins("http://localhost:8087", // Puerto de tu frontend
+                           "http://localhost:5173") // Desarrollo
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .SetIsOriginAllowedToAllowWildcardSubdomains()
+              .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
     });
 });
 
@@ -162,7 +165,7 @@ app.UseStaticFiles(); // Esto sirve archivos desde wwwroot por defecto
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowReactApp");
+app.UseCors("AllowFrontend");
 
 
 app.UseAuthorization();

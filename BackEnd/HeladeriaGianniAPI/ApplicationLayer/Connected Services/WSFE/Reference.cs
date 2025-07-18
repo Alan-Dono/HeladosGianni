@@ -220,6 +220,10 @@ namespace WSFE
         
         private double MonCotizField;
         
+        private string CanMisMonExtField;
+        
+        private int CondicionIVAReceptorIdField;
+        
         private WSFE.CbteAsoc[] CbtesAsocField;
         
         private WSFE.Tributo[] TributosField;
@@ -442,7 +446,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true, Order=16)]
+        [System.Runtime.Serialization.DataMemberAttribute(Order=16)]
         public double MonCotiz
         {
             get
@@ -456,6 +460,32 @@ namespace WSFE
         }
         
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=17)]
+        public string CanMisMonExt
+        {
+            get
+            {
+                return this.CanMisMonExtField;
+            }
+            set
+            {
+                this.CanMisMonExtField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(Order=18)]
+        public int CondicionIVAReceptorId
+        {
+            get
+            {
+                return this.CondicionIVAReceptorIdField;
+            }
+            set
+            {
+                this.CondicionIVAReceptorIdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=19)]
         public WSFE.CbteAsoc[] CbtesAsoc
         {
             get
@@ -468,7 +498,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=18)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=20)]
         public WSFE.Tributo[] Tributos
         {
             get
@@ -481,7 +511,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=19)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=21)]
         public WSFE.AlicIva[] Iva
         {
             get
@@ -494,7 +524,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=20)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=22)]
         public WSFE.Opcional[] Opcionales
         {
             get
@@ -507,7 +537,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=21)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=23)]
         public WSFE.Comprador[] Compradores
         {
             get
@@ -520,7 +550,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=22)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=24)]
         public WSFE.Periodo PeriodoAsoc
         {
             get
@@ -533,7 +563,7 @@ namespace WSFE
             }
         }
         
-        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=23)]
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=25)]
         public WSFE.Actividad[] Actividades
         {
             get
@@ -3238,6 +3268,110 @@ namespace WSFE
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CondicionIvaReceptorResponse", Namespace="http://ar.gov.afip.dif.FEV1/")]
+    public partial class CondicionIvaReceptorResponse : object
+    {
+        
+        private WSFE.CondicionIvaReceptor[] ResultGetField;
+        
+        private WSFE.Err[] ErrorsField;
+        
+        private WSFE.Evt[] EventsField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false)]
+        public WSFE.CondicionIvaReceptor[] ResultGet
+        {
+            get
+            {
+                return this.ResultGetField;
+            }
+            set
+            {
+                this.ResultGetField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public WSFE.Err[] Errors
+        {
+            get
+            {
+                return this.ErrorsField;
+            }
+            set
+            {
+                this.ErrorsField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
+        public WSFE.Evt[] Events
+        {
+            get
+            {
+                return this.EventsField;
+            }
+            set
+            {
+                this.EventsField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.Runtime.Serialization.DataContractAttribute(Name="CondicionIvaReceptor", Namespace="http://ar.gov.afip.dif.FEV1/")]
+    public partial class CondicionIvaReceptor : object
+    {
+        
+        private int IdField;
+        
+        private string DescField;
+        
+        private string Cmp_ClaseField;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(IsRequired=true)]
+        public int Id
+        {
+            get
+            {
+                return this.IdField;
+            }
+            set
+            {
+                this.IdField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public string Desc
+        {
+            get
+            {
+                return this.DescField;
+            }
+            set
+            {
+                this.DescField = value;
+            }
+        }
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
+        public string Cmp_Clase
+        {
+            get
+            {
+                return this.Cmp_ClaseField;
+            }
+            set
+            {
+                this.Cmp_ClaseField = value;
+            }
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.Runtime.Serialization.DataContractAttribute(Name="DocTipoResponse", Namespace="http://ar.gov.afip.dif.FEV1/")]
     public partial class DocTipoResponse : object
     {
@@ -3606,6 +3740,9 @@ namespace WSFE
         
         [System.ServiceModel.OperationContractAttribute(Action="http://ar.gov.afip.dif.FEV1/FEParamGetTiposCbte", ReplyAction="*")]
         System.Threading.Tasks.Task<WSFE.FEParamGetTiposCbteResponse> FEParamGetTiposCbteAsync(WSFE.FEParamGetTiposCbteRequest request);
+        
+        [System.ServiceModel.OperationContractAttribute(Action="http://ar.gov.afip.dif.FEV1/FEParamGetCondicionIvaReceptor", ReplyAction="*")]
+        System.Threading.Tasks.Task<WSFE.FEParamGetCondicionIvaReceptorResponse> FEParamGetCondicionIvaReceptorAsync(WSFE.FEParamGetCondicionIvaReceptorRequest request);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://ar.gov.afip.dif.FEV1/FEParamGetTiposDoc", ReplyAction="*")]
         System.Threading.Tasks.Task<WSFE.FEParamGetTiposDocResponse> FEParamGetTiposDocAsync(WSFE.FEParamGetTiposDocRequest request);
@@ -4494,14 +4631,18 @@ namespace WSFE
         [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
         public string MonId;
         
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=2)]
+        public string FchCotiz;
+        
         public FEParamGetCotizacionRequestBody()
         {
         }
         
-        public FEParamGetCotizacionRequestBody(WSFE.FEAuthRequest Auth, string MonId)
+        public FEParamGetCotizacionRequestBody(WSFE.FEAuthRequest Auth, string MonId, string FchCotiz)
         {
             this.Auth = Auth;
             this.MonId = MonId;
+            this.FchCotiz = FchCotiz;
         }
     }
     
@@ -5109,6 +5250,90 @@ namespace WSFE
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
     [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
     [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class FEParamGetCondicionIvaReceptorRequest
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="FEParamGetCondicionIvaReceptor", Namespace="http://ar.gov.afip.dif.FEV1/", Order=0)]
+        public WSFE.FEParamGetCondicionIvaReceptorRequestBody Body;
+        
+        public FEParamGetCondicionIvaReceptorRequest()
+        {
+        }
+        
+        public FEParamGetCondicionIvaReceptorRequest(WSFE.FEParamGetCondicionIvaReceptorRequestBody Body)
+        {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://ar.gov.afip.dif.FEV1/")]
+    public partial class FEParamGetCondicionIvaReceptorRequestBody
+    {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public WSFE.FEAuthRequest Auth;
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=1)]
+        public string ClaseCmp;
+        
+        public FEParamGetCondicionIvaReceptorRequestBody()
+        {
+        }
+        
+        public FEParamGetCondicionIvaReceptorRequestBody(WSFE.FEAuthRequest Auth, string ClaseCmp)
+        {
+            this.Auth = Auth;
+            this.ClaseCmp = ClaseCmp;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
+    public partial class FEParamGetCondicionIvaReceptorResponse
+    {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Name="FEParamGetCondicionIvaReceptorResponse", Namespace="http://ar.gov.afip.dif.FEV1/", Order=0)]
+        public WSFE.FEParamGetCondicionIvaReceptorResponseBody Body;
+        
+        public FEParamGetCondicionIvaReceptorResponse()
+        {
+        }
+        
+        public FEParamGetCondicionIvaReceptorResponse(WSFE.FEParamGetCondicionIvaReceptorResponseBody Body)
+        {
+            this.Body = Body;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.Runtime.Serialization.DataContractAttribute(Namespace="http://ar.gov.afip.dif.FEV1/")]
+    public partial class FEParamGetCondicionIvaReceptorResponseBody
+    {
+        
+        [System.Runtime.Serialization.DataMemberAttribute(EmitDefaultValue=false, Order=0)]
+        public WSFE.CondicionIvaReceptorResponse FEParamGetCondicionIvaReceptorResult;
+        
+        public FEParamGetCondicionIvaReceptorResponseBody()
+        {
+        }
+        
+        public FEParamGetCondicionIvaReceptorResponseBody(WSFE.CondicionIvaReceptorResponse FEParamGetCondicionIvaReceptorResult)
+        {
+            this.FEParamGetCondicionIvaReceptorResult = FEParamGetCondicionIvaReceptorResult;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "2.2.0-preview1.23462.5")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(IsWrapped=false)]
     public partial class FEParamGetTiposDocRequest
     {
         
@@ -5546,12 +5771,13 @@ namespace WSFE
             return base.Channel.FEParamGetCotizacionAsync(request);
         }
         
-        public System.Threading.Tasks.Task<WSFE.FEParamGetCotizacionResponse> FEParamGetCotizacionAsync(WSFE.FEAuthRequest Auth, string MonId)
+        public System.Threading.Tasks.Task<WSFE.FEParamGetCotizacionResponse> FEParamGetCotizacionAsync(WSFE.FEAuthRequest Auth, string MonId, string FchCotiz)
         {
             WSFE.FEParamGetCotizacionRequest inValue = new WSFE.FEParamGetCotizacionRequest();
             inValue.Body = new WSFE.FEParamGetCotizacionRequestBody();
             inValue.Body.Auth = Auth;
             inValue.Body.MonId = MonId;
+            inValue.Body.FchCotiz = FchCotiz;
             return ((WSFE.ServiceSoap)(this)).FEParamGetCotizacionAsync(inValue);
         }
         
@@ -5654,6 +5880,21 @@ namespace WSFE
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<WSFE.FEParamGetCondicionIvaReceptorResponse> WSFE.ServiceSoap.FEParamGetCondicionIvaReceptorAsync(WSFE.FEParamGetCondicionIvaReceptorRequest request)
+        {
+            return base.Channel.FEParamGetCondicionIvaReceptorAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<WSFE.FEParamGetCondicionIvaReceptorResponse> FEParamGetCondicionIvaReceptorAsync(WSFE.FEAuthRequest Auth, string ClaseCmp)
+        {
+            WSFE.FEParamGetCondicionIvaReceptorRequest inValue = new WSFE.FEParamGetCondicionIvaReceptorRequest();
+            inValue.Body = new WSFE.FEParamGetCondicionIvaReceptorRequestBody();
+            inValue.Body.Auth = Auth;
+            inValue.Body.ClaseCmp = ClaseCmp;
+            return ((WSFE.ServiceSoap)(this)).FEParamGetCondicionIvaReceptorAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         System.Threading.Tasks.Task<WSFE.FEParamGetTiposDocResponse> WSFE.ServiceSoap.FEParamGetTiposDocAsync(WSFE.FEParamGetTiposDocRequest request)
         {
             return base.Channel.FEParamGetTiposDocAsync(request);
@@ -5750,3 +5991,5 @@ namespace WSFE
         }
     }
 }
+
+

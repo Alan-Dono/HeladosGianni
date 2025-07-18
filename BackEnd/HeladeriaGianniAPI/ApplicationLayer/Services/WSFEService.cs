@@ -25,12 +25,12 @@ namespace ApplicationLayer.Services
             Credenciales = await afipService.ObtenerCredenciales();
         }
 
+        // 1. Método actualizado para AFIP según RG 5616
         public async Task<FacturaResponse> GenerarFacturaConsumidorFinal(decimal montoTotal, string concepto = "Productos")
         {
             await ObtenerCredenciales();
             try
             {
-                // 1. Preparar autenticación
                 var auth = new FEAuthRequest
                 {
                     Token = Credenciales.Token,
@@ -38,67 +38,61 @@ namespace ApplicationLayer.Services
                     Cuit = long.Parse(CUIT)
                 };
 
-                // 2. Crear cabecera
                 var cabecera = new FECAECabRequest
                 {
                     CantReg = 1,
                     PtoVta = PUNTO_VENTA,
-                    CbteTipo = 6 // 6 = Factura B (consumidor final)
+                    CbteTipo = 6 // Factura B
                 };
 
-                // 3. Obtener último número de comprobante
                 var ultimoComprobante = await ObtenerUltimoComprobante(auth, 6);
                 var numeroComprobante = ultimoComprobante + 1;
 
-                // 4. Calcular importes
-                var importeNeto = Math.Round(montoTotal / 1.21m, 2); // Separar IVA 21%
+                var importeNeto = Math.Round(montoTotal / 1.21m, 2);
                 var importeIva = Math.Round(montoTotal - importeNeto, 2);
 
-                // 5. Crear detalle del comprobante
                 var detalle = new FECAEDetRequest
                 {
-                    Concepto = 1, // 1 = Productos
+                    Concepto = 1, // Productos
                     DocTipo = 99, // Consumidor Final
-                    DocNro = 0, // Consumidor Final no requiere documento
+                    DocNro = 0,
+                    CondicionIVAReceptorId = 5, // <-- ¡Campo obligatorio para RG 5616! (5 = Consumidor Final)
                     CbteDesde = numeroComprobante,
                     CbteHasta = numeroComprobante,
                     CbteFch = DateTime.Now.ToString("yyyyMMdd"),
                     ImpTotal = (double)montoTotal,
-                    ImpTotConc = 0, // Importe neto no gravado
+                    ImpTotConc = 0,
                     ImpNeto = (double)importeNeto,
-                    ImpOpEx = 0, // Importe exento
-                    ImpTrib = 0, // Otros tributos
+                    ImpOpEx = 0,
+                    ImpTrib = 0,
                     ImpIVA = (double)importeIva,
-                    MonId = "PES", // Pesos Argentinos
-                    MonCotiz = 1 // Cotización 1:1 para pesos
-                };
-
-                // 6. Agregar IVA 21%
-                var iva = new AlicIva
+                    MonId = "PES",
+                    MonCotiz = 1,
+                    Iva = new[]
+                    {
+                new AlicIva
                 {
-                    Id = 5, // 5 = 21%
+                    Id = 5, // 21%
                     BaseImp = (double)importeNeto,
                     Importe = (double)importeIva
+                }
+            }
                 };
-                detalle.Iva = new[] { iva };
 
-                // 7. Crear request completo
                 var request = new FECAERequest
                 {
                     FeCabReq = cabecera,
                     FeDetReq = new[] { detalle }
                 };
 
-                // 8. Enviar solicitud a AFIP
                 using (var client = new ServiceSoapClient(ServiceSoapClient.EndpointConfiguration.ServiceSoap))
                 {
                     var response = await client.FECAESolicitarAsync(auth, request);
                     var resultado = response.Body.FECAESolicitarResult;
 
-                    if (resultado.FeCabResp.Resultado == "A") // Aprobado
+                    if (resultado.FeCabResp.Resultado == "A")
                     {
                         var detalleResp = resultado.FeDetResp[0];
-                        // Generar datos para QR
                         var qrData = GenerarDatosQR(detalleResp.CAE, detalleResp.CAEFchVto, numeroComprobante, montoTotal);
 
                         return new FacturaResponse
@@ -116,10 +110,17 @@ namespace ApplicationLayer.Services
                     }
                     else
                     {
+                        var mensajeError = "Factura rechazada";
+
+                        if (resultado.Errors != null && resultado.Errors.Length > 0)
+                            mensajeError = $"ERROR {resultado.Errors[0].Code}: {resultado.Errors[0].Msg}";
+                        else if (resultado.FeDetResp?[0]?.Observaciones != null && resultado.FeDetResp[0].Observaciones.Length > 0)
+                            mensajeError = $"OBS {resultado.FeDetResp[0].Observaciones[0].Code}: {resultado.FeDetResp[0].Observaciones[0].Msg}";
+
                         return new FacturaResponse
                         {
                             Exitoso = false,
-                            Error = resultado.Errors[0].Msg
+                            Error = mensajeError
                         };
                     }
                 }
@@ -133,7 +134,6 @@ namespace ApplicationLayer.Services
                 };
             }
         }
-
         private string GenerarDatosQR(string cae, string fechaVencimiento, long numeroComprobante, decimal montoTotal)
         {
             // Crear objeto con datos según especificación AFIP

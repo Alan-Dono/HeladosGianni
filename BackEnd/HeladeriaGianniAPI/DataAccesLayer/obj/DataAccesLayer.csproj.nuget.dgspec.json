@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj": {}
+    "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj": {}
   },
   "projects": {
-    "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj": {
+    "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj",
+        "projectUniqueName": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj",
         "projectName": "DataAccesLayer",
-        "projectPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj",
-        "packagesPath": "C:\\Users\\ALAN\\.nuget\\packages\\",
-        "outputPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\obj\\",
+        "projectPath": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\DataAccesLayer.csproj",
+        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ALAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -22,15 +26,14 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj": {
-                "projectPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj"
+              "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj": {
+                "projectPath": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj"
               }
             }
           }
@@ -44,7 +47,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -99,21 +103,25 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj": {
+    "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj",
+        "projectUniqueName": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj",
         "projectName": "DomainLayer",
-        "projectPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj",
-        "packagesPath": "C:\\Users\\ALAN\\.nuget\\packages\\",
-        "outputPath": "C:\\www\\HELADERIA-GIANNI\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\obj\\",
+        "projectPath": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\DomainLayer.csproj",
+        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DomainLayer\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\ALAN\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -121,7 +129,6 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -139,7 +146,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net8.0": {
@@ -198,7 +206,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

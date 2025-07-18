@@ -9,7 +9,7 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
     const [mostrarProgreso, setMostrarProgreso] = useState(false);
     const [clickInicial, setClickInicial] = useState(null);
     const [estaActivo, setEstaActivo] = useState(false);
-    const [superoUmbral, setSuperoUmbral] = useState(false); // Nuevo estado
+    const [superoUmbral, setSuperoUmbral] = useState(false);
 
     useEffect(() => {
         return () => {
@@ -20,17 +20,16 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
     const handleMouseDown = () => {
         setClickInicial(Date.now());
         setEstaActivo(true);
-        setSuperoUmbral(false); // Resetear al iniciar
+        setSuperoUmbral(false);
 
         const delayId = setTimeout(() => {
             setMostrarProgreso(true);
-            setSuperoUmbral(true); // Marcar que superó el umbral
+            setSuperoUmbral(true);
             const startTime = Date.now();
 
             const actualizarProgreso = () => {
                 const elapsed = Date.now() - startTime;
                 setTiempoPresionado((elapsed / 3000) * 100);
-
                 if (elapsed < 3000) {
                     requestAnimationFrame(actualizarProgreso);
                 }
@@ -52,7 +51,6 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
     const handleMouseUp = () => {
         const tiempoTranscurrido = clickInicial ? Date.now() - clickInicial : 0;
 
-        // Solo agregar al carrito si NO superó el umbral de 2 segundos
         if (tiempoTranscurrido < 2000 && !superoUmbral) {
             agregar(producto);
         }
@@ -68,11 +66,17 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
         setClickInicial(null);
     };
 
+    // Elegimos el color para el glow
+    const glowColor =
+        theme.palette.custom?.glow ||
+        theme.palette.secondary?.light ||
+        theme.palette.secondary?.main;
+
     return (
         <Card
             sx={{
                 height: '80px',
-                width: '70px',
+                width: '80px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
@@ -86,7 +90,9 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
                 overflow: 'visible',
                 transition: 'all 0.2s ease',
                 transform: estaActivo ? 'scale(0.95)' : 'scale(1)',
-                boxShadow: estaActivo ? `0 0 15px ${theme.palette.secondary.light}` : 'none',
+                boxShadow: estaActivo
+                    ? `0 0 30px 10px ${glowColor}`
+                    : 'none',
                 '&:hover': {
                     transform: 'scale(1.1)',
                     zIndex: 10,
@@ -98,7 +104,6 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
         >
-            {/* Barra de progreso */}
             {mostrarProgreso && (
                 <LinearProgress
                     variant="determinate"
@@ -111,8 +116,8 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
                         height: '4px',
                         backgroundColor: 'transparent',
                         '& .MuiLinearProgress-bar': {
-                            backgroundColor: theme.palette.secondary.light,
-                            boxShadow: `0 0 10px ${theme.palette.secondary.light}`,
+                            backgroundColor: glowColor,
+                            boxShadow: `0 0 12px 4px ${glowColor}`,
                         }
                     }}
                 />
@@ -128,21 +133,31 @@ const ProductoCard = ({ producto, agregar, toggleFavorito }) => {
             }}>
                 <Typography
                     sx={{
-                        fontSize: '0.85rem',
+                        fontSize: '0.90rem',
                         fontWeight: 'bold',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        textAlign: 'center',
                     }}
-                    noWrap
-                >
+                    >
                     {producto.nombreProducto}
-                </Typography>
+                    </Typography>
+
                 <Typography
                     variant="caption"
                     sx={{
-                        fontSize: '0.8rem',
+                        fontSize: '0.9rem',
                         fontWeight: 'bold',
+                        color: '#ffffff',
                     }}
                 >
-                    ${producto.precio.toFixed(2)}
+                    ${producto.precio.toLocaleString('es-AR', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                        })
+                        }
                 </Typography>
             </Box>
         </Card>

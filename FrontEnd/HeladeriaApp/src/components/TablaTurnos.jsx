@@ -48,7 +48,8 @@ const TablaTurnos = ({ turnos }) => {
       headerName: 'Descuentos',
       flex: 1,
       valueFormatter: (params) => {
-        return params ? params.toFixed(2) : '0.00'; // Formatea el valor a dos decimales
+        return params ? params.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+      : '0,00'; // Formatea el valor a dos decimales
       },
     },
     {
@@ -56,7 +57,8 @@ const TablaTurnos = ({ turnos }) => {
       headerName: 'Total',
       flex: 1,
       valueFormatter: (params) => {
-        return params ? params.toFixed(2) : '0.00'; // Formatea el valor a dos decimales
+        return params ? params.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+      : '0,00'; // Formatea el valor a dos decimales
       },
     },
     {
