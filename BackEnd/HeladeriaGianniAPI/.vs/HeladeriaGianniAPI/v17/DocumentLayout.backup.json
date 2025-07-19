@@ -3,32 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\mapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\mapper\\mappingprofile.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\productocategoriacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\productocategoriacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\dtos\\response\\cierrecajadtores.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\dtos\\response\\cierrecajadtores.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\turnoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\turnoscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{064657B0-55E5-4143-A56F-D1C1253B408A}|HeladeriaGianniAPI\\HeladeriaGianniAPI.csproj|solutionrelative:heladeriagianniapi\\controllers\\ventacontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\dataacceslayer\\repositories\\turnorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\repositories\\turnorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\impresoratiketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\impresoratiketservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\applicationlayer\\services\\wsfeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9E9C9CAE-024C-4070-AE09-C08062529B1C}|ApplicationLayer\\ApplicationLayer.csproj|solutionrelative:applicationlayer\\services\\wsfeservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|c:\\users\\lenovo\\desktop\\programa\\heladosgianni\\backend\\heladeriagianniapi\\dataacceslayer\\repositories\\productocategoriarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21F1048C-56B8-41D1-9146-89D3EDEE223B}|DataAccesLayer\\DataAccesLayer.csproj|solutionrelative:dataacceslayer\\repositories\\productocategoriarepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,21 +22,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 2,
           "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "CierreCajaDtoRes.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\DTOs\\Response\\CierreCajaDtoRes.cs",
-              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\DTOs\\Response\\CierreCajaDtoRes.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\DTOs\\Response\\CierreCajaDtoRes.cs",
-              "RelativeToolTip": "HeladeriaGianniAPI\\DTOs\\Response\\CierreCajaDtoRes.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-18T03:06:43.717Z",
-              "EditorCaption": ""
-            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
@@ -64,79 +35,39 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "MappingProfile.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
-              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
-              "RelativeToolTip": "HeladeriaGianniAPI\\Mapper\\MappingProfile.cs",
-              "ViewState": "AgIAACYAAAAAAAAAAAAAwDcAAAAAAAAAAAAAAA==",
+              "Title": "ProductoCategoriaController.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\ProductoCategoriaController.cs",
+              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\ProductoCategoriaController.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\ProductoCategoriaController.cs",
+              "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\ProductoCategoriaController.cs",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-18T02:57:12.449Z",
+              "WhenOpened": "2025-07-19T21:45:29.082Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "TurnosController.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\TurnosController.cs",
-              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\TurnosController.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\TurnosController.cs",
-              "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\TurnosController.cs",
-              "ViewState": "AgIAACwAAAAAAAAAAAAgwDwAAAA/AAAAAAAAAA==",
+              "Title": "ProductoCategoriaRepository.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\ProductoCategoriaRepository.cs",
+              "RelativeDocumentMoniker": "DataAccesLayer\\Repositories\\ProductoCategoriaRepository.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\ProductoCategoriaRepository.cs",
+              "RelativeToolTip": "DataAccesLayer\\Repositories\\ProductoCategoriaRepository.cs",
+              "ViewState": "AgIAACoAAAAAAAAAAAAYwDoAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-18T02:58:30.726Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-07-19T21:43:42.743Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "TurnoRepository.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\TurnoRepository.cs",
-              "RelativeDocumentMoniker": "DataAccesLayer\\Repositories\\TurnoRepository.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\DataAccesLayer\\Repositories\\TurnoRepository.cs",
-              "RelativeToolTip": "DataAccesLayer\\Repositories\\TurnoRepository.cs",
-              "ViewState": "AgIAAGsAAAAAAAAAAAAgwHQAAAArAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Program.cs",
+              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Program.cs",
+              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Program.cs",
+              "RelativeToolTip": "HeladeriaGianniAPI\\Program.cs",
+              "ViewState": "AgIAAJoAAAAAAAAAAAAAAK8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-18T02:36:40.214Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "ImpresoraTiketService.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "RelativeToolTip": "ApplicationLayer\\Services\\ImpresoraTiketService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-17T19:23:11.585Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "VentaController.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "RelativeDocumentMoniker": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "RelativeToolTip": "HeladeriaGianniAPI\\Controllers\\VentaController.cs",
-              "ViewState": "AgIAADoAAAAAAAAAAAAkwFgAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-17T19:21:59.118Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "WSFEService.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\WSFEService.cs",
-              "RelativeDocumentMoniker": "ApplicationLayer\\Services\\WSFEService.cs",
-              "ToolTip": "C:\\Users\\LENOVO\\Desktop\\PROGRAMA\\HeladosGianni\\BackEnd\\HeladeriaGianniAPI\\ApplicationLayer\\Services\\WSFEService.cs",
-              "RelativeToolTip": "ApplicationLayer\\Services\\WSFEService.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAswIcAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-07-17T19:19:40.326Z"
+              "WhenOpened": "2025-07-18T17:52:05.518Z"
             }
           ]
         },

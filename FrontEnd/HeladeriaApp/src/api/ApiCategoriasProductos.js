@@ -6,9 +6,9 @@ export const getProductosCategorias = async () => {
 
     // Definir un orden específico para las categorías
     const ordenCategorias = {
-      Heladeria: 1,
-      Cafeteria: 2,
-      Confiteria: 3,
+      Heladería: 1,
+      Cafetería: 2,
+      Confitería: 3,
       Promociones: 4,
       // Agrega más categorías si es necesario
     };

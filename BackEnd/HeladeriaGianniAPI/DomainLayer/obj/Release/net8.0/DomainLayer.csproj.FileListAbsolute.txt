@@ -1,0 +1,13 @@
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\bin\Release\net8.0\DomainLayer.deps.json
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\bin\Release\net8.0\DomainLayer.dll
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\bin\Release\net8.0\DomainLayer.pdb
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.csproj.AssemblyReference.cache
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.AssemblyInfoInputs.cache
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.AssemblyInfo.cs
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.csproj.CoreCompileInputs.cache
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.sourcelink.json
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.dll
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\refint\DomainLayer.dll
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\DomainLayer.pdb
+C:\Users\LENOVO\Desktop\PROGRAMA\HeladosGianni\BackEnd\HeladeriaGianniAPI\DomainLayer\obj\Release\net8.0\ref\DomainLayer.dll
