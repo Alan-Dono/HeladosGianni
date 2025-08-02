@@ -1,51 +1,61 @@
-# Ignorar binarios y archivos de compilación en HeladeriaGianniAPI (backend)
-BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/bin/
-BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/obj/
-
-# Ignorar configuraciones locales específicas de usuario
-BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/*.user
-
-# Ignorar archivos de configuración específicos de entornos locales
-BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/appsettings.Development.json
-
-# Archivos temporales y de caché
-BackEnd/HeladeriaGianniAPI/HeladeriaGianniAPI/.vs/
-
-# Archivos y carpetas de React/Node.js (frontend)
-
-# node_modules es donde npm instala las dependencias, no se debe subir.
-FrontEnd/HeladeriaApp/node_modules/
-
-# Build generado para producción
-FrontEnd/HeladeriaApp/build/
-FrontEnd/HeladeriaApp/dist/
-FrontEnd/HeladeriaApp/dist-ssr/
-
-# Logs
-FrontEnd/HeladeriaApp/logs/
-FrontEnd/HeladeriaApp/*.log
-FrontEnd/HeladeriaApp/npm-debug.log*
-FrontEnd/HeladeriaApp/yarn-debug.log*
-FrontEnd/HeladeriaApp/yarn-error.log*
-FrontEnd/HeladeriaApp/pnpm-debug.log*
-FrontEnd/HeladeriaApp/lerna-debug.log*
-
-# Archivos locales
-FrontEnd/HeladeriaApp/*.local
-
-# Directorios y archivos de editores
-FrontEnd/HeladeriaApp/.vscode/
-FrontEnd/HeladeriaApp/.idea/
+# ================ Configuraciones de IDE ================
+.vs/
 .vscode/
 .idea/
-.DS_Store
+*.user
+*.userprefs
 *.suo
-*.ntvs*
-*.njsproj
-# *.sln
-*.sw?
+*.cache
+*.dotCover
+*.pidb
+*.ncrunchsolution
+*.ncrunchproject
 
-# Archivos y carpetas comunes a ignorar en frontend y backend
+# ================ .NET / Backend ================
+**/bin/
+**/obj/
+**/.nuget/
+**/packages/
+*.csproj.user
+*.user
+*.msi
+*.nupkg
+
+# Configuraciones de entorno (manteniendo appsettings.json principal)
+**/appsettings.*.json
+
+# ================ Node.js / Frontend ================
+**/node_modules/
+**/build/
+**/dist/
+**/dist-ssr/
+.npm
+.yarn
+.pnpm
+.pnp.cjs
+
+# Logs
+**/logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Variables de entorno locales
+.env.local
+.env.*.local
+
+# ================ Sistemas operativos ================
+.DS_Store
 Thumbs.db
+
+# ================ Tus exclusiones personalizadas ================
 DatosAfip/
 AfipTest/
+
+# ================ Archivos temporales ================
+*.sw?
+*.bak
+*.tmp

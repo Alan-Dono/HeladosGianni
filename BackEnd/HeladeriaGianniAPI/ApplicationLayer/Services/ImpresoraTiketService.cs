@@ -538,11 +538,11 @@ namespace ApplicationLayer.Services
         {   
             foreach(var detalle in venta.DetallesVentas)
             {
-                if(detalle.Producto.ProductoCategoriaId == 1)
+                if(detalle.Producto.ProductoCategoriaId == 2)
                 {
                     _ventacafeteria.DetallesVentas.Add(detalle);
                 }
-                if(detalle.Producto.ProductoCategoriaId == 2)
+                if(detalle.Producto.ProductoCategoriaId == 1)
                 {
                     _ventaHelados.DetallesVentas.Add(detalle);
                 }

@@ -18,7 +18,7 @@ namespace ApplicationLayer.Services
         string plainPassword = "12345678";
 
         // Valores por defecto, globales en esta clase
-        const string url = "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
+        const string url = "https://wsaa.afip.gov.ar/ws/services/LoginCms?wsdl";
         const string servicio = "wsfe";
         const string certificado = "C:\\inetpub\\wwwroot\\deploy\\certificados\\certificado.pfx";
 

@@ -42,7 +42,7 @@ namespace ApplicationLayer.Services
                 {
                     CantReg = 1,
                     PtoVta = PUNTO_VENTA,
-                    CbteTipo = 6 // Factura B
+                    CbteTipo = 6 // factura b
                 };
 
                 var ultimoComprobante = await ObtenerUltimoComprobante(auth, 6);
@@ -51,12 +51,19 @@ namespace ApplicationLayer.Services
                 var importeNeto = Math.Round(montoTotal / 1.21m, 2);
                 var importeIva = Math.Round(montoTotal - importeNeto, 2);
 
+                // Validación de redondeo
+                if (Math.Abs((importeNeto + importeIva) - montoTotal) > 0.01m)
+                {
+                    throw new Exception("Error en cálculo de importes: la suma de neto + IVA no coincide con el total");
+                }
+
+
                 var detalle = new FECAEDetRequest
                 {
                     Concepto = 1, // Productos
                     DocTipo = 99, // Consumidor Final
-                    DocNro = 0,
-                    CondicionIVAReceptorId = 5, // <-- ¡Campo obligatorio para RG 5616! (5 = Consumidor Final)
+                    DocNro = 0, // Cero obligatorio para CF
+                    CondicionIVAReceptorId = 5, // Consumidor Final
                     CbteDesde = numeroComprobante,
                     CbteHasta = numeroComprobante,
                     CbteFch = DateTime.Now.ToString("yyyyMMdd"),
@@ -69,15 +76,15 @@ namespace ApplicationLayer.Services
                     MonId = "PES",
                     MonCotiz = 1,
                     Iva = new[]
-                    {
-                new AlicIva
                 {
-                    Id = 5, // 21%
-                    BaseImp = (double)importeNeto,
-                    Importe = (double)importeIva
+                    new AlicIva
+                    {
+                        Id = 5, // 21%
+                        BaseImp = (double)importeNeto,
+                        Importe = (double)importeIva
+                    }
                 }
-            }
-                };
+                            };
 
                 var request = new FECAERequest
                 {
@@ -85,8 +92,17 @@ namespace ApplicationLayer.Services
                     FeDetReq = new[] { detalle }
                 };
 
+                // Log mejorado
+                Console.WriteLine("=== DETALLE DE FACTURA ===");
+                Console.WriteLine($"Número: {PUNTO_VENTA}-{numeroComprobante}");
+                Console.WriteLine($"Fecha: {detalle.CbteFch}");
+                Console.WriteLine($"Importe Total: {montoTotal}");
+                Console.WriteLine($"Neto: {importeNeto} | IVA: {importeIva}");
+                Console.WriteLine($"Concepto: {concepto}");
+
                 using (var client = new ServiceSoapClient(ServiceSoapClient.EndpointConfiguration.ServiceSoap))
                 {
+                    Console.WriteLine($"URL: {ServiceSoapClient.EndpointConfiguration.ServiceSoap}");
                     var response = await client.FECAESolicitarAsync(auth, request);
                     var resultado = response.Body.FECAESolicitarResult;
 
@@ -113,9 +129,23 @@ namespace ApplicationLayer.Services
                         var mensajeError = "Factura rechazada";
 
                         if (resultado.Errors != null && resultado.Errors.Length > 0)
+                        {
                             mensajeError = $"ERROR {resultado.Errors[0].Code}: {resultado.Errors[0].Msg}";
+                            // Log de todos los errores
+                            foreach (var error in resultado.Errors)
+                            {
+                                Console.WriteLine($"ERROR AFIP: {error.Code} - {error.Msg}");
+                            }
+                        }
                         else if (resultado.FeDetResp?[0]?.Observaciones != null && resultado.FeDetResp[0].Observaciones.Length > 0)
+                        {
                             mensajeError = $"OBS {resultado.FeDetResp[0].Observaciones[0].Code}: {resultado.FeDetResp[0].Observaciones[0].Msg}";
+                            // Log de todas las observaciones
+                            foreach (var obs in resultado.FeDetResp[0].Observaciones)
+                            {
+                                Console.WriteLine($"OBSERVACIÓN AFIP: {obs.Code} - {obs.Msg}");
+                            }
+                        }
 
                         return new FacturaResponse
                         {
@@ -127,6 +157,11 @@ namespace ApplicationLayer.Services
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"EXCEPCIÓN: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"INNER EXCEPTION: {ex.InnerException.Message}");
+                }
                 return new FacturaResponse
                 {
                     Exitoso = false,

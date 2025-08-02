@@ -5973,7 +5973,7 @@ namespace WSFE
         {
             if ((endpointConfiguration == EndpointConfiguration.ServiceSoap))
             {
-                return new System.ServiceModel.EndpointAddress("https://wswhomo.afip.gov.ar/wsfev1/service.asmx");
+                return new System.ServiceModel.EndpointAddress("https://servicios1.afip.gov.ar/wsfev1/service.asmx");
             }
             if ((endpointConfiguration == EndpointConfiguration.ServiceSoap12))
             {

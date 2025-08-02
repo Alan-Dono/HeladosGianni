@@ -34,7 +34,7 @@ builder.Services.AddScoped<AfipService>(provider =>
     // Validación de configuraciones requeridas
     string certificatePath = configuration["Afip:CertificatePath"] ?? "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
     string certPassword = configuration["Afip:CertPassword"] ?? "12345678";
-    string wsaaUrl = configuration["Afip:WsaaUrl"] ?? "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
+    string wsaaUrl = configuration["Afip:WsaaUrl"] ?? "https://wsaa.afip.gov.ar/ws/services/LoginCms";
 
     // Validar configuración mínima
     if (string.IsNullOrWhiteSpace(certificatePath) || string.IsNullOrWhiteSpace(certPassword) || string.IsNullOrWhiteSpace(wsaaUrl))
