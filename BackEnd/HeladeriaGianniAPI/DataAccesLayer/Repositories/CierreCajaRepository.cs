@@ -19,6 +19,7 @@ namespace DataAccesLayer.Repositories
 
         public async Task CambiarResponsable(int idCierre, CierreCaja cierreCajaNuevo)
         {
+            var zonaHorariaArgentina = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
             try
             {
                 var cierreCaja = await context.CierreCajas.FindAsync(idCierre);
@@ -26,7 +27,7 @@ namespace DataAccesLayer.Repositories
                     throw new KeyNotFoundException($"No se encontró un cierre de caja con el ID {idCierre}.");
 
                 // Cambia el responsable
-                cierreCaja.FechaFin = DateTime.UtcNow; 
+                cierreCaja.FechaFin = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, zonaHorariaArgentina);
                 cierreCaja.EstaActivo = false;
                 context.Update(cierreCaja);
                 await context.SaveChangesAsync();

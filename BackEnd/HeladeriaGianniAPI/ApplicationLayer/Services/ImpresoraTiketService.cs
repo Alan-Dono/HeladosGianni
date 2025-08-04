@@ -19,7 +19,7 @@ namespace ApplicationLayer.Services
         private Venta _ventaHelados = new Venta();
         private Venta _ventacafeteria = new Venta();
         private FacturaResponse FacturaResponse;
-        private static int _contadorHeladeria = 98;
+        private static int _contadorHeladeria = 0;
 
         public ImpresoraTicketService(WSFEService webService)
         {
@@ -157,11 +157,11 @@ namespace ApplicationLayer.Services
                 float rightMargin = ANCHO_TICKET - 2;
 
                 // Encabezado
-                string razonSocial = "Razón Social: Heladería Gianni S.A.";
-                string cuit = "CUIT: 20-12345678-9";
-                string ingresosBrutos = "Ingresos Brutos: 12345678";
-                string domicilio = "Domicilio: Calle Ficticia 1234";
-                string inicioActividades = "Inicio de Actividades: 01/01/2020";
+                string razonSocial = "Razón Social: ADRIAN OSCAR GIANETTI";
+                string cuit = "CUIT: 20127915130";
+                string ingresosBrutos = "Ingresos Brutos: 20127915130";
+                string domicilio = "CALLE 21 799 MIRAMAR";
+                string inicioActividades = "Inicio de Actividades: 01/04/2015";
                 string iva = "IVA: Responsable Inscripto";
 
                 // Razón Social
@@ -193,7 +193,7 @@ namespace ApplicationLayer.Services
                 yPos += 10;
 
                 // Ticket y Punto de Venta
-                string puntoVenta = "P.V. N: 001"; // Esto se puede cambiar según corresponda
+                string puntoVenta = "P.V. N: 30"; // Esto se puede cambiar según corresponda
                 string ticketNumero = $"Ticket #: {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
                     string fechaHora = $"Fecha: {FacturaResponse.FechaEmision:dd/MM/yyyy}         Hora: {FacturaResponse.FechaEmision:HH:mm}";
                     // Resultado: "Fecha: 18/07/2024 - Hora: 14:30"
