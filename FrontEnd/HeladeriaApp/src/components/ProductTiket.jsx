@@ -14,7 +14,7 @@ const ProductTiket = ({ producto, agregar, restar, eliminar }) => {
                 mb: 1,
                 p: 1,
                 width: '100%', // Tarjeta ocupa todo el ancho
-                boxShadow: 1,
+                boxShadow: 2,
                 borderRadius: 2,
                 height: '70px', // Altura fija para todas las tarjetas
             }}

@@ -218,7 +218,7 @@ const PanelCierre = ({ onUpdate }) => {
       mostrarMensaje('Venta anulada con éxito', 'success');
       limpiarEstadosVenta();
       setDialogoAnulacionVentaAbierto(false);
-     
+      onUpdate();
     } catch (error) {
       mostrarError("Error al anular venta:", error);
     }
@@ -282,11 +282,17 @@ const PanelCierre = ({ onUpdate }) => {
                 Ventas: <span style={{ color: theme.palette.success.main }}>{cierreActual.cantidadDeVentas}</span>
               </Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-                Descuento Total: <span style={{ color: theme.palette.warning.main }}>${cierreActual.totalDescuentos.toFixed(2)}</span>
-              </Typography>
-              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-                Total: <span style={{ color: theme.palette.primary.main }}>${cierreActual.totalDeVentas.toFixed(2)}</span>
-              </Typography>
+  Descuento Total: <span style={{ color: theme.palette.warning.main }}>
+    ${cierreActual.totalDescuentos.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+  </span>
+</Typography>
+
+<Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+  Total: <span style={{ color: theme.palette.primary.main }}>
+    ${cierreActual.totalDeVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+  </span>
+</Typography>
+
             </Box>
 
             <Box sx={{

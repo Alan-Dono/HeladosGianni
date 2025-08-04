@@ -10,3 +10,7 @@ const apiClient = axios.create({
 });
 
 export default apiClient;
+
+
+//https://localhost:7266/api DEVELOPMENT
+// http://localhost:8088/api PRODUCTION

@@ -34,7 +34,7 @@ builder.Services.AddScoped<AfipService>(provider =>
     // Validación de configuraciones requeridas
     string certificatePath = configuration["Afip:CertificatePath"] ?? "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
     string certPassword = configuration["Afip:CertPassword"] ?? "12345678";
-    string wsaaUrl = configuration["Afip:WsaaUrl"] ?? "https://wsaahomo.afip.gov.ar/ws/services/LoginCms?WSDL";
+    string wsaaUrl = configuration["Afip:WsaaUrl"] ?? "https://wsaa.afip.gov.ar/ws/services/LoginCms";
 
     // Validar configuración mínima
     if (string.IsNullOrWhiteSpace(certificatePath) || string.IsNullOrWhiteSpace(certPassword) || string.IsNullOrWhiteSpace(wsaaUrl))
@@ -119,11 +119,14 @@ builder.Services.AddSwaggerGen();
 // Configuración de CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowReactApp", builder =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        builder.WithOrigins("http://localhost:5173") // Asegúrate de que esta URL sea correcta
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        policy.WithOrigins("http://localhost:8087", // Puerto de tu frontend
+                           "http://localhost:5173") // Desarrollo
+              .AllowAnyMethod()
+              .AllowAnyHeader()
+              .SetIsOriginAllowedToAllowWildcardSubdomains()
+              .SetPreflightMaxAge(TimeSpan.FromMinutes(10));
     });
 });
 
@@ -162,7 +165,7 @@ app.UseStaticFiles(); // Esto sirve archivos desde wwwroot por defecto
 
 app.UseHttpsRedirection();
 
-app.UseCors("AllowReactApp");
+app.UseCors("AllowFrontend");
 
 
 app.UseAuthorization();

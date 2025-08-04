@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Linq;
+using AutoMapper;
 using DomainLayer.Models;
 using HeladeriaGianniAPI.DTOs.Request;
 using HeladeriaGianniAPI.DTOs.Response;
@@ -56,11 +57,11 @@ namespace HeladeriaGianniAPI.Mapper
 
             // Mapeos para CierreCaja
             CreateMap<CierreCaja, CierreCajaDtoRes>()
-            .ForMember(dest => dest.IdsVentas, opt => opt.MapFrom(MapIdsVentas))
-            .ForMember(dest => dest.CantidadDeVentas, opt => opt.MapFrom(src => src.Ventas.Count))
-            .ForMember(dest => dest.TotalDeVentas, opt => opt.MapFrom(src => src.Ventas.Sum(v => v.TotalVenta)))
-            .ForMember(dest => dest.TotalDescuentos, opt => opt.MapFrom(src => src.Ventas.Sum(x => x.Descuentos)))
-            .ForMember(dest => dest.IdsVentas, opt => opt.MapFrom(MapIdsVentas));
+                .ForMember(dest => dest.IdsVentas, opt => opt.MapFrom(MapIdsVentas)) // todas
+                .ForMember(dest => dest.CantidadDeVentas, opt => opt.MapFrom(src => src.Ventas.Count)) // todas
+                .ForMember(dest => dest.TotalDeVentas, opt => opt.MapFrom(src => src.Ventas.Sum(SumarVentasC))) // solo activas
+                .ForMember(dest => dest.TotalDescuentos, opt => opt.MapFrom(src => src.Ventas.Sum(SumarDescuentosC)));
+
 
             CreateMap<IniciarCajaDtoReq, CierreCaja>();
 
@@ -121,13 +122,17 @@ namespace HeladeriaGianniAPI.Mapper
             return lista;
         }*/
 
-
+        
         private double SumarVentas(CierreCaja cierreCaja)
         {
             double Total = 0;
-            foreach(var venta in cierreCaja.Ventas)
+            foreach (var venta in cierreCaja.Ventas)
             {
-                Total += venta.TotalVenta;
+                if ( venta.Activa == true)
+                {
+                    Total += venta.TotalVenta;
+                }
+                
             }
             return Total;
         }
@@ -137,14 +142,29 @@ namespace HeladeriaGianniAPI.Mapper
             double Total = 0;
             foreach(var venta in cierreCaja.Ventas)
             {
-                Total += venta.Descuentos;
+                if (venta.Activa == true)
+                {
+                    Total += venta.Descuentos;
+                }
             }
             return Total;
         }
 
+
+
         private int ContarVentas(CierreCaja cierreCaja)
         {
             return cierreCaja.Ventas.Count();
+        }
+
+        private double SumarVentasC(Venta venta)
+        {
+            return venta.Activa ? venta.TotalVenta : 0;
+        }
+
+        private double SumarDescuentosC(Venta venta)
+        {
+            return venta.Activa ? venta.Descuentos : 0;
         }
 
 

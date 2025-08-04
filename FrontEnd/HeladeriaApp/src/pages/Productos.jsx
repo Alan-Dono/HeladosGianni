@@ -14,7 +14,7 @@ const Productos = () => {
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [snackbarInfo, setSnackbarInfo] = useState({ open: false, message: '', severity: 'success' });
     const [searchTerm, setSearchTerm] = useState('');
-    const [paginationModel, setPaginationModel] = useState({ pageSize: 5, page: 0 });
+    const [paginationModel, setPaginationModel] = useState({ pageSize: 10, page: 0 });
 
     useEffect(() => {
         fetchProductos();

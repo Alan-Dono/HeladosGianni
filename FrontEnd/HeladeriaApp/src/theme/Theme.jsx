@@ -4,28 +4,32 @@ const lightTheme = createTheme({
     palette: {
         mode: 'light',
         primary: {
-            main: '#3F72AF',
+            main: '#2f27ce',    // --primary luz
         },
         secondary: {
-            main: '#DBE2EF',
+            main: '#dddbff',    // --secondary luz
+            light: '#e5e4ff',   // un tono más claro para glow
         },
         success: {
-            main: '#4CAF50',
+            main: '#4CAF50',    // lo mismo que antes
         },
         warning: {
-            main: '#FFA726',
+            main: '#FFA726',    // sin cambiar
         },
         error: {
-            main: '#F44336',
+            main: '#F44336',    // sin cambiar
         },
         background: {
-            default: '#F0F2F5', // más suave
-            paper: '#FFFFFF',   // fondo blanco para cajas
-            componentes: '#F7F9FB' // nuevo: para componentes como botones/paneles
+            default: '#fbfbfe',   // --background luz
+            paper: '#ffffff',
+            componentes: '#443dff', // --accent luz (para fondos componentes)
         },
         text: {
-            primary: '#212121', // texto más oscuro para mejor contraste
-            secondary: '#616161',
+            primary: '#050316',   // --text luz
+            secondary: '#050316',
+        },
+        custom: {
+            glow: '#b0adff',      // brillo más visible (ajustable)
         },
     },
     typography: {
@@ -45,40 +49,44 @@ const lightTheme = createTheme({
 
 const darkTheme = createTheme({
     palette: {
-        mode: 'dark', // Modo oscuro
+        mode: 'dark',
         primary: {
-            main: '#4494f8', // Azul oscuro
+            main: '#90e9e5', // --primario oscuro
         },
         secondary: {
-            main: '#79b8ff', // Azul claro
+            main: '#1e1d8c', // --secundario oscuro
+            light: '#7b79ff', // más claro para efecto de brillo
         },
         success: {
-            main: '#248636', // Verde oscuro
+            main: '#248636',
         },
         warning: {
-            main: '#FF8C00', // Naranja
+            main: '#FF8C00',
         },
         error: {
-            main: '#B22222', // Rojo oscuro
+            main: '#B22222',
         },
         background: {
-            default: '#010409', // Fondo oscuro
-            paper: '#0d1117', // Fondo de los contenedores
-            componentes: '#151b24' // Fondo de los componentes
+            default: '#020808', // --fondo oscuro
+            paper: '#0d1117',
+            componentes: '#7949da', // --acento oscuro
         },
         text: {
-            primary: '#f0f6fc', // Texto claro para alto contraste
-            secondary: '#6e757e', // Texto gris suave para menor contraste
+            primary: '#eafafa', // --texto oscuro
+            secondary: '#eafafa',
+        },
+        custom: {
+            glow: '#a9a7ff', // brillo en modo oscuro
         },
     },
     typography: {
-        fontFamily: 'Roboto, Arial, sans-serif', // Fuente Roboto
+        fontFamily: 'Roboto, Arial, sans-serif',
     },
     components: {
         MuiButton: {
             styleOverrides: {
                 root: {
-                    textTransform: 'none', // No usar mayúsculas
+                    textTransform: 'none',
                 },
             },
         },

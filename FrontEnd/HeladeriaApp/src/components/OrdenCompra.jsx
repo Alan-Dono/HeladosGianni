@@ -283,7 +283,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
                 <Button
                     variant="outlined"
-                    color="secondary"
+                    color="primary"
                     sx={{ flex: 1, marginRight: 1 }}
                     onClick={manejarTiketFiscal}
                 >

@@ -92,7 +92,8 @@ const DetalleCierreModal = ({ abierto, cerrar, cierre }) => {
       headerName: 'Descuentos',
       flex: 1,
       valueFormatter: (params) => {
-        return params ? params.toFixed(2) : '0.00'; // Formatea el valor a dos decimales
+        return params ? params.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+      : '0,00'; // Formatea el valor a dos decimales
       },
     },
     {
@@ -100,7 +101,8 @@ const DetalleCierreModal = ({ abierto, cerrar, cierre }) => {
       headerName: 'Importe',
       flex: 1,
       valueFormatter: (params) => {
-        return params ? params.toFixed(2) : '0.00'; // Formatea el valor a dos decimales
+        return params ? params.toLocaleString('es-AR', { minimumFractionDigits: 2 })
+      : '0,00'; // Formatea el valor a dos decimales
       },
     },
     {
