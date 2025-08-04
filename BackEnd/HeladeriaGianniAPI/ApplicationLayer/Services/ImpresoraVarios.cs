@@ -108,6 +108,7 @@ namespace ApplicationLayer.Services
                 g.DrawString($"Desde: {_cierre.FechaInicio:dd/MM/yyyy HH:mm}", fuenteNormal, Brushes.Black, left, y);
                 y += 20;
                 g.DrawString($"Hasta: {_cierre.FechaFin?.ToString("dd/MM/yyyy HH:mm") ?? "Actualmente activo"}", fuenteNormal, Brushes.Black, left, y);
+
                 y += 25;
 
 
