@@ -101,23 +101,34 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
 
     const confirmarVenta = async () => {
         try {
-            // 1. Construir objeto de venta
+            // 1. Separar productos regulares y productos varios
+            const productosRegulares = carrito.filter(item => !item.esVario);
+            const productosVarios = carrito.filter(item => item.esVario);
+
+            // 2. Construir objeto de venta
             const ventaData = {
                 FechaDeVenta: new Date().toISOString(),
                 TotalVenta: parseFloat(totalConDescuento.toFixed(2)),
                 Descuentos: montoDescuento > 0 ? parseFloat(montoDescuento.toFixed(2)) : null,
                 IdCierreCaja: cierreActivo.id,
-                DetallesVentas: carrito.map(producto => ({
+                DetallesVentas: productosRegulares.map(producto => ({
                     ProductoId: producto.id,
                     Cantidad: producto.cantidad,
                     PrecioUnitario: parseFloat(producto.precio.toFixed(2))
                 })),
+                ConceptosVarios: productosVarios.length > 0
+                    ? productosVarios.map(producto => ({
+                        Nombre: producto.nombre,
+                        Precio: parseFloat(producto.precio.toFixed(2))
+                    }))
+                    : null,
                 AclaracionCafeteria: aclaracionCafeteria?.trim() || null,
                 AclaracionHeladeria: aclaracionHeladeria?.trim() || null
             };
 
-            // 2. Validación
-            if (!ventaData.DetallesVentas || ventaData.DetallesVentas.length === 0) {
+            // 2. Validación modificada para considerar productos varios
+            if ((!ventaData.DetallesVentas || ventaData.DetallesVentas.length === 0) &&
+                (!ventaData.ConceptosVarios || ventaData.ConceptosVarios.length === 0)) {
                 throw new Error("El carrito está vacío");
             }
 

@@ -4,6 +4,7 @@ using DataAccesLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccesLayer.Migrations
 {
     [DbContext(typeof(HeladeriaDbContext))]
-    partial class HeladeriaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250804231129_ConceptoVarios")]
+    partial class ConceptoVarios
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,26 +80,6 @@ namespace DataAccesLayer.Migrations
                     b.HasIndex("IdVenta");
 
                     b.ToTable("ConceptoVarios");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Contador", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NombreContador")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumeroContador")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contadores");
                 });
 
             modelBuilder.Entity("DomainLayer.Models.DetalleVenta", b =>

@@ -30,6 +30,7 @@ export const getVentasEntreFechas = async (desde, hasta) => {
     const response = await apiClient.get("/ventas/entre-fechas", {
       params: {desde, hasta},
     });
+    console.log("repuestaAPiS", response.data);
     return response.data;
   } catch (error) {
     console.error(
@@ -103,6 +104,7 @@ export const anularVenta = async (id) => {
 export const getVentasPorCierreCaja = async (id) => {
   try {
     const response = await apiClient.get(`/ventas/cierres/${id}`);
+    console.log("repuestaAPiCierre", response.data);
     return response.data;
   } catch (error) {
     console.error(

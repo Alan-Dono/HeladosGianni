@@ -9,5 +9,6 @@
         public int IdCierreCaja { get; set; }
         public bool Activa { get; set; }
         public List<DetalleVentaDtoRes> DetalleVenta { get; set; } = new List<DetalleVentaDtoRes>();
+        public List<ConceptoVariosDtoRes>? ConceptosVarios { get; set; } = new List<ConceptoVariosDtoRes>();
     }
 }

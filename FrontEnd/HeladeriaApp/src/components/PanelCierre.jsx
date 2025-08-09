@@ -51,11 +51,19 @@ const CustomSnackbar = ({ open, message, severity, onClose }) => (
   </Snackbar>
 );
 
-const ProductosList = ({ productos }) => (
+const ProductosList = ({ productos, conceptosVarios }) => (
   <ul>
-    {productos.map((d, idx) => (
-      <li key={idx}>
+    {/* Productos normales */}
+    {productos?.map((d, idx) => (
+      <li key={`normal-${idx}`}>
         {d.producto?.nombreProducto ?? "Sin nombre"} - {d.cantidad} x ${d.precioUnitario.toFixed(2)} = ${(d.cantidad * d.precioUnitario).toFixed(2)}
+      </li>
+    ))}
+
+    {/* Productos varios */}
+    {conceptosVarios?.map((c, idx) => (
+      <li key={`vario-${idx}`}>
+        {c.nombre} - 1 x ${c.precio.toFixed(2)} = ${c.precio.toFixed(2)}
       </li>
     ))}
   </ul>
@@ -218,6 +226,10 @@ const PanelCierre = ({ onUpdate }) => {
       mostrarMensaje('Venta anulada con éxito', 'success');
       limpiarEstadosVenta();
       setDialogoAnulacionVentaAbierto(false);
+
+      // Forzar recarga de los datos del cierre
+      await cargarCierreActual(); // <-- Añade esta línea
+
       onUpdate();
     } catch (error) {
       mostrarError("Error al anular venta:", error);
@@ -253,7 +265,7 @@ const PanelCierre = ({ onUpdate }) => {
 
   // Renderizado
   return (
-    <Box sx={{  }}>
+    <Box sx={{}}>
       {/* Panel principal */}
       <Box sx={{
         display: 'flex',
@@ -282,16 +294,16 @@ const PanelCierre = ({ onUpdate }) => {
                 Ventas: <span style={{ color: theme.palette.success.main }}>{cierreActual.cantidadDeVentas}</span>
               </Typography>
               <Typography variant="body1" sx={{ mb: 1 }}>
-  Descuento Total: <span style={{ color: theme.palette.warning.main }}>
-    ${cierreActual.totalDescuentos.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-  </span>
-</Typography>
+                Descuento Total: <span style={{ color: theme.palette.warning.main }}>
+                  ${cierreActual.totalDescuentos.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                </span>
+              </Typography>
 
-<Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-  Total: <span style={{ color: theme.palette.primary.main }}>
-    ${cierreActual.totalDeVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-  </span>
-</Typography>
+              <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+                Total: <span style={{ color: theme.palette.primary.main }}>
+                  ${cierreActual.totalDeVentas.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                </span>
+              </Typography>
 
             </Box>
 
@@ -484,18 +496,28 @@ const PanelCierre = ({ onUpdate }) => {
 
           {ventaData && (
             <Box sx={{ mt: 2 }}>
-              <Typography>
-                Responsable: {empleadoDeLaVenta
-                  ? `${empleadoDeLaVenta.nombreEmpleado} ${empleadoDeLaVenta.apellidoEmpleado}`
-                  : 'Cargando...'}
-              </Typography>
-              <Typography>Total: ${ventaData.totalVenta}</Typography>
-              <Typography>Fecha: {formatearFecha(ventaData.fechaDeVenta)}</Typography>
-              {ventaData.detalleVenta?.length > 0 && (
+              {ventaData.activa ? (
                 <>
-                  <Typography variant="subtitle1" sx={{ mt: 2 }}>Productos:</Typography>
-                  <ProductosList productos={ventaData.detalleVenta} />
+                  <Typography>
+                    Responsable: {empleadoDeLaVenta
+                      ? `${empleadoDeLaVenta.nombreEmpleado} ${empleadoDeLaVenta.apellidoEmpleado}`
+                      : 'Cargando...'}
+                  </Typography>
+                  <Typography>Descuento: ${ventaData.descuentos}</Typography>
+                  <Typography>Total: ${ventaData.totalVenta}</Typography>
+                  <Typography>Fecha: {formatearFecha(ventaData.fechaDeVenta)}</Typography>
+                  {(ventaData.detalleVenta?.length > 0 || ventaData.conceptosVarios?.length > 0) && (
+                    <>
+                      <Typography variant="subtitle1" sx={{ mt: 2 }}>Productos:</Typography>
+                      <ProductosList
+                        productos={ventaData.detalleVenta}
+                        conceptosVarios={ventaData.conceptosVarios}
+                      />
+                    </>
+                  )}
                 </>
+              ) : (
+                <Typography color="error">ESTA VENTA FUE ANULADA</Typography>
               )}
             </Box>
           )}
@@ -511,7 +533,7 @@ const PanelCierre = ({ onUpdate }) => {
             onClick={anularVenta}
             variant="contained"
             color="error"
-            disabled={!ventaData}
+            disabled={!ventaData || !ventaData.activa}
           >
             Eliminar
           </Button>

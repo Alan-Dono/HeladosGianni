@@ -3,7 +3,6 @@ import { Box, Typography, Modal, Table, TableBody, TableCell, TableHead, TableRo
 import VentaService from '../services/VentaService';
 
 const DetalleCompraModal = ({ abierto, cerrar, venta }) => {
-
   const [ventaDetalle, setVentaDetalle] = useState(null);
 
   useEffect(() => {
@@ -66,12 +65,23 @@ const DetalleCompraModal = ({ abierto, cerrar, venta }) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {ventaDetalle.detalleVenta.map((detalle, index) => (
-              <TableRow key={index}>
+            {/* Mostrar productos normales */}
+            {ventaDetalle.detalleVenta?.map((detalle, index) => (
+              <TableRow key={`normal-${index}`}>
                 <TableCell>{detalle.producto?.nombreProducto || 'Producto no disponible'}</TableCell>
                 <TableCell>{detalle.cantidad}</TableCell>
-                <TableCell>{detalle.precioUnitario.toFixed(2)}</TableCell>
-                <TableCell>{(detalle.cantidad * detalle.precioUnitario).toFixed(2)}</TableCell>
+                <TableCell>${detalle.precioUnitario.toFixed(2)}</TableCell>
+                <TableCell>${(detalle.cantidad * detalle.precioUnitario).toFixed(2)}</TableCell>
+              </TableRow>
+            ))}
+
+            {/* Mostrar conceptos varios */}
+            {ventaDetalle.conceptosVarios?.map((concepto, index) => (
+              <TableRow key={`vario-${index}`}>
+                <TableCell>{concepto.nombre}</TableCell>
+                <TableCell>1</TableCell> {/* Cantidad fija en 1 para productos varios */}
+                <TableCell>${concepto.precio.toFixed(2)}</TableCell>
+                <TableCell>${concepto.precio.toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -79,10 +89,10 @@ const DetalleCompraModal = ({ abierto, cerrar, venta }) => {
 
         <Box mt={4} display="flex" justifyContent="space-between">
           <Typography variant="subtitle1">
-            Descuento: {ventaDetalle.descuentos?.toFixed(2) || 0}
+            Descuento: ${ventaDetalle.descuentos?.toFixed(2) || '0.00'}
           </Typography>
           <Typography variant="h6">
-            Total: {ventaDetalle.totalVenta.toFixed(2)}
+            Total: ${ventaDetalle.totalVenta.toFixed(2)}
           </Typography>
         </Box>
       </Box>

@@ -163,7 +163,9 @@ namespace DataAccesLayer.Repositories
                             .ThenInclude(v => v.DetallesVentas)
                                 .ThenInclude(dv => dv.Producto)
                                     .ThenInclude(p => p.ProductoCategoria)
+                    .OrderByDescending(x => x.Id)
                     .FirstOrDefaultAsync(t => t.Id == id);
+
 
                 return turno;
             }

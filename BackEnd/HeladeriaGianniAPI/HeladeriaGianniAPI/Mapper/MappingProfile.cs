@@ -40,11 +40,22 @@ namespace HeladeriaGianniAPI.Mapper
 
             CreateMap<Producto, ProductoVentaDtoRes>().ReverseMap();
 
+           /* CreateMap<Venta, VentaDtoRes>()
+                    .ForMember(dest => dest.IdsDetalleVentas, opt => opt.MapFrom(MapIdsDetallesVentas));
+                  
+            CreateMap<Venta, VentaProductosDtoRes>()
+                    .ForMember(dest => dest.DetalleVenta, opt => opt.MapFrom(src => src.DetallesVentas));
+*/
+             
+            
+            // Actualizar mapeo de Venta
             CreateMap<Venta, VentaDtoRes>()
-                .ForMember(dest => dest.IdsDetalleVentas, opt => opt.MapFrom(MapIdsDetallesVentas));
+                .ForMember(dest => dest.IdsDetalleVentas, opt => opt.MapFrom(MapIdsDetallesVentas))
+                .ForMember(dest => dest.IdsConceptosVarios, opt => opt.MapFrom(MapIdsConceptosVarios));
 
             CreateMap<Venta, VentaProductosDtoRes>()
-                .ForMember(dest => dest.DetalleVenta, opt => opt.MapFrom(src => src.DetallesVentas));
+           .ForMember(dest => dest.DetalleVenta, opt => opt.MapFrom(src => src.DetallesVentas))
+           .ForMember(dest => dest.ConceptosVarios, opt => opt.MapFrom(src => src.ConceptosVarios));
 
 
             CreateMap<VentaDtoReq, Venta>().ReverseMap();
@@ -53,6 +64,10 @@ namespace HeladeriaGianniAPI.Mapper
             CreateMap<DetalleVenta, DetalleVentaDtoRes>().ReverseMap();
 
             CreateMap<DetalleVentaDtoReq, DetalleVenta>().ReverseMap();
+
+            // Mapeos para ConceptoVarios
+            CreateMap<ConceptoVariosDtoReq, ConceptoVarios>();
+            CreateMap<ConceptoVarios, ConceptoVariosDtoRes>();
 
 
             // Mapeos para CierreCaja
@@ -167,6 +182,10 @@ namespace HeladeriaGianniAPI.Mapper
             return venta.Activa ? venta.Descuentos : 0;
         }
 
+        private List<int> MapIdsConceptosVarios(Venta venta, VentaDtoRes dto)
+        {
+            return venta.ConceptosVarios?.Select(c => c.Id).ToList() ?? new List<int>();
+        }
 
     }
 }

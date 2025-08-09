@@ -19,8 +19,8 @@ namespace ApplicationLayer.Services
         private Venta _ventaHelados = new Venta();
         private Venta _ventacafeteria = new Venta();
         private FacturaResponse FacturaResponse;
-        private static int _contadorHeladeria = 0;
-
+        //private static int _contadorHeladeria = 0;
+        private const string RUTA_CONTADOR = @"C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\Helper\Contador.txt";
         public ImpresoraTicketService(WSFEService webService)
         {
             bool impresoraEncontrada = false;
@@ -127,6 +127,7 @@ namespace ApplicationLayer.Services
                     tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e, "HELADERIA");
                     tiketHelado.Print();
                 }
+
 
                 // Configurar el método para la impresión general
                 pd.PrintPage += Pd_PrintPageFiscal;
@@ -371,20 +372,28 @@ namespace ApplicationLayer.Services
                         if (nombreProducto.Length > 20)
                             nombreProducto = nombreProducto.Substring(0, 17) + "...";
 
-                        g.DrawString(nombreProducto,
-                            fuenteNormal, Brushes.Black, leftMargin, yPos);
-
-                        g.DrawString(detalle.Cantidad.ToString(),
-                            fuenteNormal, Brushes.Black, 145, yPos);  // Desplazado más a la derecha
-
-                        // Mostramos el precio unitario sin decimales y con formato de moneda
-                        g.DrawString(detalle.PrecioUnitario.ToString("C0"),
-                            fuenteNormal, Brushes.Black, 165, yPos);  // Desplazado
-
-                        // Mostramos el total sin decimales y con formato de moneda
-                        g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("C0"),
-                            fuenteNormal, Brushes.Black, 225, yPos); // Alineado con "P.U." más cerca
+                        g.DrawString(nombreProducto, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                        g.DrawString(detalle.Cantidad.ToString(), fuenteNormal, Brushes.Black, 145, yPos);
+                        g.DrawString(detalle.PrecioUnitario.ToString("C0"), fuenteNormal, Brushes.Black, 165, yPos);
+                        g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("C0"), fuenteNormal, Brushes.Black, 225, yPos);
                         yPos += 20;
+                    }
+
+                    // AÑADE ESTO PARA PRODUCTOS VARIOS (NUEVO):
+                    if (_ventaActual.ConceptosVarios != null)
+                    {
+                        foreach (var concepto in _ventaActual.ConceptosVarios)
+                        {
+                            string nombre = concepto.Nombre.Length > 20 ?
+                                           concepto.Nombre.Substring(0, 17) + "..." :
+                                           concepto.Nombre;
+
+                            g.DrawString(nombre, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                            g.DrawString("1", fuenteNormal, Brushes.Black, 145, yPos); // Cantidad siempre 1
+                            g.DrawString(concepto.Precio.ToString("C0"), fuenteNormal, Brushes.Black, 165, yPos);
+                            g.DrawString(concepto.Precio.ToString("C0"), fuenteNormal, Brushes.Black, 225, yPos);
+                            yPos += 20;
+                        }
                     }
 
                     // Línea separadora antes del total
@@ -473,6 +482,16 @@ namespace ApplicationLayer.Services
                     // Mostrar contador solo para HELADERIA (número grande y centrado)
                     if (titulo == "HELADERIA")
                     {
+                        int contador = ObtenerYActualizarContador();
+                        string contadorFormateado = contador.ToString("00"); // Esto garantiza 2 dígitos
+
+                        SizeF contadorSize = g.MeasureString(contadorFormateado, fuenteContador);
+                        g.DrawString(contadorFormateado, fuenteContador, Brushes.Black,
+                            (ANCHO_TICKET - contadorSize.Width) / 2, yPos);
+                        yPos += contadorSize.Height + 5;
+                    }
+                    /*if (titulo == "HELADERIA")
+                    {
                         string contador = _contadorHeladeria.ToString("00"); // Formato 00-99
                         SizeF contadorSize = g.MeasureString(contador, fuenteContador);
                         g.DrawString(contador, fuenteContador, Brushes.Black,
@@ -481,7 +500,7 @@ namespace ApplicationLayer.Services
 
                         // Incrementar y reiniciar contador
                         _contadorHeladeria = (_contadorHeladeria + 1) % 100;
-                    }
+                    }*/
 
                     // Fecha (alineada a la izquierda)
                     g.DrawString($"Fecha: {DateTime.Now:dd/MM/yyyy HH:mm}",
@@ -548,6 +567,37 @@ namespace ApplicationLayer.Services
                 }
             }
 
+        }
+
+        private int ObtenerYActualizarContador()
+        {
+            try
+            {
+                // Crear archivo si no existe con valor inicial 0
+                if (!File.Exists(RUTA_CONTADOR))
+                {
+                    File.WriteAllText(RUTA_CONTADOR, "0");
+                    return 0;
+                }
+
+                // Leer valor actual
+                string contenido = File.ReadAllText(RUTA_CONTADOR);
+                int contadorActual = int.TryParse(contenido, out int result) ? result : 0;
+
+                // Calcular nuevo valor (solo últimos 2 dígitos)
+                int nuevoContador = (contadorActual + 1) % 100;
+
+                // Guardar nuevo valor
+                File.WriteAllText(RUTA_CONTADOR, nuevoContador.ToString());
+
+                // Devolver el valor que se debe mostrar (formato de 2 dígitos)
+                return nuevoContador;
+            }
+            catch
+            {
+                // Si hay algún error, retornar 0
+                return 0;
+            }
         }
 
         #endregion

@@ -19,7 +19,7 @@ namespace DomainLayer.Models
         public bool Activa { get; set; } = true; // Se usa para no eliminar la venta de la db
         // Propiedades de navegacion
         public List<DetalleVenta> DetallesVentas { get; set; } = new List<DetalleVenta>();
-        //public CierreCaja CierreCaja { get; set; } // ✅ acá esta es la que agruege
+        public List<ConceptoVarios>? ConceptosVarios { get; set; } = new List<ConceptoVarios>(); // Nueva relación
     }
 }
  

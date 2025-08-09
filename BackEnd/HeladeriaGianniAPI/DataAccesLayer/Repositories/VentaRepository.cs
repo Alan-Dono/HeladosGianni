@@ -22,6 +22,15 @@ namespace DataAccesLayer.Repositories
             try
             {
                 venta.FechaDeVenta = DateTime.Now;
+
+                if (venta.ConceptosVarios != null && venta.ConceptosVarios.Any())
+                {
+                    foreach (var concepto in venta.ConceptosVarios)
+                    {
+                        _context.Entry(concepto).State = EntityState.Added;
+                    }
+                }
+
                 _context.Add(venta);
                 await _context.SaveChangesAsync();
             }
@@ -38,7 +47,8 @@ namespace DataAccesLayer.Repositories
                 return await _context.Ventas
                     .Include(v => v.DetallesVentas)
                         .ThenInclude(dv => dv.Producto)
-                        .FirstOrDefaultAsync(v => v.Id == id);
+                    .Include(x => x.ConceptosVarios)
+                    .FirstOrDefaultAsync(v => v.Id == id);
             }
             catch (Exception ex)
             {
@@ -53,6 +63,8 @@ namespace DataAccesLayer.Repositories
                 return await _context.Ventas
                     .Include(x => x.DetallesVentas)
                         .ThenInclude(x => x.Producto)
+                    .Include(x => x.ConceptosVarios)
+                    .OrderByDescending(v => v.FechaDeVenta) // Orden descendente por fecha
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -68,7 +80,9 @@ namespace DataAccesLayer.Repositories
                 return await _context.Ventas
                     .Include(x => x.DetallesVentas)
                         .ThenInclude(x => x.Producto)
+                    .Include(x => x.ConceptosVarios)
                     .Where(x => x.FechaDeVenta >= fechaDesde && x.FechaDeVenta <= fechaHasta)
+                    .OrderByDescending(v => v.FechaDeVenta) // Orden descendente por fecha
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -106,7 +120,9 @@ namespace DataAccesLayer.Repositories
                 return await _context.Ventas
                     .Include(x => x.DetallesVentas)
                         .ThenInclude(x => x.Producto)
+                    .Include(x => x.ConceptosVarios)
                     .Where(x => x.IdCierreCaja == id)
+                    .OrderByDescending(v => v.FechaDeVenta) // Orden descendente por fecha
                     .ToListAsync();
             }
             catch (Exception ex)

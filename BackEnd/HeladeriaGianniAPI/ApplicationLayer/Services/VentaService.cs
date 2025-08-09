@@ -43,8 +43,12 @@ namespace ApplicationLayer.Services
         public async Task RegistrarVenta(Venta venta)
         {
             await ventaRepository.RegistrarVenta(venta);
-            
         }
+        /*public async Task RegistrarVenta(Venta venta)
+        {
+            await ventaRepository.RegistrarVenta(venta);
+            
+        }*/
 
         public async Task AnularVenta(int id)
         {

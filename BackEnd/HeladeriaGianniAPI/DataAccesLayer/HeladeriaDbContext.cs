@@ -51,9 +51,18 @@ namespace DataAccesLayer
                  .HasForeignKey<FacturaAfip>(f => f.VentaId)
                  .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ConceptoVarios>(entity =>
+            {
+                entity.HasOne(c => c.Venta)
+                      .WithMany(v => v.ConceptosVarios)
+                      .HasForeignKey(c => c.IdVenta)
+                      .OnDelete(DeleteBehavior.Cascade); // Esto activa el borrado en cascada
+            });
+
+           
 
         }
-
+        
         public DbSet<ProductoCategoria> ProductoCategorias { get; set; }
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Turno> Turnos { get; set; }
@@ -61,7 +70,7 @@ namespace DataAccesLayer
         public DbSet<Empleado> Empleados { get; set; } 
         public DbSet<DetalleVenta> DetallesVentas { get; set; } 
         public DbSet<CierreCaja> CierreCajas { get; set; }
-
         public DbSet<FacturaAfip> FacturasAfip { get; set; }
+
     }
 }

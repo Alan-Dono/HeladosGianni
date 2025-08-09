@@ -10,7 +10,7 @@ import MuiAlert from '@mui/material/Alert';
 import AclaracionModal from '../components/AclaracionModal';
 import { useNavigate } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning';
-
+import ModalVarios from '../components/ModalVarios';
 const Ventas = () => {
 
     const theme = useTheme();
@@ -30,10 +30,13 @@ const Ventas = () => {
     const [aclaracionHeladeria, setAclaracionHeladeria] = useState("");
     const [modalCafeteriaOpen, setModalCafeteriaOpen] = useState(false);
     const [modalHeladeriaOpen, setModalHeladeriaOpen] = useState(false);
+    const [modalVariosOpen, setModalVariosOpen] = useState(false);
 
     // Funciones para abrir modales
     const abrirModalCafeteria = () => setModalCafeteriaOpen(true);
     const abrirModalHeladeria = () => setModalHeladeriaOpen(true);
+    const abrirModalVarios = () => setModalVariosOpen(true);
+
 
     // Funciones para cerrar modales (con limpieza)
     const cerrarModalCafeteria = () => {
@@ -43,6 +46,7 @@ const Ventas = () => {
     const cerrarModalHeladeria = () => {
         setModalHeladeriaOpen(false);
     };
+    const cerrarModalVarios = () => setModalVariosOpen(false);
 
     // Funciones para guardar las aclaraciones
     const handleSaveCafeteria = (aclaracion) => {
@@ -53,6 +57,11 @@ const Ventas = () => {
     const handleSaveHeladeria = (aclaracion) => {
         setAclaracionHeladeria(aclaracion); // Guardar directamente
         cerrarModalHeladeria();
+    };
+
+    const handleSaveVarios = (productoVario) => {
+        agregarProducto(productoVario);
+        cerrarModalVarios();
     };
 
     // Funciones de cancelación específicas (para usar en el modal)
@@ -123,6 +132,26 @@ const Ventas = () => {
     };
 
     const agregarProducto = (producto) => {
+        if (!producto || (!producto.id && !producto.esVario)) return;
+
+        const productoExistente = carrito.find((item) =>
+            item.esVario
+                ? item.nombre === producto.nombre
+                : item.id === producto.id
+        );
+
+        if (productoExistente) {
+            setCarrito(carrito.map((item) =>
+                (item.esVario && item.nombre === producto.nombre) ||
+                    (!item.esVario && item.id === producto.id)
+                    ? { ...item, cantidad: item.cantidad + 1 }
+                    : item
+            ));
+        } else {
+            setCarrito([...carrito, { ...producto, cantidad: 1 }]);
+        }
+    };
+    {/*   const agregarProducto = (producto) => {
         if (!producto || !producto.id) return;
         const productoExistente = carrito.find((item) => item.id === producto.id);
         if (productoExistente) {
@@ -134,7 +163,8 @@ const Ventas = () => {
         } else {
             setCarrito([...carrito, { ...producto, cantidad: 1 }]);
         }
-    };
+    }; */}
+
 
     const toggleFavorito = async (producto) => {
         if (!producto?.id) {
@@ -183,17 +213,48 @@ const Ventas = () => {
         }
     };
 
-    const restarProducto = (id) => {
-        setCarrito(prevCarrito =>
-            prevCarrito
-                .map(item => item.id === id && item.cantidad > 1 ?
-                    { ...item, cantidad: item.cantidad - 1 } : item)
-                .filter(item => item.cantidad > 0)
-        );
+    // Función para restar productos (actualizada)
+    const restarProducto = (productoOrId) => {
+        setCarrito(prevCarrito => {
+            // Si es un producto vario (objeto completo)
+            if (typeof productoOrId === 'object' && productoOrId.esVario) {
+                return prevCarrito
+                    .map(item =>
+                        item.esVario && item.nombre === productoOrId.nombre
+                            ? { ...item, cantidad: item.cantidad - 1 }
+                            : item
+                    )
+                    .filter(item => item.cantidad > 0);
+            }
+            // Si es un ID (producto normal)
+            else {
+                return prevCarrito
+                    .map(item =>
+                        !item.esVario && item.id === productoOrId
+                            ? { ...item, cantidad: item.cantidad - 1 }
+                            : item
+                    )
+                    .filter(item => item.cantidad > 0);
+            }
+        });
     };
 
-    const eliminarProducto = (id) => {
-        setCarrito(prevCarrito => prevCarrito.filter(item => item.id !== id));
+    // Función para eliminar productos (actualizada)
+    const eliminarProducto = (productoOrId) => {
+        setCarrito(prevCarrito => {
+            // Si es un producto vario (objeto completo)
+            if (typeof productoOrId === 'object' && productoOrId.esVario) {
+                return prevCarrito.filter(item =>
+                    !(item.esVario && item.nombre === productoOrId.nombre)
+                );
+            }
+            // Si es un ID (producto normal)
+            else {
+                return prevCarrito.filter(item =>
+                    !(!item.esVario && item.id === productoOrId)
+                );
+            }
+        });
     };
 
     useEffect(() => {
@@ -345,7 +406,7 @@ const Ventas = () => {
 
                         <Box sx={{
                             display: 'grid',
-                            gridTemplateColumns: 'repeat(7, 1fr)',
+                            gridTemplateColumns: 'repeat(8, 1fr)',
                             gap: '8px',
                             p: 1,
                             backgroundColor: 'background.paper',
@@ -404,6 +465,24 @@ const Ventas = () => {
                                 onClick={() => abrirModalHeladeria()}
                             >
                                 Nota Helados
+                            </Button>
+                            <Button
+                                variant='contained'
+                                sx={{
+                                    height: '100%',
+                                    fontSize: { xs: '0.7rem', sm: '1rem' },
+                                    fontWeight: 'medium',
+                                    borderRadius: '4px',
+                                    textTransform: 'capitalize',
+                                    padding: { xs: '2px', sm: '6px' },
+                                    backgroundColor: theme.palette.error.main,
+                                    '&:hover': {
+                                        backgroundColor: theme.palette.error.dark || theme.palette.error.main,
+                                    }
+                                }}
+                                onClick={abrirModalVarios}
+                            >
+                                Varios
                             </Button>
                         </Box>
                     </Box>
@@ -468,6 +547,12 @@ const Ventas = () => {
                 onSave={handleSaveHeladeria}
                 onCancel={handleCancelHeladeria}
                 tipo="heladeria"
+            />
+
+            <ModalVarios
+                open={modalVariosOpen}
+                onClose={cerrarModalVarios}
+                onSave={handleSaveVarios}
             />
         </Box>
     );
