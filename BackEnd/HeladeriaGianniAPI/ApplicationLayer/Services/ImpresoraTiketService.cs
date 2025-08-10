@@ -19,8 +19,11 @@ namespace ApplicationLayer.Services
         private Venta _ventaHelados = new Venta();
         private Venta _ventacafeteria = new Venta();
         private FacturaResponse FacturaResponse;
+        private static readonly string RUTA_CONTADOR = Path.Combine(
+            @"C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\Helper",
+            "Contador.txt");
         //private static int _contadorHeladeria = 0;
-        private const string RUTA_CONTADOR = @"C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\Helper\Contador.txt";
+        //private const string RUTA_CONTADOR = @"C:\www\HELADERIA-GIANNI\BackEnd\HeladeriaGianniAPI\ApplicationLayer\Helper\Contador.txt";
         public ImpresoraTicketService(WSFEService webService)
         {
             bool impresoraEncontrada = false;
@@ -573,11 +576,11 @@ namespace ApplicationLayer.Services
         {   
             foreach(var detalle in venta.DetallesVentas)
             {
-                if(detalle.Producto.ProductoCategoriaId == 2)
+                if(detalle.Producto.ProductoCategoriaId == 1)
                 {
                     _ventacafeteria.DetallesVentas.Add(detalle);
                 }
-                if(detalle.Producto.ProductoCategoriaId == 1)
+                if(detalle.Producto.ProductoCategoriaId == 2)
                 {
                     _ventaHelados.DetallesVentas.Add(detalle);
                 }
