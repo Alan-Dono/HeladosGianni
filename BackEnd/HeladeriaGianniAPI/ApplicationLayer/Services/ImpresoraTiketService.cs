@@ -196,10 +196,10 @@ namespace ApplicationLayer.Services
                 // Ticket y Punto de Venta
                 string puntoVenta = "P.V. N: 30"; // Esto se puede cambiar según corresponda
                 string ticketNumero = $"Ticket #: {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
-                    string fechaHora = $"Fecha: {FacturaResponse.FechaEmision:dd/MM/yyyy}         Hora: {FacturaResponse.FechaEmision:HH:mm}";
-                    // Resultado: "Fecha: 18/07/2024 - Hora: 14:30"
+                string fechaHora = $"Fecha: {FacturaResponse.FechaEmision:dd/MM/yyyy}         Hora: {FacturaResponse.FechaEmision:HH:mm}";
+                // Resultado: "Fecha: 18/07/2024 - Hora: 14:30"
 
-                    g.DrawString(ticketNumero, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(ticketNumero, fuenteNormal).Width, yPos);
+                g.DrawString(ticketNumero, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(ticketNumero, fuenteNormal).Width, yPos);
                 //yPos += 20;
 
                 g.DrawString(puntoVenta, fuenteNormal, Brushes.Black, leftMargin, yPos);
@@ -237,7 +237,23 @@ namespace ApplicationLayer.Services
                     yPos += 20;
                 }
 
-      
+                //PRODUCTOS VARIOS (NUEVO):
+                if (_ventaActual.ConceptosVarios != null)
+                {
+                    foreach (var concepto in _ventaActual.ConceptosVarios)
+                    {
+                        string nombre = concepto.Nombre.Length > 20 ?
+                                        concepto.Nombre.Substring(0, 17) + "..." :
+                                        concepto.Nombre;
+
+                        g.DrawString(nombre, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                        g.DrawString("1", fuenteNormal, Brushes.Black, 145, yPos); // Cantidad siempre 1
+                        g.DrawString(concepto.Precio.ToString("C0"), fuenteNormal, Brushes.Black, 165, yPos);
+                        g.DrawString(concepto.Precio.ToString("C0"), fuenteNormal, Brushes.Black, 225, yPos);
+                        yPos += 20;
+                    }
+                }
+
 
                     // Línea separadora antes del TOTAL
                     g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
@@ -426,7 +442,7 @@ namespace ApplicationLayer.Services
                     yPos += pieSize.Height + 10;
 
                     // Leyenda con varias líneas y más espacio
-                    string leyenda = "NO VALIDO COMO FACTURA,\nANTES DE RETIRARSE SOLICITE SU FACTURA POR CAJA";
+                    string leyenda = "      NO VALIDO COMO FACTURA,\nSOLICITE SU FACTURA POR CAJA";
                     string[] lineasLeyenda = leyenda.Split('\n');
                     float alturaTotalLeyenda = 0;
 
