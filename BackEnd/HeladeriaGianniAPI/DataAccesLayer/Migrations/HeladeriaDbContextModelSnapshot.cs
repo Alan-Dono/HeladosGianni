@@ -51,7 +51,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasIndex("IdTurno");
 
-                    b.ToTable("CierreCajas");
+                    b.ToTable("CierreCajas", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.ConceptoVarios", b =>
@@ -76,27 +76,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasIndex("IdVenta");
 
-                    b.ToTable("ConceptoVarios");
-                });
-
-            modelBuilder.Entity("DomainLayer.Models.Contador", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("NombreContador")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("NumeroContador")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Contadores");
+                    b.ToTable("ConceptoVarios", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.DetalleVenta", b =>
@@ -125,7 +105,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasIndex("VentaId");
 
-                    b.ToTable("DetallesVentas");
+                    b.ToTable("DetallesVentas", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Empleado", b =>
@@ -155,7 +135,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Empleados");
+                    b.ToTable("Empleados", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.FacturaAfip", b =>
@@ -197,7 +177,7 @@ namespace DataAccesLayer.Migrations
                     b.HasIndex("VentaId")
                         .IsUnique();
 
-                    b.ToTable("FacturasAfip");
+                    b.ToTable("FacturasAfip", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Producto", b =>
@@ -229,7 +209,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasIndex("ProductoCategoriaId");
 
-                    b.ToTable("Productos");
+                    b.ToTable("Productos", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.ProductoCategoria", b =>
@@ -246,7 +226,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductoCategorias");
+                    b.ToTable("ProductoCategorias", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Turno", b =>
@@ -268,7 +248,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Turnos");
+                    b.ToTable("Turnos", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.Venta", b =>
@@ -301,7 +281,7 @@ namespace DataAccesLayer.Migrations
 
                     b.HasIndex("IdCierreCaja");
 
-                    b.ToTable("Ventas");
+                    b.ToTable("Ventas", (string)null);
                 });
 
             modelBuilder.Entity("DomainLayer.Models.CierreCaja", b =>

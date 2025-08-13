@@ -71,6 +71,7 @@ namespace DataAccesLayer
         public DbSet<DetalleVenta> DetallesVentas { get; set; } 
         public DbSet<CierreCaja> CierreCajas { get; set; }
         public DbSet<FacturaAfip> FacturasAfip { get; set; }
+        public DbSet<ConceptoVarios> ConceptoVarios { get; set; }
 
     }
 }

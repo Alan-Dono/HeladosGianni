@@ -100,7 +100,7 @@ namespace ApplicationLayer.Services
                 Console.WriteLine($"Neto: {importeNeto} | IVA: {importeIva}");
                 Console.WriteLine($"Concepto: {concepto}");
 
-                using (var client = new ServiceSoapClient(ServiceSoapClient.EndpointConfiguration.ServiceSoap))
+                using (var client = new ServiceSoapClient(ServiceSoapClient.EndpointConfiguration.ServiceSoap)) // ULR PROD : ServiceSoap // URL DEV: ServiceSoap12
                 {
                     Console.WriteLine($"URL: {ServiceSoapClient.EndpointConfiguration.ServiceSoap}");
                     var response = await client.FECAESolicitarAsync(auth, request);

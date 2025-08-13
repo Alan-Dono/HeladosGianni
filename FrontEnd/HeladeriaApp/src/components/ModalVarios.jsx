@@ -68,7 +68,7 @@ const ModalVarios = ({ open, onClose, onSave, onCancel }) => {
           fullWidth
           label="Nombre del producto"
           value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
+          onChange={(e) => setNombre(e.target.value.toUpperCase())}
           variant="outlined"
           sx={{ mb: 2 }}
         />
