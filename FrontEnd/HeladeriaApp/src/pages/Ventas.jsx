@@ -11,6 +11,8 @@ import AclaracionModal from '../components/AclaracionModal';
 import { useNavigate } from 'react-router-dom';
 import WarningIcon from '@mui/icons-material/Warning';
 import ModalVarios from '../components/ModalVarios';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 const Ventas = () => {
 
     const theme = useTheme();
@@ -73,6 +75,45 @@ const Ventas = () => {
         setAclaracionHeladeria("");
     };
 
+    const moveProduct = async (dragIndex, hoverIndex) => {
+         console.log(`Moviendo producto de posición ${dragIndex} a ${hoverIndex}`);
+    
+        setProductos(prev => {
+            const newProductos = {...prev};
+            const categoria = vistaActual;
+            const draggedItem = newProductos[categoria][dragIndex];
+            
+            // Elimina el elemento arrastrado
+            const remainingItems = newProductos[categoria].filter((_, idx) => idx !== dragIndex);
+            
+            // Inserta el elemento en la nueva posición
+            const newItems = [
+                ...remainingItems.slice(0, hoverIndex),
+                draggedItem,
+                ...remainingItems.slice(hoverIndex)
+            ];
+            
+            // Crear diccionario con el nuevo orden
+            const ordenProductos = {};
+            newItems.forEach((producto, index) => {
+                ordenProductos[producto.id] = index;
+            });
+
+            // Actualizar el orden en el backend
+            ProductoService.actualizarOrdenProductos(ordenProductos)
+                .catch(error => {
+                    console.error("Error al actualizar el orden:", error);
+                    setMensajeSnackbar("Error al guardar el orden");
+                    setTipoAlerta("error");
+                    setSnackbarAbierto(true);
+                });
+
+            return {
+                ...newProductos,
+                [categoria]: newItems
+            };
+        });
+    };
 
 
     const [productos, setProductos] = useState({
@@ -280,7 +321,7 @@ const Ventas = () => {
                 height: '100%',
                 overflow: 'hidden',
             }}>
-                {productosActuales.map((producto) => (
+                {productosActuales.map((producto, index) => (
                     <Box key={producto.id} sx={{
                         aspectRatio: '1/1',
                         minHeight: 0,
@@ -288,8 +329,10 @@ const Ventas = () => {
                     }}>
                         <ProductoCard
                             producto={producto}
+                            index={index}
                             agregar={agregarProducto}
                             toggleFavorito={toggleFavorito}
+                            moveProduct={moveProduct}
                         />
                     </Box>
                 ))}
@@ -297,12 +340,14 @@ const Ventas = () => {
         );
     };
 
+
     const reiniciarAclaraciones = () => {
         setAclaracionCafeteria("");
         setAclaracionHeladeria("");
     };
 
     return (
+        <DndProvider backend={HTML5Backend}>
         <Box sx={{
             display: 'flex',
             height: '100vh',
@@ -555,6 +600,7 @@ const Ventas = () => {
                 onSave={handleSaveVarios}
             />
         </Box>
+        </DndProvider>
     );
 };
 

@@ -160,12 +160,14 @@ namespace DataAccesLayer.Repositories
                         .ThenInclude(c => c.Empleado)
                     .Include(t => t.CierreCajas)
                         .ThenInclude(c => c.Ventas.Where(v => v.Activa))
-                            .ThenInclude(v => v.DetallesVentas)
+                            .ThenInclude(v => v.ConceptosVarios)  // <- Incluye ConceptosVarios
+                    .Include(t => t.CierreCajas)
+                        .ThenInclude(c => c.Ventas.Where(v => v.Activa))
+                            .ThenInclude(v => v.DetallesVentas)   // <- Incluye DetallesVentas
                                 .ThenInclude(dv => dv.Producto)
                                     .ThenInclude(p => p.ProductoCategoria)
                     .OrderByDescending(x => x.Id)
                     .FirstOrDefaultAsync(t => t.Id == id);
-
 
                 return turno;
             }

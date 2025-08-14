@@ -12,13 +12,15 @@ namespace DomainLayer.Interface
         Task<IEnumerable<Producto>> ObtenerProductos();
         Task<IEnumerable<Producto>> ObtenerFavoritos();
         Task<IEnumerable<Producto>> ObtenerProductosPorCategoria(int idCategoria);
-        Task<IEnumerable<Producto>> ObtenerProductosPorProveedor(int idPoveedor);
+        //Task<IEnumerable<Producto>> ObtenerProductosPorProveedor(int idPoveedor);
         Task<Producto> ObtenerProductoPorId(int id);
         Task AgregarProducto(Producto producto);
         Task EditarProducto(int id, Producto producto);
         Task EliminarProducto(int id);
         Task AgregarFavorito(int id);
         Task EliminarFavorito(int id);
-       
+        Task ActualizarOrdenProductos(Dictionary<int, int> ordenProductos);
+
+
     }
 }

@@ -8,6 +8,7 @@ import {
   agregarAFavoritos,
   eliminarDeFavoritos,
   obtenerFavoritos,
+  actualizarOrdenProductos
 } from "../api/ApiProducto"; // Asegúrate de que la ruta sea correcta
 
 const ProductoService = {
@@ -119,6 +120,18 @@ const ProductoService = {
       throw error; // Re-lanzar el error para que pueda ser manejado en el componente
     }
   },
+
+  actualizarOrdenProductos: async (ordenProductos) => {
+    try {
+      const respuesta = await actualizarOrdenProductos(ordenProductos);
+      return respuesta;
+    } catch (error) {
+      console.error("Error al actualizar el orden de los productos", error);
+      throw error;
+    }
+  }
+
+  
 };
 
 export default ProductoService;

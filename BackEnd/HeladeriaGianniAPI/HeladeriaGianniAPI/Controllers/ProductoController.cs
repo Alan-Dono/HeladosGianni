@@ -191,6 +191,22 @@ namespace HeladeriaGianniAPI.Controllers
             return Ok(productosDto);
         }
 
+        [HttpPost("orden")]
+        public async Task<IActionResult> ActualizarOrdenProductos([FromBody] Dictionary<int, int> ordenProductos)
+        {
+            try
+            {
+                Console.WriteLine($"Recibida solicitud para actualizar orden de {ordenProductos.Count} productos");
+                await productoService.ActualizarOrdenProductos(ordenProductos);
+                Console.WriteLine("Orden actualizado correctamente");
+                return Ok(new { mensaje = "Orden de productos actualizado correctamente" });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al actualizar orden: {ex.Message}");
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }

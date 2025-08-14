@@ -124,3 +124,13 @@ export const obtenerFavoritos = async () => {
     throw error;
   }
 };
+
+export const actualizarOrdenProductos = async (ordenProductos) => {
+  try {
+    const response = await apiClient.post("/productos/orden", ordenProductos);
+    return response.data;
+  } catch (error) {
+    console.error("Error al actualizar el orden de los productos", error);
+    throw error;
+  }
+};

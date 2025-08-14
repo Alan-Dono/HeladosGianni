@@ -5,13 +5,12 @@ import { productValidationSchema } from '../validations/ProductValidation';
 import { getProductosCategorias } from '../api/ApiCategoriasProductos';
 
 const ProductFormModal = ({ open, onClose, product, onSave }) => {
-
     const [categories, setCategories] = useState([]);
 
     const fetchCategories = async () => {
         try {
             const data = await getProductosCategorias();
-            setCategories(data); // Asegúrate de que 'data' sea un array con id y nombreCategoria
+            setCategories(data);
         } catch (error) {
             console.error("Error al obtener categorias", error);
         }
@@ -22,9 +21,9 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
     }, []);
 
     const initialValues = product ? {
-        nombre: product.nombreProducto,
-        categoria: product.productoCategoriaDtoRes.id, // Cambiado a id
-        descripcion: product.descripcion,
+        nombre: product.nombreProducto.toUpperCase(),
+        categoria: product.productoCategoriaDtoRes.id,
+        descripcion: product.descripcion.toUpperCase(),
         precio: product.precio,
     } : {
         nombre: '',
@@ -34,11 +33,10 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
     };
 
     const handleSubmit = async (values, { setSubmitting }) => {
-        // Crea un objeto solo con los campos necesarios
         const producto = {
-            categoria: values.categoria, // Asegúrate de que esto sea un ID válido
-            descripcion: values.descripcion,
-            nombre: values.nombre,
+            categoria: values.categoria,
+            descripcion: values.descripcion.toUpperCase(),
+            nombre: values.nombre.toUpperCase(),
             precio: values.precio
         };
 
@@ -52,6 +50,11 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
         }
     };
 
+    const handleUpperCaseInput = (e, setFieldValue, fieldName) => {
+        const upperValue = e.target.value.toUpperCase();
+        setFieldValue(fieldName, upperValue);
+    };
+
     return (
         <Dialog open={open} onClose={onClose} TransitionComponent={Slide} fullWidth maxWidth="sm">
             <DialogTitle>{product ? 'Editar Producto' : 'Agregar Producto'}</DialogTitle>
@@ -61,7 +64,7 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                 onSubmit={handleSubmit}
                 enableReinitialize
             >
-                {({ errors, touched, isSubmitting }) => (
+                {({ errors, touched, isSubmitting, setFieldValue }) => (
                     <Form>
                         <DialogContent>
                             <Box mb={2}>
@@ -72,6 +75,7 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                                     fullWidth
                                     error={touched.nombre && Boolean(errors.nombre)}
                                     helperText={touched.nombre && errors.nombre}
+                                    onChange={(e) => handleUpperCaseInput(e, setFieldValue, 'nombre')}
                                 />
                             </Box>
                             <Box mb={2}>
@@ -86,7 +90,7 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                                 >
                                     {categories.map((option) => (
                                         <MenuItem key={option.id} value={option.id}>
-                                            {option.nombreCategoria} {/* Mostrar el nombre de la categoría */}
+                                            {option.nombreCategoria.toUpperCase()}
                                         </MenuItem>
                                     ))}
                                 </Field>
@@ -101,6 +105,7 @@ const ProductFormModal = ({ open, onClose, product, onSave }) => {
                                     rows={3}
                                     error={touched.descripcion && Boolean(errors.descripcion)}
                                     helperText={touched.descripcion && errors.descripcion}
+                                    onChange={(e) => handleUpperCaseInput(e, setFieldValue, 'descripcion')}
                                 />
                             </Box>
                             <Box mb={2}>

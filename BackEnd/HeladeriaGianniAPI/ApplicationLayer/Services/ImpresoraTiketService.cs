@@ -489,11 +489,6 @@ namespace ApplicationLayer.Services
                     g.DrawString(hora, fuenteNormal, Brushes.Black, leftMargin +180, yPos);
                     yPos += 20;
 
-                    // Número de ticket debajo a la izquierda
-                    string numeroTicket = $"Ticket #: {DateTime.Now.Ticks.ToString().Substring(10).PadLeft(8, '0')}";
-                    g.DrawString(numeroTicket, fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    yPos += 25;
-
                     g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
                     yPos += 10;
 

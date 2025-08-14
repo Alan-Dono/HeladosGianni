@@ -104,29 +104,40 @@ namespace DataAccesLayer.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Producto>> ObtenerProductosPorCategoria(int idCategoria)
+        public async Task ActualizarOrdenProductos(Dictionary<int, int> ordenProductos)
         {
-            var productos = await context.Productos
-                .Where(x => x.ProductoCategoriaId == idCategoria)
-                .ToListAsync();
-            return productos;
+            foreach (var item in ordenProductos)
+            {
+                var producto = await context.Productos.FindAsync(item.Key);
+                if (producto != null)
+                {
+                    producto.Orden = item.Value;
+                }
+            }
+            await context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Producto>> ObtenerProductosPorProveedor(int idProveedor)
+        public async Task<IEnumerable<Producto>> ObtenerProductosPorCategoria(int idCategoria)
         {
-            var productos = await context.Productos
-                //.Where(x => x.ProveedorId == idProveedor)
+            return await context.Productos
+                .Where(x => x.ProductoCategoriaId == idCategoria)
+                .OrderBy(p => p.Orden)
                 .ToListAsync();
-            return productos;
         }
 
         public async Task<IEnumerable<Producto>> ObtenerFavoritos()
         {
-            var favoritos = await context.Productos
+            return await context.Productos
                 .Include(x => x.ProductoCategoria)
                 .Where(x => x.EsFavorito == true)
+                .OrderBy(p => p.Orden)
                 .ToListAsync();
-            return favoritos;
         }
+
+        
     }
+
+
 }
+
+

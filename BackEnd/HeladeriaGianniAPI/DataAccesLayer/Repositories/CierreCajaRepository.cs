@@ -140,9 +140,11 @@ namespace DataAccesLayer.Repositories
                 var cierre = await context.CierreCajas
                     .Include(c => c.Empleado)
                     .Include(c => c.Ventas)
-                        .ThenInclude(v => v.DetallesVentas)
+                        .ThenInclude(v => v.DetallesVentas)  // Incluye DetallesVentas
                             .ThenInclude(dv => dv.Producto)
-                               .ThenInclude(p => p.ProductoCategoria)
+                                .ThenInclude(p => p.ProductoCategoria)
+                    .Include(c => c.Ventas)
+                        .ThenInclude(v => v.ConceptosVarios)  // Incluye ConceptosVarios (en el mismo nivel)
                     .FirstOrDefaultAsync(c => c.Id == id);
 
                 return cierre;

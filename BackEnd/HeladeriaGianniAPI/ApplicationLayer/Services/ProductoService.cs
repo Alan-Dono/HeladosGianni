@@ -32,10 +32,7 @@ namespace ApplicationLayer.Services
             return await productoRepository.ObtenerProductosPorCategoria(idCategoria);
         }
 
-        public async Task<IEnumerable<Producto>> ObtenerProductosPorProveedor(int idProveedor)
-        {
-            return await productoRepository.ObtenerProductosPorProveedor(idProveedor);
-        }
+        
 
         public async Task AgregarProducto(Producto producto)
         {
@@ -67,6 +64,10 @@ namespace ApplicationLayer.Services
             return await productoRepository.ObtenerFavoritos();
         }
 
+        public async Task ActualizarOrdenProductos(Dictionary<int, int> ordenProductos)
+        {
+            await productoRepository.ActualizarOrdenProductos(ordenProductos);
+        }
 
     }
 }

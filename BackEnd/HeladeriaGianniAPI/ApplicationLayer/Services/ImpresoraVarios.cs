@@ -130,7 +130,7 @@ namespace ApplicationLayer.Services
             y += 25;
         }
 
-        private (List<DetalleVenta>, List<ConceptoVarios>) ObtenerDatosTurno()
+        private (List<DetalleVenta>, List<ConceptoVariosAgrupado>) ObtenerDatosTurno()
         {
             var detallesVentas = _turno.CierreCajas?
                 .SelectMany(c => c.Ventas)
@@ -143,12 +143,20 @@ namespace ApplicationLayer.Services
                 .SelectMany(c => c.Ventas)
                 .Where(v => v.Activa)
                 .SelectMany(v => v.ConceptosVarios ?? new List<ConceptoVarios>())
-                .ToList() ?? new List<ConceptoVarios>();
+                .GroupBy(c => c.Nombre) // Agrupar solo por nombre
+                .Select(g => new ConceptoVariosAgrupado
+                {
+                    Nombre = g.Key,
+                    PrecioUnitario = g.First().Precio, // Precio de referencia (primero encontrado)
+                    Cantidad = g.Count(), // Suma de cantidades
+                    Total = g.Sum(x => x.Precio) // Suma total de todos los precios
+                })
+                .ToList() ?? new List<ConceptoVariosAgrupado>();
 
             return (detallesVentas, conceptosVarios);
         }
 
-        private (List<DetalleVenta>, List<ConceptoVarios>) ObtenerDatosCierre()
+        private (List<DetalleVenta>, List<ConceptoVariosAgrupado>) ObtenerDatosCierre()
         {
             var detallesVentas = _cierre.Ventas?
                 .Where(v => v.Activa)
@@ -159,14 +167,22 @@ namespace ApplicationLayer.Services
             var conceptosVarios = _cierre.Ventas?
                 .Where(v => v.Activa)
                 .SelectMany(v => v.ConceptosVarios ?? new List<ConceptoVarios>())
-                .ToList() ?? new List<ConceptoVarios>();
+                .GroupBy(c => c.Nombre) // Agrupar solo por nombre
+                .Select(g => new ConceptoVariosAgrupado
+                {
+                    Nombre = g.Key,
+                    PrecioUnitario = g.First().Precio, // Precio de referencia (primero encontrado)
+                    Cantidad = g.Count(), // Suma de cantidades
+                    Total = g.Sum(x => x.Precio) // Suma total de todos los precios
+                })
+                .ToList() ?? new List<ConceptoVariosAgrupado>();
 
             return (detallesVentas, conceptosVarios);
         }
 
         private void ImprimirDetalles(
             List<DetalleVenta> detallesVentas,
-            List<ConceptoVarios> conceptosVarios,
+            List<ConceptoVariosAgrupado> conceptosVarios,
             Graphics g,
             Font fuenteNormal,
             Font fuenteBold,
@@ -222,17 +238,7 @@ namespace ApplicationLayer.Services
 
                 double subtotalVarios = 0;
 
-                var variosAgrupados = conceptosVarios
-                    .GroupBy(c => new { c.Nombre, c.Precio })
-                    .Select(g => new
-                    {
-                        g.Key.Nombre,
-                        Cantidad = g.Count(),
-                        Total = g.Sum(x => x.Precio)
-                    })
-                    .ToList();
-
-                foreach (var item in variosAgrupados)
+                foreach (var item in conceptosVarios)
                 {
                     string linea = $"{item.Cantidad} x {item.Nombre} - {item.Total.ToString("C0")}";
                     g.DrawString(linea, fuenteNormal, Brushes.Black, left + 10, y);
@@ -264,5 +270,13 @@ namespace ApplicationLayer.Services
             y += 20;
             g.DrawString("¡Gianni es familia!", fuenteNormal, Brushes.Black, left + 80, y);
         }
+    }
+
+    public class ConceptoVariosAgrupado
+    {
+        public string Nombre { get; set; }
+        public double PrecioUnitario { get; set; }
+        public int Cantidad { get; set; }
+        public double Total { get; set; }
     }
 }
