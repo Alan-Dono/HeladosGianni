@@ -6,6 +6,7 @@ using System.Drawing.Printing;
 using System.IO;
 using System.Net.NetworkInformation;
 using DomainLayer.Models;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using ZXing;
 using ZXing.Common;
 using ZXing.QrCode;
@@ -23,7 +24,8 @@ namespace ApplicationLayer.Services
         private static readonly string RUTA_CONTADOR = Path.Combine(
             @"C:\inetpub\wwwroot\deploy",
             "Contador.txt");
-
+        private static readonly string RUTA_MODO = Path.Combine(@"C:\inetpub\wwwroot\deploy",
+            "ModoImpresion.txt");
         public ImpresoraTicketService(WSFEService webService)
         {
             bool impresoraEncontrada = false;
@@ -44,10 +46,44 @@ namespace ApplicationLayer.Services
             this.webService = webService;
         }
 
+        public void CambiarModoImpresion(int modo)
+        {
+            try
+            {
+                // Forzar a 0 o 1
+                modo = modo != 0 ? 1 : 0;
+                File.WriteAllText(RUTA_MODO, modo.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al cambiar modo de impresión: {ex.Message}");
+            }
+        }
+
+        public int ObtenerModoImpresion()
+        {
+            try
+            {
+                if (!File.Exists(RUTA_MODO))
+                {
+                    File.WriteAllText(RUTA_MODO, "0"); // Valor por defecto
+                    return 0;
+                }
+
+                string contenido = File.ReadAllText(RUTA_MODO);
+                return contenido.Trim() == "1" ? 1 : 0; // Solo acepta 0 o 1
+            }
+            catch
+            {
+                return 0; // Valor por defecto en caso de error
+            }
+        }
+
         public void ImprimirTicketVenta(Venta venta, string AclaracionCafeteria, string AclaracionHeladeria)
         {
             try
             {
+                int modoImpresion = ObtenerModoImpresion();
                 _ventaActual = venta;
                 ProductosCageteria(_ventaActual);
 
@@ -90,8 +126,13 @@ namespace ApplicationLayer.Services
                     tiketHelado.Print();
                 }
 
-                pd.PrintPage += Pd_PrintPage;
-                pd.Print();
+                // Imprimir el ticket principal (1 o 2 veces según modoImpresion)
+                for (int i = 0; i < (modoImpresion == 1 ? 2 : 1); i++)
+                {
+                    pd.PrintPage += Pd_PrintPage;
+                    pd.Print();
+                    pd.PrintPage -= Pd_PrintPage; // Limpiar el evento para la próxima iteración
+                }
             }
             catch (Exception ex)
             {
@@ -103,6 +144,7 @@ namespace ApplicationLayer.Services
         {
             try
             {
+                int modoImpresion = ObtenerModoImpresion();
                 _ventaActual = venta;
                 decimal totalDecimal = (decimal)_ventaActual.TotalVenta;
                 FacturaResponse = await webService.GenerarFacturaConsumidorFinal(totalDecimal);
@@ -147,8 +189,13 @@ namespace ApplicationLayer.Services
                     tiketHelado.Print();
                 }
 
-                pd.PrintPage += Pd_PrintPageFiscal;
-                pd.Print();
+                // Imprimir el ticket fiscal (1 o 2 veces según modoImpresion)
+                for (int i = 0; i < (modoImpresion == 1 ? 2 : 1); i++)
+                {
+                    pd.PrintPage += Pd_PrintPageFiscal;
+                    pd.Print();
+                    pd.PrintPage -= Pd_PrintPageFiscal; // Limpiar el evento para la próxima iteración
+                }
             }
             catch (Exception ex)
             {
@@ -407,7 +454,7 @@ namespace ApplicationLayer.Services
                             g.DrawString(nombre, fuenteNormal, Brushes.Black, colDesc, yPos);
                             g.DrawString("1", fuenteNormal, Brushes.Black, colCant + 10, yPos); // Cantidad fija "1" alineada
                             g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colPU - 6, yPos); // Precio alineado
-                            g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 5, yPos); // Total alineado
+                            g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 4, yPos); // Total alineado
                             yPos += 20;
                         }
                     }
@@ -587,5 +634,10 @@ namespace ApplicationLayer.Services
                 return 0;
             }
         }
+
+
+
+
+
     }
 }

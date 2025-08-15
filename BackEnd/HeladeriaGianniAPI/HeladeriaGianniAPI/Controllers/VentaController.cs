@@ -127,5 +127,28 @@ namespace HeladeriaGianniAPI.Controllers
             await _ventaService.AnularVenta(id);
             return NoContent();
         }
+
+        [HttpPost("cambiar-modo-impresion/{modo:int}")]
+        public IActionResult CambiarModoImpresion(int modo)
+        {
+            impresoraTicketService.CambiarModoImpresion(modo);
+            return Ok();
+        }
+
+        // Agrega este método al VentaController
+        [HttpGet("modo-impresion")]
+        public IActionResult ObtenerModoImpresion()
+        {
+            try
+            {
+                // Asumo que tienes acceso al servicio de impresión desde el controlador
+                var modo = impresoraTicketService.ObtenerModoImpresion();
+                return Ok(new { modo });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener el modo de impresión: {ex.Message}");
+            }
+        }
     }
 }

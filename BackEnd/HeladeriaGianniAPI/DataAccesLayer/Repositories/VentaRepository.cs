@@ -130,5 +130,7 @@ namespace DataAccesLayer.Repositories
                 throw new Exception($"Error en la capa de datos al obtener ventas para el cierre de caja con ID {id}.", ex);
             }
         }
+
+  
     }
 }

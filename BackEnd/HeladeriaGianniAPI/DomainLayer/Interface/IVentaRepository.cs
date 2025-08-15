@@ -15,5 +15,6 @@ namespace DomainLayer.Interface
         Task<ICollection<Venta>> ObtenerVentasEntreFechas(DateTime fechaDesde, DateTime fechaHasta);
         Task RegistrarVenta(Venta venta);
         Task AnularVenta (int id);
+
     }
 }

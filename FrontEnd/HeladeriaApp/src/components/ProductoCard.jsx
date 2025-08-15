@@ -175,8 +175,8 @@ const ProductoCard = ({ producto, agregar, toggleFavorito, index, moveProduct })
                 }
             }}
                onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseLeave}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
         >
         
             {mostrarProgreso && (

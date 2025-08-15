@@ -114,3 +114,24 @@ export const getVentasPorCierreCaja = async (id) => {
     throw error;
   }
 };
+
+// Modo de impresión
+export const getModoImpresion = async () => {
+  try {
+    const response = await apiClient.get("/ventas/modo-impresion");
+    return response.data;
+  } catch (error) {
+    console.error("Error al obtener modo impresión", error);
+    throw error;
+  }
+};
+
+export const cambiarModoImpresion = async (modo) => {
+  try {
+    const response = await apiClient.post(`/ventas/cambiar-modo-impresion/${modo}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error al cambiar modo impresión", error);
+    throw error;
+  }
+};

@@ -181,18 +181,33 @@ namespace ApplicationLayer.Services
         }
 
         private void ImprimirDetalles(
-            List<DetalleVenta> detallesVentas,
-            List<ConceptoVariosAgrupado> conceptosVarios,
-            Graphics g,
-            Font fuenteNormal,
-            Font fuenteBold,
-            ref float y,
-            float left)
+    List<DetalleVenta> detallesVentas,
+    List<ConceptoVariosAgrupado> conceptosVarios,
+    Graphics g,
+    Font fuenteNormal,
+    Font fuenteBold,
+    ref float y,
+    float left)
         {
-            // Agrupar productos por categoría
+            // Agrupar productos por categoría y ordenar por categoría y luego por Orden del producto
             var productosPorCategoria = detallesVentas
                 .GroupBy(d => d.Producto.ProductoCategoria.NombreCategoria)
-                .OrderBy(g => g.Key)
+                .OrderBy(g => g.Key) // Orden alfabético por nombre de categoría
+                .Select(g => new
+                {
+                    Categoria = g.Key,
+                    Productos = g.OrderBy(d => d.Producto.Orden) // Ordenar por campo Orden dentro de cada categoría
+                                 .ThenBy(d => d.Producto.NombreProducto) // Orden alfabético como criterio secundario
+                                 .GroupBy(d => new { d.Producto.NombreProducto, d.PrecioUnitario })
+                                 .Select(p => new
+                                 {
+                                     p.Key.NombreProducto,
+                                     p.Key.PrecioUnitario,
+                                     Cantidad = p.Sum(x => x.Cantidad),
+                                     Total = p.Sum(x => x.Cantidad * x.PrecioUnitario)
+                                 })
+                                 .ToList()
+                })
                 .ToList();
 
             double totalGeneral = 0;
@@ -200,23 +215,12 @@ namespace ApplicationLayer.Services
             // Imprimir productos por categoría
             foreach (var grupo in productosPorCategoria)
             {
-                g.DrawString(grupo.Key.ToUpper(), fuenteBold, Brushes.Black, left, y);
+                g.DrawString(grupo.Categoria.ToUpper(), fuenteBold, Brushes.Black, left, y);
                 y += 20;
-
-                var productos = grupo
-                    .GroupBy(d => new { d.Producto.NombreProducto, d.PrecioUnitario })
-                    .Select(g => new
-                    {
-                        g.Key.NombreProducto,
-                        g.Key.PrecioUnitario,
-                        Cantidad = g.Sum(x => x.Cantidad),
-                        Total = g.Sum(x => x.Cantidad * x.PrecioUnitario)
-                    })
-                    .ToList();
 
                 double subtotalCategoria = 0;
 
-                foreach (var producto in productos)
+                foreach (var producto in grupo.Productos)
                 {
                     string linea = $"{producto.Cantidad} x {producto.NombreProducto} - {producto.Total.ToString("C0")}";
                     g.DrawString(linea, fuenteNormal, Brushes.Black, left + 10, y);
@@ -226,12 +230,12 @@ namespace ApplicationLayer.Services
                     totalGeneral += producto.Total;
                 }
 
-                g.DrawString($"Subtotal {grupo.Key}: {subtotalCategoria.ToString("C0")}", fuenteBold, Brushes.Black, left + 10, y);
+                g.DrawString($"Subtotal {grupo.Categoria}: {subtotalCategoria.ToString("C0")}", fuenteBold, Brushes.Black, left + 10, y);
                 y += 25;
             }
 
             // Imprimir conceptos varios si existen
-            if (conceptosVarios.Any())
+            if (conceptosVarios?.Any() == true)
             {
                 g.DrawString("VARIOS", fuenteBold, Brushes.Black, left, y);
                 y += 20;
@@ -256,9 +260,12 @@ namespace ApplicationLayer.Services
             g.DrawLine(Pens.Black, left, y, 270, y);
             y += 10;
 
-            // Mostrar descuentos
-            g.DrawString($"Descuentos: -{_totalDescuentos.ToString("C0")}", fuenteBold, Brushes.Black, left, y);
-            y += 20;
+            // Mostrar descuentos si existen
+            if (_totalDescuentos > 0)
+            {
+                g.DrawString($"Descuentos: -{_totalDescuentos.ToString("C0")}", fuenteBold, Brushes.Black, left, y);
+                y += 20;
+            }
 
             // Total general
             g.DrawString($"TOTAL GENERAL: {(totalGeneral - _totalDescuentos).ToString("C0")}", fuenteBold, Brushes.Black, left, y);
