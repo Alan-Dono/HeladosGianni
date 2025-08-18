@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Slide from '@mui/material/Slide';
-import { TextField, Typography, Box, Button, Snackbar } from '@mui/material';
+import { TextField, Typography, Box, Button, Snackbar, Fade, CircularProgress } from '@mui/material';
 import { Lock, LockOpen } from '@mui/icons-material';
 import ProductTiket from './ProductTiket';
 import { useTheme } from '@emotion/react';
@@ -21,6 +21,8 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     const [tipoAlerta, setTipoAlerta] = useState("error");
     const [confirmarVentaAbierto, setConfirmarVentaAbierto] = useState(false);
     const [esFiscal, setEsFiscal] = useState(false);
+    const [cargandoVenta, setCargandoVenta] = useState(false);
+
 
     const theme = useTheme();
     {/* 
@@ -100,6 +102,9 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     };
 
     const confirmarVenta = async () => {
+        if (cargandoVenta) return; // Evitar múltiples ejecuciones
+
+        setCargandoVenta(true);
         try {
             // 1. Separar productos regulares y productos varios
             const productosRegulares = carrito.filter(item => !item.esVario);
@@ -171,6 +176,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             );
             setTipoAlerta("error");
         } finally {
+            setCargandoVenta(false);
             setSnackbarAbierto(true);
             setConfirmarVentaAbierto(false);
         }
@@ -369,15 +375,43 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                         onClick={confirmarVenta}
                         variant="contained"
                         color="primary"
+                        disabled={cargandoVenta}
                         sx={{
                             borderRadius: '20px',
                             textTransform: 'none',
                         }}
                     >
-                        Confirmar
+                        {cargandoVenta ? (
+                            <CircularProgress size={24} color="inherit" />
+                        ) : (
+                            'Confirmar'
+                        )}
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Spinner de carga */}
+            <Fade
+                in={cargandoVenta}
+                timeout={{ enter: 100, exit: 400 }}
+                unmountOnExit
+                style={{ transitionDelay: cargandoVenta ? '200ms' : '0ms' }}
+            >
+                <Box sx={{
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0,0,0,0.5)',
+                    zIndex: 9999
+                }}>
+                    <CircularProgress size={80} color="primary" thickness={4} />
+                </Box>
+            </Fade>
         </Box>
     );
 };
