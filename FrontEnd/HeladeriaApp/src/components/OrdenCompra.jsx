@@ -150,7 +150,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
 
             exito = true;
             setMostrarExito(true);
-            await new Promise(resolve => setTimeout(resolve, 1500)); // Mostrar animación por 1 segundo
+            await new Promise(resolve => setTimeout(resolve, esFiscal ? 2500 : 1500)); // Mostrar animación por 1 segundo
 
             // Resetear UI
             setCarrito([]);
@@ -171,100 +171,6 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             setMostrarExito(false);
         }
     };
-
-    {/* 
-    const confirmarVenta = async () => {
-        if (cargandoVenta) return; // Evitar múltiples ejecuciones
-        setCargandoVenta(true);
-        let exito = false;
-        try {
-            // 1. Separar productos regulares y productos varios
-            const productosRegulares = carrito.filter(item => !item.esVario);
-            const productosVarios = carrito.filter(item => item.esVario);
-
-            // 2. Construir objeto de venta
-            const ventaData = {
-                FechaDeVenta: new Date().toISOString(),
-                TotalVenta: parseFloat(totalConDescuento.toFixed(2)),
-                Descuentos: montoDescuento > 0 ? parseFloat(montoDescuento.toFixed(2)) : null,
-                IdCierreCaja: cierreActivo.id,
-                DetallesVentas: productosRegulares.map(producto => ({
-                    ProductoId: producto.id,
-                    Cantidad: producto.cantidad,
-                    PrecioUnitario: parseFloat(producto.precio.toFixed(2))
-                })),
-                ConceptosVarios: productosVarios.length > 0
-                    ? productosVarios.map(producto => ({
-                        Nombre: producto.nombre,
-                        Precio: parseFloat(producto.precio.toFixed(2))
-                    }))
-                    : null,
-                AclaracionCafeteria: aclaracionCafeteria?.trim() || null,
-                AclaracionHeladeria: aclaracionHeladeria?.trim() || null
-            };
-
-            // 2. Validación modificada para considerar productos varios
-            if ((!ventaData.DetallesVentas || ventaData.DetallesVentas.length === 0) &&
-                (!ventaData.ConceptosVarios || ventaData.ConceptosVarios.length === 0)) {
-                throw new Error("El carrito está vacío");
-            }
-
-            // 3. Enviar al backend
-            const response = esFiscal
-                ? await VentaService.registrarVentaFiscal(ventaData)
-                : await VentaService.registrarVenta(ventaData);
-
-
-            // 4. Manejar respuesta (ajustado para ASP.NET Core)
-            if (!response) {
-                throw new Error("No se recibió respuesta del servidor");
-            }
-            exito = true;
-            // La respuesta directa es el VentaDtoRes (no está envuelta en .data)
-            const ventaRegistrada = response;
-
-            console.log("Venta registrada:", ventaRegistrada);
-
-            // 5. Resetear UI
-            setCarrito([]);
-            setSubtotal(0);
-            setDescuento(0);
-            setDescuentoValor(0);
-
-            // 6. Mostrar feedback
-            setMensajeSnackbar('Venta registrada con éxito');
-            setTipoAlerta("success");
-
-            // 7. Resetear aclaraciones
-            reiniciarAclaraciones();
-
-        } catch (error) {
-            console.error("[ERROR] En confirmarVenta:", error);
-
-            setMensajeSnackbar(
-                error.response?.data?.message ||
-                error.message ||
-                "Error al procesar la venta"
-            );
-            setTipoAlerta("error");
-        } finally {
-            //await new Promise(resolve => setTimeout(resolve, 2000));
-
-            if (exito) {
-                setMostrarExito(true);
-                // Mostrar animación por 1 segundo
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                setMostrarExito(false);
-                // Pequeña pausa antes de cerrar
-                await new Promise(resolve => setTimeout(resolve, 300));
-            }
-
-            setCargandoVenta(false);
-            setSnackbarAbierto(true);
-            setConfirmarVentaAbierto(false);
-        }
-    };
-*/}
 
     const cerrarAlerta = () => {
         setSnackbarAbierto(false);

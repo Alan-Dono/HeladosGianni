@@ -23,11 +23,11 @@ namespace ApplicationLayer.Services
         private Venta _ventaVarios = new Venta();
         private FacturaResponse FacturaResponse;
         private static readonly string RUTA_CONTADOR = Path.Combine(
-            @"C:\Users\ALAN\Desktop\RUTAS",
+            @"C:\inetpub\wwwroot\deploy",
             "Contador.txt");
-        private static readonly string RUTA_MODO = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        private static readonly string RUTA_MODO = Path.Combine(@"C:\inetpub\wwwroot\deploy",
             "ModoImpresion.txt");
-        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\inetpub\wwwroot\deploy",
         "Comanda.txt");
         // C:\Users\ALAN\Desktop\RUTAS
         public ImpresoraTicketService(WSFEService webService)
@@ -109,7 +109,7 @@ namespace ApplicationLayer.Services
                     throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
                 }
 
-                if (_ventacafeteria.DetallesVentas.Count > 0)
+                if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios != null)
                 {
                     PrintDocument tiketCafe = new PrintDocument();
                     tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
@@ -150,10 +150,12 @@ namespace ApplicationLayer.Services
                 decimal totalDecimal = (decimal)_ventaActual.TotalVenta;
                 FacturaResponse = await webService.GenerarFacturaConsumidorFinal(totalDecimal);
 
-                // Separar productos por categoría
-                ProductosCageteria(_ventaActual);
+                if (FacturaResponse == null)
+                {
+                    throw new Exception("No se pudo obtener la respuesta fiscal.");
+                }
 
-                // Configuración común para todos los documentos
+                ProductosCageteria(_ventaActual);
                 var paperSize = GetPaperSize();
                 var margins = new Margins(5, 5, 15, 30);
 
@@ -189,7 +191,6 @@ namespace ApplicationLayer.Services
                 pdFiscal.PrintPage += Pd_PrintPageFiscal;
                 pdFiscal.Print();
 
-                // 4. Si está en modo impresión 1, imprimir constancia (similar al ticket normal)
                 if (modoImpresion == 1)
                 {
                     PrintDocument pdConstancia = new PrintDocument();
@@ -628,7 +629,7 @@ namespace ApplicationLayer.Services
 
             foreach (var detalle in venta.DetallesVentas)
             {
-                if (detalle.Producto.ProductoCategoriaId == 2) // Solo helados
+                if (detalle.Producto.ProductoCategoriaId == 1) // Solo helados
                 {
                     _ventaHelados.DetallesVentas.Add(detalle);
                 }
@@ -712,7 +713,7 @@ namespace ApplicationLayer.Services
                     string comprobante = $"Comp. {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
 
                     g.DrawString(puntoVenta, fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    g.DrawString(comprobante, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(comprobante, fuenteNormal).Width, yPos);
+                    g.DrawString(comprobante, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(comprobante, fuenteNormal).Width -20, yPos);
                     yPos += 20;
 
                     // Fecha y hora
@@ -779,10 +780,6 @@ namespace ApplicationLayer.Services
                     g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width - 45, yPos);
                     yPos += totalSize.Height + 20;
 
-                    // Información CAE simplificada
-                    string infoCAE = $"CAE: {FacturaResponse.CAE} (Vto: {FacturaResponse.VencimientoCAE})";
-                    CentrarTexto(g, infoCAE, fuenteNormal, leftMargin, printableWidth, yPos);
-
                     e.HasMorePages = false;
                 }
             }
@@ -806,6 +803,11 @@ namespace ApplicationLayer.Services
                     float leftMargin = e.MarginBounds.Left;
                     float printableWidth = e.MarginBounds.Width;
                     float rightMargin = leftMargin + printableWidth;
+
+                    // Encabezado simplificado
+                    string titulo = "CONSTANCIA NORMAL";
+                    CentrarTexto(g, titulo, fuenteGrande, leftMargin, printableWidth, yPos);
+                    yPos += g.MeasureString(titulo, fuenteGrande).Height + 5;
 
                     // Fecha a la izquierda, hora a la derecha
                     string fecha = $"Fecha: {_ventaActual.FechaDeVenta:dd/MM/yyyy}";
