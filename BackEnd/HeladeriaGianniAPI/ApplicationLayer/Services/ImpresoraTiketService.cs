@@ -12,7 +12,7 @@ using ZXing.Common;
 using ZXing.QrCode;
 
 namespace ApplicationLayer.Services
-{
+{   // cambiamos program.cs , ventaController, y venta service
     public class ImpresoraTicketService
     {
         private const string NOMBRE_IMPRESORA = "GianniPrinter";
@@ -20,12 +20,16 @@ namespace ApplicationLayer.Services
         private Venta _ventaActual;
         private Venta _ventaHelados = new Venta();
         private Venta _ventacafeteria = new Venta();
+        private Venta _ventaVarios = new Venta();
         private FacturaResponse FacturaResponse;
         private static readonly string RUTA_CONTADOR = Path.Combine(
-            @"C:\inetpub\wwwroot\deploy",
+            @"C:\Users\ALAN\Desktop\RUTAS",
             "Contador.txt");
-        private static readonly string RUTA_MODO = Path.Combine(@"C:\inetpub\wwwroot\deploy",
+        private static readonly string RUTA_MODO = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
             "ModoImpresion.txt");
+        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        "Comanda.txt");
+        // C:\Users\ALAN\Desktop\RUTAS
         public ImpresoraTicketService(WSFEService webService)
         {
             bool impresoraEncontrada = false;
@@ -86,7 +90,6 @@ namespace ApplicationLayer.Services
                 int modoImpresion = ObtenerModoImpresion();
                 _ventaActual = venta;
                 ProductosCageteria(_ventaActual);
-
                 PrintDocument pd = new PrintDocument();
                 pd.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
 
@@ -112,9 +115,10 @@ namespace ApplicationLayer.Services
                     tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
                     tiketCafe.DefaultPageSettings.PaperSize = pd.DefaultPageSettings.PaperSize;
                     tiketCafe.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
-                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "CAFETERIA");
+                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "COMANDA N");
                     tiketCafe.Print();
                 }
+
 
                 if (_ventaHelados.DetallesVentas.Count > 0)
                 {
@@ -126,13 +130,10 @@ namespace ApplicationLayer.Services
                     tiketHelado.Print();
                 }
 
-                // Imprimir el ticket principal (1 o 2 veces según modoImpresion)
-                for (int i = 0; i < (modoImpresion == 1 ? 2 : 1); i++)
-                {
-                    pd.PrintPage += Pd_PrintPage;
-                    pd.Print();
-                    pd.PrintPage -= Pd_PrintPage; // Limpiar el evento para la próxima iteración
-                }
+                pd.PrintPage += Pd_PrintPageConstancia;
+                pd.Print();
+
+                
             }
             catch (Exception ex)
             {
@@ -149,52 +150,52 @@ namespace ApplicationLayer.Services
                 decimal totalDecimal = (decimal)_ventaActual.TotalVenta;
                 FacturaResponse = await webService.GenerarFacturaConsumidorFinal(totalDecimal);
 
+                // Separar productos por categoría
                 ProductosCageteria(_ventaActual);
 
-                PrintDocument pd = new PrintDocument();
-                pd.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
+                // Configuración común para todos los documentos
+                var paperSize = GetPaperSize();
+                var margins = new Margins(5, 5, 15, 30);
 
-                foreach (PaperSize size in pd.PrinterSettings.PaperSizes)
-                {
-                    if (size.PaperName.Contains("80 x 3276"))
-                    {
-                        pd.DefaultPageSettings.PaperSize = size;
-                        break;
-                    }
-                }
-                pd.DefaultPageSettings.Margins = new Margins(5, 5, 15, 30);
-
-                if (!pd.PrinterSettings.IsValid)
-                {
-                    throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
-                }
-
-                if (_ventacafeteria.DetallesVentas.Count > 0)
+                // 1. Imprimir comanda de cafetería si hay productos
+                if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios?.Count > 0)
                 {
                     PrintDocument tiketCafe = new PrintDocument();
-                    tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
-                    tiketCafe.DefaultPageSettings.PaperSize = pd.DefaultPageSettings.PaperSize;
-                    tiketCafe.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
-                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "CAFETERIA");
+                    ConfigurePrintDocument(tiketCafe, paperSize, margins);
+                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(
+                        _ventacafeteria.DetallesVentas,
+                        AclaracionCafeteria,
+                        e,
+                        "COMANDA N");
                     tiketCafe.Print();
                 }
 
+                // 2. Imprimir ticket de heladería si hay productos
                 if (_ventaHelados.DetallesVentas.Count > 0)
                 {
                     PrintDocument tiketHelado = new PrintDocument();
-                    tiketHelado.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
-                    tiketHelado.DefaultPageSettings.PaperSize = pd.DefaultPageSettings.PaperSize;
-                    tiketHelado.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
-                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e, "¡TU HELADO TE ESPERA!");
+                    ConfigurePrintDocument(tiketHelado, paperSize, margins);
+                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(
+                        _ventaHelados.DetallesVentas,
+                        AclaracionHeladeria,
+                        e,
+                        "¡TU HELADO TE ESPERA!");
                     tiketHelado.Print();
                 }
 
-                // Imprimir el ticket fiscal (1 o 2 veces según modoImpresion)
-                for (int i = 0; i < (modoImpresion == 1 ? 2 : 1); i++)
+                // 3. Imprimir ticket fiscal principal
+                PrintDocument pdFiscal = new PrintDocument();
+                ConfigurePrintDocument(pdFiscal, paperSize, margins);
+                pdFiscal.PrintPage += Pd_PrintPageFiscal;
+                pdFiscal.Print();
+
+                // 4. Si está en modo impresión 1, imprimir constancia (similar al ticket normal)
+                if (modoImpresion == 1)
                 {
-                    pd.PrintPage += Pd_PrintPageFiscal;
-                    pd.Print();
-                    pd.PrintPage -= Pd_PrintPageFiscal; // Limpiar el evento para la próxima iteración
+                    PrintDocument pdConstancia = new PrintDocument();
+                    ConfigurePrintDocument(pdConstancia, paperSize, margins);
+                    pdConstancia.PrintPage += Pd_PrintPageFiscalConstancia;
+                    pdConstancia.Print();
                 }
             }
             catch (Exception ex)
@@ -202,7 +203,7 @@ namespace ApplicationLayer.Services
                 throw new Exception($"Error al imprimir: {ex.Message}", ex);
             }
         }
-
+       
         private void Pd_PrintPageFiscal(object sender, PrintPageEventArgs e)
         {
             try
@@ -378,7 +379,7 @@ namespace ApplicationLayer.Services
             }
         }
 
-        private void Pd_PrintPage(object sender, PrintPageEventArgs e)
+        /*private void Pd_PrintPage(object sender, PrintPageEventArgs e)
         {
             try
             {
@@ -452,7 +453,7 @@ namespace ApplicationLayer.Services
                                            concepto.Nombre;
 
                             g.DrawString(nombre, fuenteNormal, Brushes.Black, colDesc, yPos);
-                            g.DrawString("1", fuenteNormal, Brushes.Black, colCant + 10, yPos); // Cantidad fija "1" alineada
+                            g.DrawString("1", fuenteNormal, Brushes.Black, colCant + 5, yPos); // Cantidad fija "1" alineada
                             g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colPU - 6, yPos); // Precio alineado
                             g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 4, yPos); // Total alineado
                             yPos += 20;
@@ -499,7 +500,7 @@ namespace ApplicationLayer.Services
             {
                 throw new Exception($"Error al generar la página del ticket: {ex.Message}", ex);
             }
-        }
+        }*/
 
         private void ImprimirTicketProductos(List<DetalleVenta> detallesVenta, string aclaracion, PrintPageEventArgs e, string titulo)
         {
@@ -513,14 +514,19 @@ namespace ApplicationLayer.Services
                     float yPos = e.MarginBounds.Top;
                     float leftMargin = e.MarginBounds.Left;
                     float printableWidth = e.MarginBounds.Width;
-
+                    int comanda = ObtenerNumeroComanda();
                     // Título con misma tipografía para ambos
-                    CentrarTexto(g, titulo, fuenteGrande, leftMargin, printableWidth, yPos);
-                    yPos += g.MeasureString(titulo, fuenteGrande).Height + 3;
+                    if (titulo == "COMANDA N")
+                    {
+                        CentrarTexto(g, titulo + $" {comanda}", fuenteGrande, leftMargin, printableWidth, yPos);
+                        yPos += g.MeasureString(titulo, fuenteGrande).Height + 3;
+                    }
 
                     // Solo para heladería mostrar el contador
                     if (titulo == "¡TU HELADO TE ESPERA!")
                     {
+                        CentrarTexto(g, titulo, fuenteGrande, leftMargin, printableWidth, yPos);
+                        yPos += g.MeasureString(titulo, fuenteGrande).Height + 3;
                         int contador = ObtenerYActualizarContador();
                         string contadorFormateado = contador.ToString("00");
 
@@ -561,6 +567,25 @@ namespace ApplicationLayer.Services
                         yPos += 20;
                     }
 
+                    // Conceptos varios - sin signo $ (mismo formato que productos)
+                    if (_ventaVarios.ConceptosVarios != null)
+                    {
+                        foreach (var concepto in _ventaActual.ConceptosVarios)
+                        {
+                            string nombre = concepto.Nombre.Length > 25 ?
+                                           concepto.Nombre.Substring(0, 22) + "..." :
+                                           concepto.Nombre;
+
+                            g.DrawString(nombre, fuenteGrande, Brushes.Black, colDesc, yPos);
+                            CentrarTextoEnColumna(g,"1", fuenteGrande, colCant, printableWidth * 0.22f, yPos);
+                            //g.DrawString("1", fuenteGrande, Brushes.Black, colCant + 20, yPos); 
+                          
+                            yPos += 20;
+                        }
+                        _ventaVarios.ConceptosVarios = null;
+                    }
+
+
                     if (!string.IsNullOrEmpty(aclaracion))
                     {
                         yPos += 10;
@@ -599,17 +624,24 @@ namespace ApplicationLayer.Services
         {
             _ventaHelados.DetallesVentas.Clear();
             _ventacafeteria.DetallesVentas.Clear();
+            _ventaVarios.ConceptosVarios?.Clear(); // Usar null-conditional por seguridad
 
             foreach (var detalle in venta.DetallesVentas)
             {
-                if (detalle.Producto.ProductoCategoriaId == 2)
-                {
-                    _ventacafeteria.DetallesVentas.Add(detalle);
-                }
-                if (detalle.Producto.ProductoCategoriaId == 1)
+                if (detalle.Producto.ProductoCategoriaId == 2) // Solo helados
                 {
                     _ventaHelados.DetallesVentas.Add(detalle);
                 }
+                else // Todo lo demás va a cafetería
+                {
+                    _ventacafeteria.DetallesVentas.Add(detalle);
+                }
+            }
+
+            // Mover todos los conceptos varios a cafetería
+            if (venta.ConceptosVarios != null)
+            {
+                _ventacafeteria.ConceptosVarios = venta.ConceptosVarios;
             }
         }
 
@@ -635,9 +667,260 @@ namespace ApplicationLayer.Services
             }
         }
 
+        private int ObtenerNumeroComanda()
+        {
+            try
+            {
+                if (!File.Exists(RUTA_COMANDA))
+                {
+                    File.WriteAllText(RUTA_COMANDA, "0");
+                    return 0;
+                }
 
+                string contenido = File.ReadAllText(RUTA_COMANDA);
+                int contadorActual = int.TryParse(contenido, out int result) ? result : 0;
+                int nuevoContador = (contadorActual + 1) % 100;
+                File.WriteAllText(RUTA_COMANDA, nuevoContador.ToString());
+                return nuevoContador;
+            }
+            catch
+            {
+                return 0;
+            }
+        }
 
+        private void Pd_PrintPageFiscalConstancia(object sender, PrintPageEventArgs e)
+        {
+            try
+            {
+                using (Font fuenteNormal = new Font("Arial", 10))
+                using (Font fuenteGrande = new Font("Arial", 13, FontStyle.Bold))
+                {
+                    Graphics g = e.Graphics;
+                    float yPos = e.MarginBounds.Top;
+                    float leftMargin = e.MarginBounds.Left;
+                    float printableWidth = e.MarginBounds.Width;
+                    float rightMargin = leftMargin + printableWidth;
 
+                    // Encabezado simplificado
+                    string titulo = "CONSTANCIA FISCAL";
+                    CentrarTexto(g, titulo, fuenteGrande, leftMargin, printableWidth, yPos);
+                    yPos += g.MeasureString(titulo, fuenteGrande).Height + 5;
+
+                    // Información fiscal básica
+                    string puntoVenta = "P.V. 0030";
+                    string comprobante = $"Comp. {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
+
+                    g.DrawString(puntoVenta, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    g.DrawString(comprobante, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(comprobante, fuenteNormal).Width, yPos);
+                    yPos += 20;
+
+                    // Fecha y hora
+                    string fechaHora = $"Fecha: {FacturaResponse.FechaEmision:dd/MM/yyyy HH:mm}";
+                    g.DrawString(fechaHora, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += 20;
+
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Columnas
+                    float colDesc = 5;
+                    float colCant = 155;
+                    float colPU = 195;
+                    float colTotal = 238;
+
+                    g.DrawString("Descripción", fuenteNormal, Brushes.Black, colDesc, yPos);
+                    g.DrawString("Cant", fuenteNormal, Brushes.Black, colCant, yPos);
+                    g.DrawString("P.U.", fuenteNormal, Brushes.Black, colPU, yPos);
+                    g.DrawString("Total", fuenteNormal, Brushes.Black, colTotal, yPos);
+                    yPos += 20;
+
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Productos
+                    foreach (var detalle in _ventaActual.DetallesVentas)
+                    {
+                        string nombreProducto = detalle.Producto.NombreProducto;
+                        if (nombreProducto.Length > 25)
+                            nombreProducto = nombreProducto.Substring(0, 22) + "...";
+
+                        g.DrawString(nombreProducto, fuenteNormal, Brushes.Black, colDesc, yPos);
+                        g.DrawString(detalle.Cantidad.ToString(), fuenteNormal, Brushes.Black, colCant + 5, yPos);
+                        g.DrawString(detalle.PrecioUnitario.ToString("N0"), fuenteNormal, Brushes.Black, colPU - 6, yPos);
+                        g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 3, yPos);
+                        yPos += 20;
+                    }
+
+                    // Conceptos varios
+                    if (_ventaActual.ConceptosVarios != null)
+                    {
+                        foreach (var concepto in _ventaActual.ConceptosVarios)
+                        {
+                            string nombre = concepto.Nombre.Length > 25 ?
+                                           concepto.Nombre.Substring(0, 22) + "..." :
+                                           concepto.Nombre;
+
+                            g.DrawString(nombre, fuenteNormal, Brushes.Black, colDesc, yPos);
+                            g.DrawString("1", fuenteNormal, Brushes.Black, colCant + 5, yPos);
+                            g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colPU - 6, yPos);
+                            g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 4, yPos);
+                            yPos += 20;
+                        }
+                    }
+
+                    yPos += 5;
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Total
+                    string total = $"TOTAL: {FacturaResponse.ImporteTotal.ToString("C2")}";
+                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
+                    g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width - 45, yPos);
+                    yPos += totalSize.Height + 20;
+
+                    // Información CAE simplificada
+                    string infoCAE = $"CAE: {FacturaResponse.CAE} (Vto: {FacturaResponse.VencimientoCAE})";
+                    CentrarTexto(g, infoCAE, fuenteNormal, leftMargin, printableWidth, yPos);
+
+                    e.HasMorePages = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al generar la página del ticket: {ex.Message}", ex);
+            }
+        }
+
+        private void Pd_PrintPageConstancia(object sender, PrintPageEventArgs e)
+        {
+            try
+            {
+                using (Font fuenteNormal = new Font("Arial", 10))
+                using (Font fuenteGrande = new Font("Arial", 13, FontStyle.Bold))
+                using (Font fuentePequena = new Font("Arial", 9))
+                using (Font fuenteLeyenda = new Font("Arial", 6, FontStyle.Italic))
+                {
+                    Graphics g = e.Graphics;
+                    float yPos = e.MarginBounds.Top;
+                    float leftMargin = e.MarginBounds.Left;
+                    float printableWidth = e.MarginBounds.Width;
+                    float rightMargin = leftMargin + printableWidth;
+
+                    // Fecha a la izquierda, hora a la derecha
+                    string fecha = $"Fecha: {_ventaActual.FechaDeVenta:dd/MM/yyyy}";
+                    string hora = $"Hora: {_ventaActual.FechaDeVenta:HH:mm}";
+
+                    g.DrawString(fecha, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    g.DrawString(hora, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(hora, fuenteNormal).Width - 35, yPos);
+                    yPos += 20;
+
+                    // Número de ticket debajo a la izquierda
+                    string ticketInfo = $"Ticket #: {_ventaActual.Id.ToString().PadLeft(8, '0')}";
+                    g.DrawString(ticketInfo, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += 25;
+
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    // Configurar columnas reorganizadas
+                    float colDesc = 5;
+                    float colCant = 155;
+                    float colPU = 195;
+                    float colTotal = 238;
+
+                    g.DrawString("Descripción", fuenteNormal, Brushes.Black, colDesc, yPos);
+                    g.DrawString("Cant", fuenteNormal, Brushes.Black, colCant, yPos);
+                    g.DrawString("P.U.", fuenteNormal, Brushes.Black, colPU, yPos);
+                    g.DrawString("Total", fuenteNormal, Brushes.Black, colTotal, yPos);
+                    yPos += 20;
+
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+                    //ACA
+                    // Productos - sin signo $
+                    foreach (var detalle in _ventaActual.DetallesVentas)
+                    {
+                        string nombreProducto = detalle.Producto.NombreProducto;
+                        if (nombreProducto.Length > 25)
+                            nombreProducto = nombreProducto.Substring(0, 22) + "...";
+
+                        g.DrawString(nombreProducto, fuenteNormal, Brushes.Black, colDesc, yPos);
+                        g.DrawString(detalle.Cantidad.ToString(), fuenteNormal, Brushes.Black, colCant + 5, yPos);
+                        g.DrawString(detalle.PrecioUnitario.ToString("N0"), fuenteNormal, Brushes.Black, colPU - 6, yPos);
+                        g.DrawString((detalle.Cantidad * detalle.PrecioUnitario).ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 3, yPos);
+                        yPos += 20;
+                    }
+
+                    // Conceptos varios - sin signo $ (mismo formato que productos)
+                    if (_ventaActual.ConceptosVarios != null)
+                    {
+                        foreach (var concepto in _ventaActual.ConceptosVarios)
+                        {
+                            string nombre = concepto.Nombre.Length > 25 ?
+                                           concepto.Nombre.Substring(0, 22) + "..." :
+                                           concepto.Nombre;
+
+                            g.DrawString(nombre, fuenteNormal, Brushes.Black, colDesc, yPos);
+                            g.DrawString("1", fuenteNormal, Brushes.Black, colCant + 5, yPos); // Cantidad fija "1" alineada
+                            g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colPU - 6, yPos); // Precio alineado
+                            g.DrawString(concepto.Precio.ToString("N0"), fuenteNormal, Brushes.Black, colTotal - 4, yPos); // Total alineado
+                            yPos += 20;
+                        }
+                    }
+
+                    yPos += 5;
+                    g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
+                    yPos += 10;
+
+                    if (_ventaActual.Descuentos > 0)
+                    {
+                        string descuento = $"Descuento: {_ventaActual.Descuentos.ToString("N0")}";
+                        SizeF descuentoSize = g.MeasureString(descuento, fuenteGrande);
+                        g.DrawString(descuento, fuenteGrande, Brushes.Black, rightMargin - descuentoSize.Width - 20, yPos);
+                        yPos += descuentoSize.Height + 10;
+                    }
+
+                    // Total corregido más a la izquierda
+                    string total = $"TOTAL: {_ventaActual.TotalVenta.ToString("N0")}";
+                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
+                    g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width - 45, yPos);
+                    yPos += totalSize.Height + 20;
+
+                    e.HasMorePages = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Error al generar la página del ticket: {ex.Message}", ex);
+            }
+        }
+
+        // Métodos auxiliares para simplificar el código
+        private PaperSize GetPaperSize()
+        {
+            PrintDocument pd = new PrintDocument();
+            foreach (PaperSize size in pd.PrinterSettings.PaperSizes)
+            {
+                if (size.PaperName.Contains("80 x 3276"))
+                {
+                    return size;
+                }
+            }
+            return pd.DefaultPageSettings.PaperSize; // Tamaño por defecto si no se encuentra
+        }
+
+        private void ConfigurePrintDocument(PrintDocument doc, PaperSize paperSize, Margins margins)
+        {
+            doc.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
+            doc.DefaultPageSettings.PaperSize = paperSize;
+            doc.DefaultPageSettings.Margins = margins;
+
+            if (!doc.PrinterSettings.IsValid)
+            {
+                throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
+            }
+        }
 
     }
 }

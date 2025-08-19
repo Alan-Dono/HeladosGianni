@@ -9,7 +9,8 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VentaService from '../services/VentaService';
 import { use } from 'framer-motion/client';
-
+import LoadingOverlay from './LoadingOverlay';
+import LoadingButton from './LoadingButton';
 const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria, reiniciarAclaraciones }) => {
 
     //const [codigoDescuento, setCodigoDescuento] = useState('');
@@ -22,7 +23,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     const [confirmarVentaAbierto, setConfirmarVentaAbierto] = useState(false);
     const [esFiscal, setEsFiscal] = useState(false);
     const [cargandoVenta, setCargandoVenta] = useState(false);
-
+    const [mostrarExito, setMostrarExito] = useState(false);
 
     const theme = useTheme();
     {/* 
@@ -102,9 +103,80 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     };
 
     const confirmarVenta = async () => {
-        if (cargandoVenta) return; // Evitar múltiples ejecuciones
+        if (cargandoVenta) return;
 
         setCargandoVenta(true);
+        setMostrarExito(false);
+        let exito = false;
+
+        try {
+            // 1. Separar productos
+            const productosRegulares = carrito.filter(item => !item.esVario);
+            const productosVarios = carrito.filter(item => item.esVario);
+
+            // 2. Construir objeto de venta
+            const ventaData = {
+                FechaDeVenta: new Date().toISOString(),
+                TotalVenta: parseFloat(totalConDescuento.toFixed(2)),
+                Descuentos: montoDescuento > 0 ? parseFloat(montoDescuento.toFixed(2)) : null,
+                IdCierreCaja: cierreActivo.id,
+                DetallesVentas: productosRegulares.map(producto => ({
+                    ProductoId: producto.id,
+                    Cantidad: producto.cantidad,
+                    PrecioUnitario: parseFloat(producto.precio.toFixed(2))
+                })),
+                ConceptosVarios: productosVarios.length > 0
+                    ? productosVarios.map(producto => ({
+                        Nombre: producto.nombre,
+                        Precio: parseFloat(producto.precio.toFixed(2))
+                    }))
+                    : null,
+                AclaracionCafeteria: aclaracionCafeteria?.trim() || null,
+                AclaracionHeladeria: aclaracionHeladeria?.trim() || null
+            };
+
+            // 3. Validación
+            if ((!ventaData.DetallesVentas || ventaData.DetallesVentas.length === 0) &&
+                (!ventaData.ConceptosVarios || ventaData.ConceptosVarios.length === 0)) {
+                throw new Error("El carrito está vacío");
+            }
+
+            // 4. Enviar al backend
+            const response = esFiscal
+                ? await VentaService.registrarVentaFiscal(ventaData)
+                : await VentaService.registrarVenta(ventaData);
+
+            if (!response) throw new Error("No se recibió respuesta del servidor");
+
+            exito = true;
+            setMostrarExito(true);
+            await new Promise(resolve => setTimeout(resolve, 1500)); // Mostrar animación por 1 segundo
+
+            // Resetear UI
+            setCarrito([]);
+            setSubtotal(0);
+            setDescuento(0);
+            setMensajeSnackbar('Venta registrada con éxito');
+            setTipoAlerta("success");
+            reiniciarAclaraciones();
+
+        } catch (error) {
+            console.error("Error:", error);
+            setMensajeSnackbar(error.message || "Error al procesar la venta");
+            setTipoAlerta("error");
+        } finally {
+            setCargandoVenta(false);
+            setSnackbarAbierto(true);
+            setConfirmarVentaAbierto(false);
+            setMostrarExito(false);
+        }
+    };
+
+    {/* 
+    const confirmarVenta = async () => {
+        if (cargandoVenta) return; // Evitar múltiples ejecuciones
+        setCargandoVenta(true);
+        let exito = false;
         try {
             // 1. Separar productos regulares y productos varios
             const productosRegulares = carrito.filter(item => !item.esVario);
@@ -147,7 +219,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             if (!response) {
                 throw new Error("No se recibió respuesta del servidor");
             }
-
+            exito = true;
             // La respuesta directa es el VentaDtoRes (no está envuelta en .data)
             const ventaRegistrada = response;
 
@@ -176,12 +248,23 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             );
             setTipoAlerta("error");
         } finally {
+            //await new Promise(resolve => setTimeout(resolve, 2000));
+
+            if (exito) {
+                setMostrarExito(true);
+                // Mostrar animación por 1 segundo
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                setMostrarExito(false);
+                // Pequeña pausa antes de cerrar
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+
             setCargandoVenta(false);
             setSnackbarAbierto(true);
             setConfirmarVentaAbierto(false);
         }
     };
-
+*/}
 
     const cerrarAlerta = () => {
         setSnackbarAbierto(false);
@@ -361,57 +444,45 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                 </DialogContent>
                 <DialogActions sx={{ justifyContent: 'center', padding: '20px' }}>
                     <Button
-                        onClick={() => setConfirmarVentaAbierto(false)}
-                        color="default" // Color por defecto
-                        sx={{
-                            borderRadius: '20px',
-                            textTransform: 'none',
-                            marginRight: '10px', // Espaciado
-                        }}
-                    >
-                        Cancelar
-                    </Button>
-                    <Button
-                        onClick={confirmarVenta}
-                        variant="contained"
-                        color="primary"
+                        onClick={() => !cargandoVenta && setConfirmarVentaAbierto(false)}
+                        color="default"
                         disabled={cargandoVenta}
                         sx={{
                             borderRadius: '20px',
                             textTransform: 'none',
+                            marginRight: '10px',
+                            transition: 'all 0.3s',
+                            '&:hover': {
+                                transform: cargandoVenta ? 'none' : 'translateY(-2px)',
+                            }
                         }}
                     >
-                        {cargandoVenta ? (
-                            <CircularProgress size={24} color="inherit" />
-                        ) : (
-                            'Confirmar'
-                        )}
+                        Cancelar
                     </Button>
+
+                    <LoadingButton
+                        loading={cargandoVenta}
+                        onClick={confirmarVenta}
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                            borderRadius: '20px',
+                            textTransform: 'none',
+                            px: 4,
+                            py: 1,
+                        }}
+                    >
+                        Confirmar Venta
+                    </LoadingButton>
                 </DialogActions>
             </Dialog>
 
             {/* Spinner de carga */}
-            <Fade
-                in={cargandoVenta}
-                timeout={{ enter: 100, exit: 400 }}
-                unmountOnExit
-                style={{ transitionDelay: cargandoVenta ? '200ms' : '0ms' }}
-            >
-                <Box sx={{
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'rgba(0,0,0,0.5)',
-                    zIndex: 9999
-                }}>
-                    <CircularProgress size={80} color="primary" thickness={4} />
-                </Box>
-            </Fade>
+            <LoadingOverlay
+                open={cargandoVenta || mostrarExito}
+                message={esFiscal ? "Generando ticket fiscal..." : "Procesando venta..."}
+                success={mostrarExito}
+            />
         </Box>
     );
 };

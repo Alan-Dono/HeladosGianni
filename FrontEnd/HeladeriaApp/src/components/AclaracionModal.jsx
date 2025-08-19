@@ -14,7 +14,7 @@ const AclaracionModal = ({ open, onClose, onSave, tipo, onCancel }) => {
   const [aclaracion, setAclaracion] = useState('');
 
   const handleChange = (event) => {
-    setAclaracion(event.target.value);
+    setAclaracion(event.target.value.toUpperCase());
   };
 
   const handleSave = () => {

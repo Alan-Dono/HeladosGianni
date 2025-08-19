@@ -13,11 +13,10 @@ namespace HeladeriaGianniAPI.Controllers
     [ApiController]
     [Route("api/ventas")]
     public class VentaController : ControllerBase
-    {
+    {// cambiamos program.cs , ventaController, y venta service
         private readonly VentaService _ventaService;
         private readonly IMapper _mapper;
-        private readonly ImpresoraTicketService impresoraTicketService;
-
+        private readonly ImpresoraTicketService impresoraTicketService; 
         public VentaController(VentaService ventaService, IMapper mapper, ImpresoraTicketService impresoraTicketService)
         {
             _ventaService = ventaService;
@@ -86,24 +85,7 @@ namespace HeladeriaGianniAPI.Controllers
             return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
         }
 
-        /*[HttpPost("crear-venta-normal", Name = "CrearVentaNormal")]
-        public async Task<ActionResult<VentaDtoRes>> CrearVentaNormal([FromBody] VentaDtoReq ventaDtoReq)
-        {
-            // aca quedaste recorda seguir la venta
-            string? notaCafe = ventaDtoReq.AclaracionCafeteria;
-            string? notaHelado = ventaDtoReq.AclaracionHeladeria;
-            var venta = _mapper.Map<Venta>(ventaDtoReq);
-            // Mapeo seguro de conceptos varios (puede ser null)
-            if (ventaDtoReq.ConceptosVarios != null)
-            {
-                venta.ConceptosVarios = _mapper.Map<List<ConceptoVarios>>(ventaDtoReq.ConceptosVarios);
-            }
-            await _ventaService.RegistrarVenta(venta);
-            venta = await _ventaService.ObtenerVentaPorId(venta.Id);
-            impresoraTicketService.ImprimirTicketVenta(venta, ventaDtoReq.AclaracionCafeteria, ventaDtoReq.AclaracionHeladeria);
-            var ventaDto = _mapper.Map<VentaDtoRes>(venta);
-            return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
-        }*/
+
 
         // Crear una nueva venta fiscal
         [HttpPost("crear-venta-fiscal", Name = "CrearVentaFiscal")]

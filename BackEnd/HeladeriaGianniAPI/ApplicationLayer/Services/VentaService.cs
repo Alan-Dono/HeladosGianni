@@ -11,7 +11,7 @@ namespace ApplicationLayer.Services
     public class VentaService
     {
         private readonly IVentaRepository ventaRepository;
-        private readonly ImpresoraTicketService impresoraTicketService;
+        private readonly ImpresoraTicketService impresoraTicketService; 
 
         public VentaService( IVentaRepository ventaRepository, ImpresoraTicketService impresoraTicketService)
         {
@@ -44,11 +44,7 @@ namespace ApplicationLayer.Services
         {
             await ventaRepository.RegistrarVenta(venta);
         }
-        /*public async Task RegistrarVenta(Venta venta)
-        {
-            await ventaRepository.RegistrarVenta(venta);
-            
-        }*/
+
 
         public async Task AnularVenta(int id)
         {

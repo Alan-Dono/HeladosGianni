@@ -1,33 +1,40 @@
 import React from 'react';
 import { Box, CircularProgress, Typography, keyframes, styled } from '@mui/material';
 import { Fade, Zoom } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const floatAnimation = keyframes`
-  0% { transform: translateY(0px) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-`;
+const SuccessAnimation = ({ open }) => (
+  <Fade in={open} timeout={300}>
+    <Box sx={{
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 2,
+      background: 'rgba(0,0,0,0.5)',
+      backdropFilter: 'blur(4px)'
+    }}>
+      <CheckCircleIcon sx={{
+        fontSize: 120,
+        color: '#4CAF50',
+        filter: 'drop-shadow(0 0 10px rgba(76, 175, 80, 0.7))',
+        animation: 'pulse 1s infinite alternate',
+        '@keyframes pulse': {
+          '0%': { transform: 'scale(1)', opacity: 0.9 },
+          '100%': { transform: 'scale(1.1)', opacity: 1 }
+        }
+      }} />
+    </Box>
+  </Fade>
+);
 
-const Particle = styled('div')(({ theme, delay, size, left }) => ({
-  position: 'absolute',
-  background: 'rgba(255,255,255,0.6)',
-  borderRadius: '50%',
-  width: size,
-  height: size,
-  left: `${left}%`,
-  top: '120%',
-  animation: `${floatAnimation} 3s ease-out ${delay}s infinite`,
-}));
-
-const LoadingOverlay = ({ open, message = "Procesando venta..." }) => {
-  const particles = Array.from({ length: 12 }).map((_, i) => ({
-    id: i,
-    delay: Math.random() * 2,
-    size: `${Math.random() * 10 + 5}px`,
-    left: Math.random() * 100,
-  }));
-
+const LoadingOverlay = ({ open, message = "Procesando venta...", success = false }) => {
   return (
-    <Fade in={open} timeout={500} unmountOnExit>
+    <Fade in={open} timeout={800} unmountOnExit>
       <Box
         sx={{
           position: 'fixed',
@@ -35,60 +42,56 @@ const LoadingOverlay = ({ open, message = "Procesando venta..." }) => {
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.85)',
+          background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)',
           zIndex: 9999,
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
           flexDirection: 'column',
-          backdropFilter: 'blur(4px)',
+          overflow: 'hidden',
         }}
       >
-        <Zoom in={open} style={{ transitionDelay: '200ms' }}>
-          <Box sx={{ position: 'relative', textAlign: 'center' }}>
-            {/* Partículas flotantes */}
-            {particles.map((particle) => (
-              <Particle
-                key={particle.id}
-                delay={particle.delay}
-                size={particle.size}
-                left={particle.left}
-              />
-            ))}
+        {/* Animación de éxito */}
+        {success && <SuccessAnimation open={success} />}
 
-            {/* Spinner con gradiente */}
+        <Zoom in={open} style={{ transitionDelay: '300ms' }}>
+          <Box sx={{
+            position: 'relative',
+            textAlign: 'center',
+            zIndex: 1,
+            p: 4,
+            borderRadius: 4,
+            backgroundColor: 'rgba(0,0,0,0.3)',
+            backdropFilter: 'blur(10px)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            opacity: success ? 0.7 : 1,
+            transition: 'opacity 0.5s ease'
+          }}>
             <CircularProgress
-              size={80}
-              thickness={4}
+              size={100}
+              thickness={2}
               sx={{
-                background: 'conic-gradient(from 180deg at 50% 50%, #00FFE0 0deg, #7233FF 360deg)',
-                borderRadius: '50%',
-                padding: '4px',
-                boxShadow: '0 0 20px rgba(114, 51, 255, 0.5)',
+                color: success ? '#4CAF50' : 'primary.main',
+                transition: 'color 0.5s ease',
+                '& .MuiCircularProgress-circle': {
+                  strokeLinecap: 'round',
+                  animationDuration: '2s',
+                }
               }}
             />
 
-            {/* Texto */}
             <Typography
-              variant="h6"
+              variant="h5"
               sx={{
                 mt: 3,
                 color: 'white',
-                fontWeight: 500,
-                textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+                fontWeight: 600,
+                textShadow: '0 0 8px rgba(100, 149, 237, 0.8)',
+                letterSpacing: '1px'
               }}
             >
               {message}
-            </Typography>
-            <Typography
-              variant="body2"
-              sx={{
-                mt: 1,
-                color: 'rgba(255,255,255,0.7)',
-                fontStyle: 'italic',
-              }}
-            >
-              Por favor, espere un momento...
             </Typography>
           </Box>
         </Zoom>
