@@ -39,6 +39,8 @@ export const obtenerTurnoPorId = async (id) => {
   }
 };
 
+{
+  /*
 // Función para obtener todos los turnos
 export const obtenerTodosLosTurnos = async () => {
   try {
@@ -49,7 +51,8 @@ export const obtenerTodosLosTurnos = async () => {
     throw error;
   }
 };
-
+ */
+}
 // Función para obtener turnos activo
 export const obtenerTurnoActivo = async () => {
   try {
@@ -61,6 +64,8 @@ export const obtenerTurnoActivo = async () => {
   }
 };
 
+{
+  /* 
 // Función para obtener turnos por fechas
 export const obtenerTurnosPorFechas = async (fechaDesde, fechaHasta) => {
   try {
@@ -73,6 +78,8 @@ export const obtenerTurnosPorFechas = async (fechaDesde, fechaHasta) => {
     throw error;
   }
 };
+*/
+}
 
 // Función para eliminar un turno
 export const eliminarTurno = async (id) => {
@@ -93,4 +100,27 @@ export const imprimirResumenTurno = async (id) => {
     console.error(`Error al imprimir resumen del turno con ID: ${id}`, error);
     throw error;
   }
+};
+
+export const obtenerTodosLosTurnos = async (pageNumber = 1, pageSize = 25) => {
+  const response = await apiClient.get("/turnos", {
+    params: {pageNumber, pageSize},
+  });
+  console.log("pageNumber: ", pageNumber, " y pageSize: ", pageSize);
+
+  console.log("Turnos: ", response.data);
+
+  return response.data; // { data, totalCount }
+};
+
+export const obtenerTurnosPorFechas = async (
+  fechaDesde,
+  fechaHasta,
+  pageNumber = 1,
+  pageSize = 25
+) => {
+  const response = await apiClient.get("/turnos/fechas", {
+    params: {fechaDesde, fechaHasta, pageNumber, pageSize},
+  });
+  return response.data; // { data, totalCount }
 };

@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import { IconButton } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DetalleTurnoModal from './DetalleTurnosModal';
 
-const TablaTurnos = ({ turnos }) => {
+const TablaTurnos = ({
+  turnos,
+  rowCount,
+  paginationModel,
+  onPaginationModelChange,
+}) => {
   const [modalAbierto, setModalAbierto] = useState(false);
   const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
 
@@ -15,30 +19,24 @@ const TablaTurnos = ({ turnos }) => {
       field: 'fechaInicio',
       headerName: 'Fecha Inicio',
       flex: 1,
-      valueGetter: (params) => {
-        if (!params) return '';
+      valueGetter: (value) => {
+        if (!value) return '';
         return new Intl.DateTimeFormat('es-ES', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        }).format(new Date(params));
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit',
+        }).format(new Date(value));
       },
     },
     {
       field: 'fechaFin',
       headerName: 'Fecha Fin',
       flex: 1,
-      valueGetter: (params) => {
-        if (!params) return 'En curso';
+      valueGetter: (value) => {
+        if (!value) return 'En curso';
         return new Intl.DateTimeFormat('es-ES', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-        }).format(new Date(params));
+          year: 'numeric', month: '2-digit', day: '2-digit',
+          hour: '2-digit', minute: '2-digit',
+        }).format(new Date(value));
       },
     },
     { field: 'cantidadCierresParciales', headerName: 'Cant. Cierres', flex: 1 },
@@ -47,19 +45,15 @@ const TablaTurnos = ({ turnos }) => {
       field: 'totalDescuentos',
       headerName: 'Descuentos',
       flex: 1,
-      valueFormatter: (params) => {
-        return params ? params.toLocaleString('es-AR', { minimumFractionDigits: 2 })
-      : '0,00'; // Formatea el valor a dos decimales
-      },
+      valueFormatter: (v) =>
+        v ? v.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : '0,00',
     },
     {
       field: 'totalVentas',
       headerName: 'Total',
       flex: 1,
-      valueFormatter: (params) => {
-        return params ? params.toLocaleString('es-AR', { minimumFractionDigits: 2 })
-      : '0,00'; // Formatea el valor a dos decimales
-      },
+      valueFormatter: (v) =>
+        v ? v.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : '0,00',
     },
     {
       field: 'verDetalles',
@@ -69,7 +63,6 @@ const TablaTurnos = ({ turnos }) => {
         <IconButton
           color="primary"
           onClick={() => {
-            // Establece el turno seleccionado y pasa toda la información del turno
             setTurnoSeleccionado(params.row.id);
             setModalAbierto(true);
           }}
@@ -80,23 +73,25 @@ const TablaTurnos = ({ turnos }) => {
     },
   ];
 
-  console.log('TablaTurnos', turnos);
-
-  const handleRowClick = (params) => {
-    // Solo marca visualmente la fila sin seleccionar
-    setTurnoSeleccionado(params.row);
-  };
-
   return (
     <Box sx={{ height: 400, width: '100%' }}>
       <DataGrid
         rows={turnos}
         columns={columns}
-        disableSelectionOnClick
-        onRowClick={handleRowClick} // Mantiene la función para marcar la fila visualmente
-        getRowId={(row) => row.id} // Asegúrate de que haya una propiedad única para cada fila
-
+        getRowId={(row) => row.id}
+        pagination
+        paginationMode="server"
+        rowCount={rowCount}
+        paginationModel={paginationModel}
+        onPaginationModelChange={onPaginationModelChange}
+        pageSizeOptions={[25, 50, 100]}
+        localeText={{
+          MuiTablePagination: { labelRowsPerPage: 'Registros por página:' },
+          noRowsLabel: 'Sin registros',
+        }}
       />
+
+
       <DetalleTurnoModal
         abierto={modalAbierto}
         cerrar={() => setModalAbierto(false)}

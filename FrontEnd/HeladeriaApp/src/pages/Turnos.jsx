@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -19,63 +19,85 @@ const Turnos = () => {
   const [fechaDesde, setFechaDesde] = useState('');
   const [fechaHasta, setFechaHasta] = useState('');
 
+  const [rowCount, setRowCount] = useState(0);
+  const [paginationModel, setPaginationModel] = useState({ page: 0, pageSize: 25 });
 
-  const cargarTurnos = async (filtros = {}) => {
+  // Función principal para cargar turnos
+  const fetchTurnos = async (model = paginationModel, resetPagination = false, customFechas = null) => {
+    setCargando(true);
     try {
-      // Solo muestra spinner si es la carga inicial o si la operación podría demorar
-      if (filtros.conFechas || turnos.length === 0) {
-        setCargando(true);
-      }
+      // Si resetPagination es true, usar página 0, sino usar la del modelo
+      const currentModel = resetPagination ? { ...model, page: 0 } : model;
+      const page = currentModel.page + 1; // DataGrid usa base 0, backend base 1
+      const size = currentModel.pageSize;
 
-      let listaTurnos;
-      if (filtros.conFechas) {
-        const fechaHastaAjustada = new Date(filtros.fechaHasta);
-        fechaHastaAjustada.setHours(23, 59, 59, 999);
-        listaTurnos = await TurnoService.buscarPorFechas(
-          new Date(filtros.fechaDesde),
-          fechaHastaAjustada
-        );
+      // Usar fechas personalizadas si se pasan, sino usar las del estado
+      const fechasAUsar = customFechas !== null ? customFechas : { desde: fechaDesde, hasta: fechaHasta };
+
+      let result;
+      if (fechasAUsar.desde && fechasAUsar.hasta) {
+        const fhAjustada = new Date(fechasAUsar.hasta);
+        fhAjustada.setHours(23, 59, 59, 999);
+        result = await TurnoService.buscarPorFechas(fechasAUsar.desde, fhAjustada, page, size);
       } else {
-        listaTurnos = await TurnoService.obtenerTodos();
+        result = await TurnoService.obtenerTodos(page, size);
       }
 
-      setTurnos(listaTurnos || []);
-    } catch (error) {
-      console.error('Error:', error);
+      setTurnos(result.data ?? []);
+      setRowCount(result.totalCount ?? 0);
+
+      // Si reseteamos la paginación, actualizar el estado
+      if (resetPagination) {
+        setPaginationModel(currentModel);
+      }
+    } catch (e) {
+      console.error('Error al cargar turnos:', e);
+      setTurnos([]);
+      setRowCount(0);
     } finally {
       setCargando(false);
-      setMostrarContenido(true); // Siempre muestra el contenido después de cargar
+      setMostrarContenido(true);
     }
   };
 
+  // Buscar por fechas
   const buscarPorFechas = async () => {
     if (!fechaDesde || !fechaHasta) {
-      alert('Seleccioná ambas fechas');
+      alert('Selecciona ambas fechas');
       return;
     }
-    await cargarTurnos({ conFechas: true, fechaDesde, fechaHasta });
+
+    // Resetear a la primera página al hacer búsqueda
+    await fetchTurnos(paginationModel, true, { desde: fechaDesde, hasta: fechaHasta });
   };
 
+  // Limpiar búsqueda
   const limpiarBusqueda = async () => {
+    // Primero hacer la consulta con fechas vacías
+    await fetchTurnos(paginationModel, true, { desde: '', hasta: '' });
+
+    // Luego limpiar el estado (esto es solo para el UI)
     setFechaDesde('');
     setFechaHasta('');
-    await cargarTurnos(); // No fuerza spinner a menos que sea primera carga
   };
 
+  // Función para actualizar desde PanelCierre
+  const actualizarVista = async () => {
+    // Mantener la página actual al actualizar
+    await fetchTurnos(paginationModel, false, null);
+  };
 
+  // Carga inicial
   useEffect(() => {
-    cargarTurnos();
+    fetchTurnos();
   }, []);
 
-  const actualizarVista = () => {
-    if (fechaDesde && fechaHasta) {
-      buscarPorFechas();
-    } else {
-      cargarTurnos();
-    }
+  // Manejar cambios de paginación
+  const handlePaginationChange = (model) => {
+    setPaginationModel(model);
+    fetchTurnos(model, false, null);
   };
 
-  
   return (
     <Box sx={{
       p: 1,
@@ -86,12 +108,11 @@ const Turnos = () => {
       gap: 1
     }}>
       {/* Spinner */}
-      {/*<Fade in={cargando} timeout={{ enter: 100, exit: 400 }} unmountOnExit>*/}
       <Fade
         in={cargando}
         timeout={{ enter: 100, exit: 400 }}
         unmountOnExit
-        style={{ transitionDelay: cargando ? '200ms' : '0ms' }} // Retraso para evitar parpadeo
+        style={{ transitionDelay: cargando ? '200ms' : '0ms' }}
       >
         <Box sx={{
           position: 'fixed',
@@ -118,9 +139,9 @@ const Turnos = () => {
           flexDirection: 'column',
           opacity: mostrarContenido ? 1 : 0,
           transition: 'opacity 0.5s ease',
-          pointerEvents: cargando ? 'none' : 'auto' // Deshabilita interacciones durante carga
+          pointerEvents: cargando ? 'none' : 'auto'
         }}>
-          {/* PanelCierre con menos margen */}
+          {/* PanelCierre */}
           <Box sx={{ p: 1 }}>
             <PanelCierre onUpdate={actualizarVista} />
           </Box>
@@ -144,6 +165,16 @@ const Turnos = () => {
               value={fechaDesde}
               onChange={(e) => setFechaDesde(e.target.value)}
               InputLabelProps={{ shrink: true }}
+              InputProps={{
+                sx: {
+                  '& input::-webkit-calendar-picker-indicator': {
+                    filter: 'invert(0.4)',
+                    opacity: 0.8,
+                    transform: 'scale(1.3)',
+                    marginRight: '4px'
+                  }
+                }
+              }}
               sx={{ width: 180 }}
             />
             <TextField
@@ -153,12 +184,23 @@ const Turnos = () => {
               value={fechaHasta}
               onChange={(e) => setFechaHasta(e.target.value)}
               InputLabelProps={{ shrink: true }}
+              InputProps={{
+                sx: {
+                  '& input::-webkit-calendar-picker-indicator': {
+                    filter: 'invert(0.4)',
+                    opacity: 0.8,
+                    transform: 'scale(1.3)',
+                    marginRight: '4px'
+                  }
+                }
+              }}
               sx={{ width: 180 }}
             />
             <Button
               variant="contained"
               onClick={buscarPorFechas}
               sx={{ textTransform: 'none' }}
+              disabled={cargando}
             >
               Buscar
             </Button>
@@ -166,12 +208,20 @@ const Turnos = () => {
               variant="outlined"
               onClick={limpiarBusqueda}
               sx={{ textTransform: 'none' }}
+              disabled={cargando}
             >
               Limpiar
             </Button>
+
+            {/* Indicador visual de filtros activos */}
+            {fechaDesde && fechaHasta && (
+              <Typography variant="body2" color="primary" sx={{ ml: 2 }}>
+                📅 Filtrado: {fechaDesde} a {fechaHasta}
+              </Typography>
+            )}
           </Stack>
 
-          {/* Contenedor de la tabla optimizado */}
+          {/* Contenedor de la tabla */}
           <Box sx={{
             flex: 1,
             minHeight: 0,
@@ -181,7 +231,7 @@ const Turnos = () => {
             bgcolor: 'background.paper',
             borderRadius: 1,
           }}>
-            {turnos.length === 0 ? (
+            {turnos.length === 0 && !cargando ? (
               <Box sx={{
                 flex: 1,
                 display: 'flex',
@@ -189,7 +239,10 @@ const Turnos = () => {
                 alignItems: 'center',
               }}>
                 <Typography variant="h6" color="text.secondary">
-                  No se encontraron turnos
+                  {fechaDesde && fechaHasta
+                    ? `No se encontraron turnos entre ${fechaDesde} y ${fechaHasta}`
+                    : 'No se encontraron turnos'
+                  }
                 </Typography>
               </Box>
             ) : (
@@ -199,7 +252,12 @@ const Turnos = () => {
                 overflow: 'auto',
                 p: 0.5
               }}>
-                <TablaTurnos turnos={turnos} onUpdate={actualizarVista} />
+                <TablaTurnos
+                  turnos={turnos}
+                  rowCount={rowCount}
+                  paginationModel={paginationModel}
+                  onPaginationModelChange={handlePaginationChange}
+                />
               </Box>
             )}
           </Box>

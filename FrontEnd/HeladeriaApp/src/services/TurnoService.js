@@ -43,14 +43,8 @@ class TurnoService {
     }
   }
 
-  async obtenerTodos() {
-    try {
-      const turnos = await obtenerTodosLosTurnos();
-      return turnos;
-    } catch (error) {
-      console.error("Error al obtener todos los turnos", error);
-      throw error;
-    }
+  async obtenerTodos(pageNumber = 1, pageSize = 25) {
+    return await obtenerTodosLosTurnos(pageNumber, pageSize);
   }
 
   async obtenerTurnoActivo() {
@@ -63,14 +57,13 @@ class TurnoService {
     }
   }
 
-  async buscarPorFechas(fechaDesde, fechaHasta) {
-    try {
-      const turnos = await obtenerTurnosPorFechas(fechaDesde, fechaHasta);
-      return turnos;
-    } catch (error) {
-      console.error("Error al obtener turnos por fechas", error);
-      throw error;
-    }
+  async buscarPorFechas(fechaDesde, fechaHasta, pageNumber = 1, pageSize = 25) {
+    return await obtenerTurnosPorFechas(
+      fechaDesde,
+      fechaHasta,
+      pageNumber,
+      pageSize
+    );
   }
 
   async imprimirResumen(id) {

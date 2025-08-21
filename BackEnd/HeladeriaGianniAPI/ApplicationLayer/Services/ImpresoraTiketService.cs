@@ -23,11 +23,11 @@ namespace ApplicationLayer.Services
         private Venta _ventaVarios = new Venta();
         private FacturaResponse FacturaResponse;
         private static readonly string RUTA_CONTADOR = Path.Combine(
-            @"C:\inetpub\wwwroot\deploy",
+            @"C:\Users\ALAN\Desktop\RUTAS ",
             "Contador.txt");
-        private static readonly string RUTA_MODO = Path.Combine(@"C:\inetpub\wwwroot\deploy",
+        private static readonly string RUTA_MODO = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
             "ModoImpresion.txt");
-        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\inetpub\wwwroot\deploy",
+        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
         "Comanda.txt");
         // C:\Users\ALAN\Desktop\RUTAS
         public ImpresoraTicketService(WSFEService webService)

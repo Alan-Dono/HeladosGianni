@@ -25,7 +25,9 @@ const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
                 onSubmit={(values, { setSubmitting }) => {
                     const empleadoData = {
                         ...values,
-                        fechaContratacion: values.fechaContratacion ? values.fechaContratacion.toISOString().split('T')[0] : null
+                        fechaContratacion: values.fechaContratacion
+                            ? values.fechaContratacion.toISOString().split('T')[0]
+                            : null
                     };
                     handleSave(empleadoData);
                     setSubmitting(false);
@@ -41,6 +43,10 @@ const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
                                 margin="dense"
                                 name="nombreEmpleado"
                                 label="Nombre"
+                                value={values.nombreEmpleado}
+                                onChange={(e) =>
+                                    setFieldValue('nombreEmpleado', e.target.value.toUpperCase())
+                                }
                                 error={touched.nombreEmpleado && Boolean(errors.nombreEmpleado)}
                                 helperText={touched.nombreEmpleado && errors.nombreEmpleado}
                             />
@@ -50,6 +56,10 @@ const EmpleadoFormModal = ({ open, handleClose, empleado, handleSave }) => {
                                 margin="dense"
                                 name="apellidoEmpleado"
                                 label="Apellido"
+                                value={values.apellidoEmpleado}
+                                onChange={(e) =>
+                                    setFieldValue('apellidoEmpleado', e.target.value.toUpperCase())
+                                }
                                 error={touched.apellidoEmpleado && Boolean(errors.apellidoEmpleado)}
                                 helperText={touched.apellidoEmpleado && errors.apellidoEmpleado}
                             />

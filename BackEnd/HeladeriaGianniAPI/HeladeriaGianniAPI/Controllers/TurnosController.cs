@@ -55,21 +55,48 @@ namespace HeladeriaGianniAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ObtenerTodos()
+        public async Task<IActionResult> ObtenerTodos([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 25)
         {
-            var turnos = await _turnoService.ObtenerTodosAsync();
+            var (turnos, totalCount) = await _turnoService.ObtenerPaginadosAsync(pageNumber, pageSize);
             var turnosDto = _mapper.Map<ICollection<TurnoDtoRes>>(turnos);
 
-            return Ok(turnosDto);
+            return Ok(new
+            {
+                totalCount,
+                data = turnosDto
+            });
         }
 
+
         [HttpGet("fechas")]
-        public async Task<IActionResult> ObtenerPorFechas([FromQuery] DateTime fechaDesde, [FromQuery] DateTime fechaHasta)
+        public async Task<IActionResult> ObtenerPorFechas(
+    [FromQuery] DateTime fechaDesde,
+    [FromQuery] DateTime fechaHasta,
+    [FromQuery] int pageNumber = 1,
+    [FromQuery] int pageSize = 25)
         {
-            var turnos = await _turnoService.ObtenerPorFechasAsync(fechaDesde, fechaHasta);
+            var (turnos, totalCount) = await _turnoService.ObtenerPorFechasPaginadoAsync(fechaDesde, fechaHasta, pageNumber, pageSize);
             var turnosDto = _mapper.Map<IEnumerable<TurnoDtoRes>>(turnos);
-            return Ok(turnosDto);
+
+            return Ok(new { data = turnosDto, totalCount });
         }
+        /*
+                [HttpGet]
+                public async Task<IActionResult> ObtenerTodos()
+                {
+                    var turnos = await _turnoService.ObtenerTodosAsync();
+                    var turnosDto = _mapper.Map<ICollection<TurnoDtoRes>>(turnos);
+
+                    return Ok(turnosDto);
+                }
+
+                [HttpGet("fechas")]
+                public async Task<IActionResult> ObtenerPorFechas([FromQuery] DateTime fechaDesde, [FromQuery] DateTime fechaHasta)
+                {
+                    var turnos = await _turnoService.ObtenerPorFechasAsync(fechaDesde, fechaHasta);
+                    var turnosDto = _mapper.Map<IEnumerable<TurnoDtoRes>>(turnos);
+                    return Ok(turnosDto);
+                }*/
 
         [HttpGet("activo")]
         public async Task<IActionResult> ObtenerTurnoActivo()
@@ -128,6 +155,7 @@ namespace HeladeriaGianniAPI.Controllers
             }
         }
 
+        
 
     }
 

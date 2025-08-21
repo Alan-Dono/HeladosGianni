@@ -12,6 +12,8 @@ namespace DomainLayer.Interface
         Task FinalizarTurno(int id);
         Task<Turno> ObtenerTurnoActivo();
         Task<Turno> ObtenerTurnoConResumen(int id);
+        Task<(ICollection<Turno>, int)> ObtenerPaginadosAsync(int pageNumber, int pageSize);
+        Task<(ICollection<Turno>, int)> ObtenerPorFechasPaginadoAsync(DateTime fechaDesde, DateTime fechaHasta, int pageNumber, int pageSize);
     }
 }
 

@@ -62,6 +62,16 @@ namespace ApplicationLayer.Services
             impresora.Imprimir();
         }
 
+        public async Task<(ICollection<Turno> Turnos, int TotalCount)> ObtenerPaginadosAsync(int pageNumber, int pageSize)
+        {
+            return await _turnoRepositorio.ObtenerPaginadosAsync(pageNumber, pageSize);
+        }
+
+
+        public async Task<(ICollection<Turno>, int)> ObtenerPorFechasPaginadoAsync(DateTime fechaDesde, DateTime fechaHasta, int pageNumber, int pageSize)
+        {
+            return await _turnoRepositorio.ObtenerPorFechasPaginadoAsync(fechaDesde, fechaHasta, pageNumber, pageSize);
+        }
 
 
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Slide from '@mui/material/Slide';
 import { TextField, Typography, Box, Button, Snackbar, Fade, CircularProgress } from '@mui/material';
-import { Lock, LockOpen } from '@mui/icons-material';
+import { Lock, LockOpen, Clear } from '@mui/icons-material'; // Añadí el icono Clear
 import ProductTiket from './ProductTiket';
 import { useTheme } from '@emotion/react';
 import MuiAlert from '@mui/material/Alert';
@@ -11,6 +11,7 @@ import VentaService from '../services/VentaService';
 import { use } from 'framer-motion/client';
 import LoadingOverlay from './LoadingOverlay';
 import LoadingButton from './LoadingButton';
+import { Delete } from '@mui/icons-material'; // Añade esta importación
 const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria, reiniciarAclaraciones }) => {
 
     //const [codigoDescuento, setCodigoDescuento] = useState('');
@@ -26,6 +27,26 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     const [mostrarExito, setMostrarExito] = useState(false);
 
     const theme = useTheme();
+
+    const vaciarCarrito = () => {
+        if (carrito.length === 0) {
+            setMensajeSnackbar("El carrito ya está vacío");
+            setTipoAlerta("info");
+            setSnackbarAbierto(true);
+            return;
+        }
+
+        setCarrito([]);
+        setSubtotal(0);
+        setDescuento(0);
+        setDescuentoValor(0);
+        setMostrarDescuento(false);
+        setMensajeSnackbar("Carrito vaciado");
+        setTipoAlerta("success");
+        setSnackbarAbierto(true);
+    };
+
+
     {/* 
     const descuentosValidos = {
         "helado": true,
@@ -286,21 +307,35 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             </Box>
             <Typography variant="h6">Total: ${totalConDescuento.toFixed(2)}</Typography>
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2 }}>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    sx={{ flex: 1, marginRight: 1 }}
-                    onClick={manejarTiketFiscal}
-                >
-                    Tiket Fiscal
-                </Button>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, gap: 1 }}>
+                {/* 
+    <Button
+        variant="outlined"
+        color="primary"
+        sx={{ flex: 1 }}
+        onClick={manejarTiketFiscal}
+    >
+        Tiket Fiscal
+    </Button>
+    */}
 
                 <Button
                     variant="outlined"
+                    color="error"
+                    size="small"
+                    startIcon={<Delete />}
+                    onClick={vaciarCarrito}
+                    disabled={carrito.length === 0}
+                    sx={{ flex: 1 }}
+                >
+                    Vaciar
+                </Button>
+
+                <Button
+                    variant="contained"
                     color="primary"
-                    sx={{ flex: 2 }}
                     onClick={manejarFinalizarVenta}
+                    sx={{ flex: 2, fontWeight: 'bold' }}
                 >
                     Finalizar Venta
                 </Button>
