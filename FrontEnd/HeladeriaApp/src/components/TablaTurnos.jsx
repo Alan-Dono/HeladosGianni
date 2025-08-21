@@ -10,6 +10,7 @@ const TablaTurnos = ({
   paginationModel,
   onPaginationModelChange,
 }) => {
+
   const [modalAbierto, setModalAbierto] = useState(false);
   const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
 
@@ -63,7 +64,8 @@ const TablaTurnos = ({
         <IconButton
           color="primary"
           onClick={() => {
-            setTurnoSeleccionado(params.row.id);
+            console.log('🔍 Turno seleccionado:', params.row); // Debug
+            setTurnoSeleccionado(params.row); // ✅ Pasar el objeto completo, no solo el ID
             setModalAbierto(true);
           }}
         >
@@ -91,10 +93,12 @@ const TablaTurnos = ({
         }}
       />
 
-
       <DetalleTurnoModal
         abierto={modalAbierto}
-        cerrar={() => setModalAbierto(false)}
+        cerrar={() => {
+          setModalAbierto(false);
+          setTurnoSeleccionado(null);
+        }}
         turno={turnoSeleccionado}
       />
     </Box>

@@ -308,17 +308,17 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             <Typography variant="h6">Total: ${totalConDescuento.toFixed(2)}</Typography>
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', marginTop: 2, gap: 1 }}>
-                {/* 
-    <Button
-        variant="outlined"
-        color="primary"
-        sx={{ flex: 1 }}
-        onClick={manejarTiketFiscal}
-    >
-        Tiket Fiscal
-    </Button>
-    */}
 
+                <Button
+                    variant="outlined"
+                    color="primary"
+                    sx={{ flex: 1 }}
+                    onClick={manejarTiketFiscal}
+                >
+                    Tiket Fiscal
+                </Button>
+
+                {/*
                 <Button
                     variant="outlined"
                     color="error"
@@ -330,7 +330,7 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                 >
                     Vaciar
                 </Button>
-
+                */}
                 <Button
                     variant="contained"
                     color="primary"
