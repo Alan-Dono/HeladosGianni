@@ -10,7 +10,6 @@ const TablaTurnos = ({
   paginationModel,
   onPaginationModelChange,
 }) => {
-
   const [modalAbierto, setModalAbierto] = useState(false);
   const [turnoSeleccionado, setTurnoSeleccionado] = useState(null);
 
@@ -20,6 +19,7 @@ const TablaTurnos = ({
       field: 'fechaInicio',
       headerName: 'Fecha Inicio',
       flex: 1,
+      minWidth: 150,
       valueGetter: (value) => {
         if (!value) return '';
         return new Intl.DateTimeFormat('es-ES', {
@@ -32,6 +32,7 @@ const TablaTurnos = ({
       field: 'fechaFin',
       headerName: 'Fecha Fin',
       flex: 1,
+      minWidth: 150,
       valueGetter: (value) => {
         if (!value) return 'En curso';
         return new Intl.DateTimeFormat('es-ES', {
@@ -40,19 +41,19 @@ const TablaTurnos = ({
         }).format(new Date(value));
       },
     },
-    { field: 'cantidadCierresParciales', headerName: 'Cant. Cierres', flex: 1 },
-    { field: 'cantidadDeVentas', headerName: 'Cant. Ventas', flex: 1 },
+    { field: 'cantidadCierresParciales', headerName: 'Cant. Cierres', width: 120 },
+    { field: 'cantidadDeVentas', headerName: 'Cant. Ventas', width: 120 },
     {
       field: 'totalDescuentos',
       headerName: 'Descuentos',
-      flex: 1,
+      width: 120,
       valueFormatter: (v) =>
         v ? v.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : '0,00',
     },
     {
       field: 'totalVentas',
       headerName: 'Total',
-      flex: 1,
+      width: 120,
       valueFormatter: (v) =>
         v ? v.toLocaleString('es-AR', { minimumFractionDigits: 2 }) : '0,00',
     },
@@ -64,10 +65,10 @@ const TablaTurnos = ({
         <IconButton
           color="primary"
           onClick={() => {
-            console.log('🔍 Turno seleccionado:', params.row); // Debug
-            setTurnoSeleccionado(params.row); // ✅ Pasar el objeto completo, no solo el ID
+            setTurnoSeleccionado(params.row);
             setModalAbierto(true);
           }}
+          size="small"
         >
           <VisibilityIcon />
         </IconButton>
@@ -76,22 +77,51 @@ const TablaTurnos = ({
   ];
 
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={turnos}
-        columns={columns}
-        getRowId={(row) => row.id}
-        pagination
-        paginationMode="server"
-        rowCount={rowCount}
-        paginationModel={paginationModel}
-        onPaginationModelChange={onPaginationModelChange}
-        pageSizeOptions={[25, 50, 100]}
-        localeText={{
-          MuiTablePagination: { labelRowsPerPage: 'Registros por página:' },
-          noRowsLabel: 'Sin registros',
-        }}
-      />
+    <Box sx={{ 
+      height: '100%', 
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column'
+    }}>
+      {/* Contenedor principal que ocupa todo el espacio */}
+      <Box sx={{ 
+        flex: 1,
+        width: '100%',
+        position: 'relative'
+      }}>
+        <Box sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: 'flex',
+          flexDirection: 'column'
+        }}>
+          <DataGrid
+            rows={turnos}
+            columns={columns}
+            getRowId={(row) => row.id}
+            pagination
+            paginationMode="server"
+            rowCount={rowCount}
+            paginationModel={paginationModel}
+            onPaginationModelChange={onPaginationModelChange}
+            pageSizeOptions={[25, 50, 100]}
+            localeText={{
+              MuiTablePagination: { labelRowsPerPage: 'Registros por página:' },
+              noRowsLabel: 'Sin registros',
+            }}
+            sx={{
+              flex: 1,
+              width: '100%',
+              '& .MuiDataGrid-virtualScroller': {
+                minHeight: '50px'
+              }
+            }}
+          />
+        </Box>
+      </Box>
 
       <DetalleTurnoModal
         abierto={modalAbierto}

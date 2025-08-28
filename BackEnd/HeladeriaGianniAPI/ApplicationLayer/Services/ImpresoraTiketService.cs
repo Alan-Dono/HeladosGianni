@@ -18,18 +18,18 @@ namespace ApplicationLayer.Services
         private const string NOMBRE_IMPRESORA = "GianniPrinter";
         private readonly WSFEService webService;
         private Venta _ventaActual;
-        private Venta _ventaHelados = new Venta();
-        private Venta _ventacafeteria = new Venta();
-        private Venta _ventaVarios = new Venta();
+        private Venta _ventaHelados = new Venta { DetallesVentas = new List<DetalleVenta>() };
+        private Venta _ventacafeteria = new Venta { DetallesVentas = new List<DetalleVenta>() };
+        private Venta _ventaVarios = new Venta { ConceptosVarios = new List<ConceptoVarios>() };
         private FacturaResponse FacturaResponse;
         private static readonly string RUTA_CONTADOR = Path.Combine(
-            @"C:\Users\ALAN\Desktop\RUTAS ",
+            @"C:\inetpub\wwwroot\deploy",
             "Contador.txt");
-        private static readonly string RUTA_MODO = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        private static readonly string RUTA_MODO = Path.Combine(@"C:\inetpub\wwwroot\deploy",
             "ModoImpresion.txt");
-        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\inetpub\wwwroot\deploy",
         "Comanda.txt");
-        // C:\Users\ALAN\Desktop\RUTAS
+        // C:\Users\ALAN\Desktop\RUTAS desarrollo
         public ImpresoraTicketService(WSFEService webService)
         {
             bool impresoraEncontrada = false;
@@ -109,7 +109,8 @@ namespace ApplicationLayer.Services
                     throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
                 }
 
-                if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios != null)
+                if ((_ventacafeteria.DetallesVentas != null && _ventacafeteria.DetallesVentas.Count > 0) ||
+                   (_ventacafeteria.ConceptosVarios != null && _ventacafeteria.ConceptosVarios.Count > 0))
                 {
                     PrintDocument tiketCafe = new PrintDocument();
                     tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
@@ -160,7 +161,8 @@ namespace ApplicationLayer.Services
                 var margins = new Margins(5, 5, 15, 30);
 
                 // 1. Imprimir comanda de cafetería si hay productos
-                if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios?.Count > 0)
+                if ((_ventacafeteria.DetallesVentas != null && _ventacafeteria.DetallesVentas.Count > 0) ||
+                   (_ventacafeteria.ConceptosVarios != null && _ventacafeteria.ConceptosVarios.Count > 0))
                 {
                     PrintDocument tiketCafe = new PrintDocument();
                     ConfigurePrintDocument(tiketCafe, paperSize, margins);
@@ -682,7 +684,7 @@ namespace ApplicationLayer.Services
                 int contadorActual = int.TryParse(contenido, out int result) ? result : 0;
                 int nuevoContador = (contadorActual + 1) % 100;
                 File.WriteAllText(RUTA_COMANDA, nuevoContador.ToString());
-                return nuevoContador;
+                return contadorActual;
             }
             catch
             {
