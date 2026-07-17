@@ -1,42 +1,43 @@
-using ApplicationLayer.Helper;
+Ôªøusing ApplicationLayer.Helper;
 using ApplicationLayer.Services;
 using DataAccesLayer;
 using DataAccesLayer.Repositories;
 using DomainLayer.Interface;
+using DomainLayer.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// ConfiguraciÛn de la cultura global (pasar valores con decimales)
+// Configuraci√≥n de la cultura global (pasar valores con decimales)
 CultureInfo.DefaultThreadCurrentCulture = new CultureInfo("en-US");
 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo("en-US");
 
-// ConfiguraciÛn de la base de datos
+// Configuraci√≥n de la base de datos
 builder.Services.AddDbContext<HeladeriaDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         b => b.MigrationsAssembly("DataAccesLayer"))); // Especifica el ensamblado para las migraciones
 
-// InyecciÛn de dependencias
+// Inyecci√≥n de dependencias
 
 
-// ConfiguraciÛn del AfipService con inyecciÛn de dependencias
-// ConfiguraciÛn del LoginTicket como dependencia
+// Configuraci√≥n del AfipService con inyecci√≥n de dependencias
+// Configuraci√≥n del LoginTicket como dependencia
 builder.Services.AddScoped<LoginTicket>();
 
-// ConfiguraciÛn del AfipService con inyecciÛn de dependencias
+// Configuraci√≥n del AfipService con inyecci√≥n de dependencias
 builder.Services.AddScoped<AfipService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
 
-    // ValidaciÛn de configuraciones requeridas
+    // Validaci√≥n de configuraciones requeridas
     string certificatePath = configuration["Afip:CertificatePath"] ?? "C:\\www\\HELADERIA-GIANNI\\AfipTest\\certificado.pfx";
     string certPassword = configuration["Afip:CertPassword"] ?? "12345678";
     string wsaaUrl = configuration["Afip:WsaaUrl"] ?? "https://wsaa.afip.gov.ar/ws/services/LoginCms";
 
-    // Validar configuraciÛn mÌnima
+    // Validar configuraci√≥n m√≠nima
     if (string.IsNullOrWhiteSpace(certificatePath) || string.IsNullOrWhiteSpace(certPassword) || string.IsNullOrWhiteSpace(wsaaUrl))
     {
         throw new Exception("Faltan configuraciones requeridas para el servicio AFIP en el archivo appsettings.json.");
@@ -50,17 +51,17 @@ builder.Services.AddScoped<AfipService>(provider =>
 
 
 
-// ConfiguraciÛn de WSFEService con dependencias
+// Configuraci√≥n de WSFEService con dependencias
 builder.Services.AddScoped<WSFEService>(provider =>
 {
     var configuration = provider.GetRequiredService<IConfiguration>();
     var afipService = provider.GetRequiredService<AfipService>();
 
-    // Leer configuraciÛn para CUIT y PUNTO_VENTA
+    // Leer configuraci√≥n para CUIT y PUNTO_VENTA
     string cuit = configuration["Afip:CUIT"];
     int puntoVenta = int.Parse(configuration["Afip:PuntoVenta"]);
 
-    // Validar configuraciÛn de CUIT y PUNTO_VENTA
+    // Validar configuraci√≥n de CUIT y PUNTO_VENTA
     if (string.IsNullOrWhiteSpace(cuit) || puntoVenta <= 0)
     {
         throw new Exception("Faltan configuraciones requeridas para el servicio WSFE en el archivo appsettings.json.");
@@ -72,8 +73,14 @@ builder.Services.AddScoped<WSFEService>(provider =>
 
 
 
-// Agregar configuraciÛn para leer el archivo appsettings.json
+// Agregar configuraci√≥n para leer el archivo appsettings.json
 builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
+
+builder.Services.AddScoped<IConfiguracionTemaRepository, ConfiguracionTemaRepository>();
+builder.Services.AddScoped<ConfiguracionTemaService>(); // ‚Üê ESTA L√çNEA FALTA
+
+// Inyecci√≥n de dependencias
+builder.Services.AddScoped<ThemeService>();
 
 builder.Services.AddScoped<ImpresoraTicketService>();
 
@@ -99,11 +106,11 @@ builder.Services.AddScoped<ICierreCajaRepository, CierreCajaRepository>();
 builder.Services.AddScoped<CierreCajaService>();
 
 //builder.Services.AddScoped<CalculadoraVentas>();
-// ConfiguraciÛn de AutoMapper
+// Configuraci√≥n de AutoMapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
-// ConfiguraciÛn de Newtonsoft.Json para usar la cultura invariante
+// Configuraci√≥n de Newtonsoft.Json para usar la cultura invariante
 builder.Services.AddControllers()
     .AddNewtonsoftJson(options =>
     {
@@ -116,7 +123,7 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-// ConfiguraciÛn de CORS
+// Configuraci√≥n de CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
@@ -133,9 +140,30 @@ builder.Services.AddCors(options =>
 
 
 var app = builder.Build();
+// AGREGAR ESTO AL PRINCIPIO para logging detallado
+app.Use(async (context, next) =>
+{
+    Console.WriteLine($"Processing: {context.Request.Path}");
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("=== UNHANDLED EXCEPTION ===");
+        Console.WriteLine($"Path: {context.Request.Path}");
+        Console.WriteLine($"Message: {ex.Message}");
+        Console.WriteLine($"StackTrace: {ex.StackTrace}");
+        if (ex.InnerException != null)
+        {
+            Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+        }
+        throw;
+    }
+});
 
 #region VerificarConexionDB
-// Verificar conexiÛn a la base de datos
+// Verificar conexi√≥n a la base de datos
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<HeladeriaDbContext>();
@@ -143,7 +171,7 @@ using (var scope = app.Services.CreateScope())
     {
         // Intenta acceder a la base de datos
         await dbContext.Database.CanConnectAsync();
-        Console.WriteLine("Conectado con Èxito a la base de datos.");
+        Console.WriteLine("Conectado con √©xito a la base de datos.");
     }
     catch (Exception ex)
     {
@@ -159,7 +187,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// Habilitar archivos est·ticos
+// Habilitar archivos est√°ticos
 app.UseStaticFiles(); // Esto sirve archivos desde wwwroot por defecto
 
 

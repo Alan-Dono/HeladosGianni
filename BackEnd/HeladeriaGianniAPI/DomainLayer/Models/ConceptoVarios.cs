@@ -11,6 +11,7 @@ namespace DomainLayer.Models
         public int Id { get; set; }
         public string Nombre { get; set; }
         public double Precio { get; set; }
+        public string? Aclaracion { get; set; }
 
         // Navegacion
         public int IdVenta { get; set; }

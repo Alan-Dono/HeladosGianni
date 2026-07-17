@@ -16,7 +16,7 @@ namespace HeladeriaGianniAPI.Controllers
     {// cambiamos program.cs , ventaController, y venta service
         private readonly VentaService _ventaService;
         private readonly IMapper _mapper;
-        private readonly ImpresoraTicketService impresoraTicketService; 
+        private readonly ImpresoraTicketService impresoraTicketService;
         public VentaController(VentaService ventaService, IMapper mapper, ImpresoraTicketService impresoraTicketService)
         {
             _ventaService = ventaService;
@@ -74,12 +74,35 @@ namespace HeladeriaGianniAPI.Controllers
                 venta.ConceptosVarios = _mapper.Map<List<ConceptoVarios>>(ventaDtoReq.ConceptosVarios);
             }
 
+            // Distribuir aclaraciones globales como fallback si no hay aclaraciones individuales
+            if (!string.IsNullOrEmpty(ventaDtoReq.AclaracionCafeteria))
+            {
+                foreach (var detalle in venta.DetallesVentas)
+                {
+                    if (string.IsNullOrEmpty(detalle.Aclaracion) &&
+                        detalle.Producto?.ProductoCategoria?.NombreCategoria?.ToLower() != "heladeria")
+                    {
+                        detalle.Aclaracion = ventaDtoReq.AclaracionCafeteria;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ventaDtoReq.AclaracionHeladeria))
+            {
+                foreach (var detalle in venta.DetallesVentas)
+                {
+                    if (string.IsNullOrEmpty(detalle.Aclaracion) &&
+                        detalle.Producto?.ProductoCategoria?.NombreCategoria?.ToLower() == "heladeria")
+                    {
+                        detalle.Aclaracion = ventaDtoReq.AclaracionHeladeria;
+                    }
+                }
+            }
+
             await _ventaService.RegistrarVenta(venta);
             venta = await _ventaService.ObtenerVentaPorId(venta.Id);
 
-            impresoraTicketService.ImprimirTicketVenta(venta,
-                ventaDtoReq.AclaracionCafeteria,
-                ventaDtoReq.AclaracionHeladeria);
+            impresoraTicketService.ImprimirTicketVenta(venta);
 
             var ventaDto = _mapper.Map<VentaDtoRes>(venta);
             return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
@@ -91,12 +114,42 @@ namespace HeladeriaGianniAPI.Controllers
         [HttpPost("crear-venta-fiscal", Name = "CrearVentaFiscal")]
         public async Task<ActionResult<VentaDtoRes>> CrearVentaFiscal([FromBody] VentaDtoReq ventaDtoReq)
         {
-            string? notaCafe = ventaDtoReq.AclaracionCafeteria;
-            string? notaHelado = ventaDtoReq.AclaracionHeladeria;
             var venta = _mapper.Map<Venta>(ventaDtoReq);
+
+            // Mapeo seguro de conceptos varios
+            if (ventaDtoReq.ConceptosVarios != null && ventaDtoReq.ConceptosVarios.Any())
+            {
+                venta.ConceptosVarios = _mapper.Map<List<ConceptoVarios>>(ventaDtoReq.ConceptosVarios);
+            }
+
+            // Distribuir aclaraciones globales como fallback si no hay aclaraciones individuales
+            if (!string.IsNullOrEmpty(ventaDtoReq.AclaracionCafeteria))
+            {
+                foreach (var detalle in venta.DetallesVentas)
+                {
+                    if (string.IsNullOrEmpty(detalle.Aclaracion) &&
+                        detalle.Producto?.ProductoCategoria?.NombreCategoria?.ToLower() != "heladeria")
+                    {
+                        detalle.Aclaracion = ventaDtoReq.AclaracionCafeteria;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(ventaDtoReq.AclaracionHeladeria))
+            {
+                foreach (var detalle in venta.DetallesVentas)
+                {
+                    if (string.IsNullOrEmpty(detalle.Aclaracion) &&
+                        detalle.Producto?.ProductoCategoria?.NombreCategoria?.ToLower() == "heladeria")
+                    {
+                        detalle.Aclaracion = ventaDtoReq.AclaracionHeladeria;
+                    }
+                }
+            }
+
             await _ventaService.RegistrarVenta(venta);
             venta = await _ventaService.ObtenerVentaPorId(venta.Id);
-            impresoraTicketService.ImprimirTicketVentaFiscal(venta, ventaDtoReq.AclaracionCafeteria, ventaDtoReq.AclaracionHeladeria);
+            impresoraTicketService.ImprimirTicketVentaFiscal(venta);
             var ventaDto = _mapper.Map<VentaDtoRes>(venta);
             return CreatedAtAction(nameof(ObtenerVentasPorId), new { id = venta.Id }, ventaDto);
         }

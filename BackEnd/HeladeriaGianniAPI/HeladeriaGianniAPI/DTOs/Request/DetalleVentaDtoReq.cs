@@ -5,6 +5,7 @@
         public int ProductoId { get; set; }
         public int Cantidad { get; set; }
         public double PrecioUnitario { get; set; }
+        public string? Aclaracion { get; set; }
 
     }
 }

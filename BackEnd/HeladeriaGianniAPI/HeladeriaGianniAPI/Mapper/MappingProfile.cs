@@ -3,6 +3,7 @@ using AutoMapper;
 using DomainLayer.Models;
 using HeladeriaGianniAPI.DTOs.Request;
 using HeladeriaGianniAPI.DTOs.Response;
+using System.Text.Json;
 
 
 
@@ -91,9 +92,11 @@ namespace HeladeriaGianniAPI.Mapper
 
             CreateMap<TurnoDtoReq, Turno>();
 
-
-
+ 
         }
+
+
+
 
         private List<int> MapIdsCierreCajasEnTurno(Turno turno , TurnoDtoRes dto)
         {

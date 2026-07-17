@@ -20,7 +20,6 @@ namespace ApplicationLayer.Services
         private Venta _ventaActual;
         private Venta _ventaHelados = new Venta();
         private Venta _ventacafeteria = new Venta();
-        private Venta _ventaVarios = new Venta();
         private FacturaResponse FacturaResponse;
         private static readonly string RUTA_CONTADOR = Path.Combine(
             @"C:\Users\ALAN\Desktop\RUTAS ",
@@ -83,13 +82,14 @@ namespace ApplicationLayer.Services
             }
         }
 
-        public void ImprimirTicketVenta(Venta venta, string AclaracionCafeteria, string AclaracionHeladeria)
+        public void ImprimirTicketVenta(Venta venta)
         {
             try
             {
                 int modoImpresion = ObtenerModoImpresion();
                 _ventaActual = venta;
                 ProductosCageteria(_ventaActual);
+                ResumenesTicketsOperativos resumenesTickets = CrearResumenesTicketsOperativos();
                 PrintDocument pd = new PrintDocument();
                 pd.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
 
@@ -108,8 +108,28 @@ namespace ApplicationLayer.Services
                 {
                     throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
                 }
+                // Verificar SI HAY CONTENIDO real, no solo si no es null
+                bool tieneProductosCafeteria = _ventacafeteria.DetallesVentas.Any();
+                bool tieneConceptosVarios = _ventacafeteria.ConceptosVarios != null && _ventacafeteria.ConceptosVarios.Any();
 
-                if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios != null)
+
+                if (tieneProductosCafeteria || tieneConceptosVarios)
+                {
+                    PrintDocument tiketCafe = new PrintDocument();
+                    tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
+                    tiketCafe.DefaultPageSettings.PaperSize = pd.DefaultPageSettings.PaperSize;
+                    tiketCafe.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
+                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(
+                        _ventacafeteria.DetallesVentas,
+                        _ventacafeteria.ConceptosVarios,
+                        resumenesTickets.Comanda,
+                        e,
+                        "COMANDA N");
+                    tiketCafe.Print();
+                }
+
+
+                /*if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios != null)
                 {
                     PrintDocument tiketCafe = new PrintDocument();
                     tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
@@ -117,7 +137,7 @@ namespace ApplicationLayer.Services
                     tiketCafe.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
                     tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "COMANDA N");
                     tiketCafe.Print();
-                }
+                }*/
 
 
                 if (_ventaHelados.DetallesVentas.Count > 0)
@@ -126,14 +146,19 @@ namespace ApplicationLayer.Services
                     tiketHelado.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
                     tiketHelado.DefaultPageSettings.PaperSize = pd.DefaultPageSettings.PaperSize;
                     tiketHelado.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
-                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(_ventaHelados.DetallesVentas, AclaracionHeladeria, e, "¡TU HELADO TE ESPERA!");
+                    tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(
+                        _ventaHelados.DetallesVentas,
+                        null,
+                        resumenesTickets.Heladeria,
+                        e,
+                        "¡TU HELADO TE ESPERA!");
                     tiketHelado.Print();
                 }
 
                 pd.PrintPage += Pd_PrintPageConstancia;
                 pd.Print();
 
-                
+
             }
             catch (Exception ex)
             {
@@ -141,7 +166,7 @@ namespace ApplicationLayer.Services
             }
         }
 
-        public async void ImprimirTicketVentaFiscal(Venta venta, string AclaracionCafeteria, string AclaracionHeladeria)
+        public async void ImprimirTicketVentaFiscal(Venta venta)
         {
             try
             {
@@ -156,17 +181,23 @@ namespace ApplicationLayer.Services
                 }
 
                 ProductosCageteria(_ventaActual);
+                ResumenesTicketsOperativos resumenesTickets = CrearResumenesTicketsOperativos();
                 var paperSize = GetPaperSize();
                 var margins = new Margins(5, 5, 15, 30);
 
+                bool tieneCafeteria = _ventacafeteria.DetallesVentas.Any() ||
+                     (_ventacafeteria.ConceptosVarios != null &&
+                      _ventacafeteria.ConceptosVarios.Any());
+
                 // 1. Imprimir comanda de cafetería si hay productos
-                if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios?.Count > 0)
+                if (tieneCafeteria)
                 {
                     PrintDocument tiketCafe = new PrintDocument();
                     ConfigurePrintDocument(tiketCafe, paperSize, margins);
                     tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(
                         _ventacafeteria.DetallesVentas,
-                        AclaracionCafeteria,
+                        _ventacafeteria.ConceptosVarios,
+                        resumenesTickets.Comanda,
                         e,
                         "COMANDA N");
                     tiketCafe.Print();
@@ -179,7 +210,8 @@ namespace ApplicationLayer.Services
                     ConfigurePrintDocument(tiketHelado, paperSize, margins);
                     tiketHelado.PrintPage += (sender, e) => ImprimirTicketProductos(
                         _ventaHelados.DetallesVentas,
-                        AclaracionHeladeria,
+                        null,
+                        resumenesTickets.Heladeria,
                         e,
                         "¡TU HELADO TE ESPERA!");
                     tiketHelado.Print();
@@ -204,7 +236,7 @@ namespace ApplicationLayer.Services
                 throw new Exception($"Error al imprimir: {ex.Message}", ex);
             }
         }
-       
+
         private void Pd_PrintPageFiscal(object sender, PrintPageEventArgs e)
         {
             try
@@ -503,22 +535,24 @@ namespace ApplicationLayer.Services
             }
         }*/
 
-        private void ImprimirTicketProductos(List<DetalleVenta> detallesVenta, string aclaracion, PrintPageEventArgs e, string titulo)
+        private void ImprimirTicketProductos(List<DetalleVenta> detallesVenta, List<ConceptoVarios> conceptosVarios, ResumenTicketOperativo resumen, PrintPageEventArgs e, string titulo)
         {
             try
             {
                 using (Font fuenteNormal = new Font("Arial", 10))
                 using (Font fuenteGrande = new Font("Arial", 12, FontStyle.Bold))
                 using (Font fuenteContador = new Font("Arial", 24, FontStyle.Bold))
+                using (Font fuenteAclaracion = new Font("Arial", 8, FontStyle.Italic))
                 {
                     Graphics g = e.Graphics;
                     float yPos = e.MarginBounds.Top;
                     float leftMargin = e.MarginBounds.Left;
                     float printableWidth = e.MarginBounds.Width;
-                    int comanda = ObtenerNumeroComanda();
+
                     // Título con misma tipografía para ambos
                     if (titulo == "COMANDA N")
                     {
+                        int comanda = ObtenerNumeroComanda();
                         CentrarTexto(g, titulo + $" {comanda}", fuenteGrande, leftMargin, printableWidth, yPos);
                         yPos += g.MeasureString(titulo, fuenteGrande).Height + 3;
                     }
@@ -540,23 +574,31 @@ namespace ApplicationLayer.Services
                     string hora = $"Hora: {DateTime.Now:HH:mm}";
 
                     g.DrawString(fecha, fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    g.DrawString(hora, fuenteNormal, Brushes.Black, leftMargin +180, yPos);
+                    g.DrawString(hora, fuenteNormal, Brushes.Black, leftMargin + 180, yPos);
+                    yPos += 20;
+
+                    string ticketInfo = $"Ticket #: {_ventaActual.Id}";
+                    g.DrawString(ticketInfo, fuenteNormal, Brushes.Black, leftMargin, yPos);
                     yPos += 20;
 
                     g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
                     yPos += 10;
 
-                    // Configurar columnas - cantidad corregida a la izquierda
                     float colDesc = leftMargin + 5;
-                    float colCant = leftMargin + printableWidth * 0.70f;
+                    float colCant = leftMargin + printableWidth * 0.62f;
+                    float colPU = leftMargin + printableWidth * 0.81f;
+                    float colTotal = leftMargin + printableWidth;
 
                     g.DrawString("Descripción", fuenteNormal, Brushes.Black, colDesc, yPos);
-                    g.DrawString("Cantidad", fuenteNormal, Brushes.Black, colCant, yPos);
+                    AlinearTextoDerecha(g, "Cantidad", fuenteNormal, colCant, yPos);
+                    AlinearTextoDerecha(g, "P.U.", fuenteNormal, colPU, yPos);
+                    AlinearTextoDerecha(g, "Total", fuenteNormal, colTotal, yPos);
                     yPos += 20;
 
                     g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
                     yPos += 10;
 
+                    // Imprimir productos con sus aclaraciones individuales
                     foreach (var detalle in detallesVenta)
                     {
                         string nombreProducto = detalle.Producto.NombreProducto;
@@ -564,38 +606,64 @@ namespace ApplicationLayer.Services
                             nombreProducto = nombreProducto.Substring(0, 22) + "...";
 
                         g.DrawString(nombreProducto, fuenteGrande, Brushes.Black, colDesc, yPos);
-                        CentrarTextoEnColumna(g, detalle.Cantidad.ToString(), fuenteGrande, colCant, printableWidth * 0.22f, yPos);
+                        AlinearTextoDerecha(g, detalle.Cantidad.ToString(), fuenteNormal, colCant, yPos);
+                        AlinearTextoDerecha(g, RedondearDinero((decimal)detalle.PrecioUnitario).ToString("N2"), fuenteNormal, colPU, yPos);
+                        AlinearTextoDerecha(g, RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario).ToString("N2"), fuenteNormal, colTotal, yPos);
                         yPos += 20;
+
+                        // Imprimir aclaración individual si existe
+                        if (!string.IsNullOrEmpty(detalle.Aclaracion))
+                        {
+                            g.DrawString("  >> " + detalle.Aclaracion, fuenteAclaracion, Brushes.DarkGray, colDesc, yPos);
+                            yPos += 15;
+                        }
                     }
 
-                    // Conceptos varios - sin signo $ (mismo formato que productos)
-                    if (_ventaVarios.ConceptosVarios != null)
+                    // Conceptos varios con sus aclaraciones individuales
+                    if (conceptosVarios != null)
                     {
-                        foreach (var concepto in _ventaActual.ConceptosVarios)
+                        foreach (var concepto in conceptosVarios)
                         {
                             string nombre = concepto.Nombre.Length > 25 ?
-                                           concepto.Nombre.Substring(0, 22) + "..." :
-                                           concepto.Nombre;
+                                            concepto.Nombre.Substring(0, 22) + "..." :
+                                            concepto.Nombre;
 
                             g.DrawString(nombre, fuenteGrande, Brushes.Black, colDesc, yPos);
-                            CentrarTextoEnColumna(g,"1", fuenteGrande, colCant, printableWidth * 0.22f, yPos);
-                            //g.DrawString("1", fuenteGrande, Brushes.Black, colCant + 20, yPos); 
-                          
+                            AlinearTextoDerecha(g, "1", fuenteNormal, colCant, yPos);
+                            AlinearTextoDerecha(g, RedondearDinero((decimal)concepto.Precio).ToString("N2"), fuenteNormal, colPU, yPos);
+                            AlinearTextoDerecha(g, RedondearDinero((decimal)concepto.Precio).ToString("N2"), fuenteNormal, colTotal, yPos);
                             yPos += 20;
+
+                            // Imprimir aclaración individual si existe
+                            if (!string.IsNullOrEmpty(concepto.Aclaracion))
+                            {
+                                g.DrawString("  >> " + concepto.Aclaracion, fuenteAclaracion, Brushes.DarkGray, colDesc, yPos);
+                                yPos += 15;
+                            }
                         }
-                        _ventaVarios.ConceptosVarios = null;
                     }
 
+                    yPos += 5;
+                    g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
+                    yPos += 10;
 
-                    if (!string.IsNullOrEmpty(aclaracion))
+                    string subtotal = $"Subtotal: {resumen.Subtotal.ToString("N2")}";
+                    SizeF subtotalSize = g.MeasureString(subtotal, fuenteNormal);
+                    g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin + printableWidth - subtotalSize.Width, yPos);
+                    yPos += subtotalSize.Height + 5;
+
+                    if (resumen.Descuento != 0)
                     {
-                        yPos += 10;
-                        string aclaracionTexto = $"Aclaración: {aclaracion}";
-                        CentrarTexto(g, aclaracionTexto, fuenteGrande, leftMargin, printableWidth, yPos);
-                        yPos += 20;
+                        string descuento = $"Descuento: {resumen.Descuento.ToString("N2")}";
+                        SizeF descuentoSize = g.MeasureString(descuento, fuenteNormal);
+                        g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin + printableWidth - descuentoSize.Width, yPos);
+                        yPos += descuentoSize.Height + 5;
                     }
 
-                    yPos += 40;
+                    string total = $"TOTAL: {resumen.Total.ToString("N2")}";
+                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
+                    g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin + printableWidth - totalSize.Width, yPos);
+                    yPos += totalSize.Height + 20;
                     e.HasMorePages = false;
                 }
             }
@@ -621,11 +689,17 @@ namespace ApplicationLayer.Services
             g.DrawString(texto, fuente, Brushes.Black, xPos, yPos);
         }
 
+        private void AlinearTextoDerecha(Graphics g, string texto, Font fuente, float columnaDerecha, float yPos)
+        {
+            SizeF textoSize = g.MeasureString(texto, fuente);
+            g.DrawString(texto, fuente, Brushes.Black, columnaDerecha - textoSize.Width, yPos);
+        }
+
         private void ProductosCageteria(Venta venta)
         {
             _ventaHelados.DetallesVentas.Clear();
             _ventacafeteria.DetallesVentas.Clear();
-            _ventaVarios.ConceptosVarios?.Clear(); // Usar null-conditional por seguridad
+
 
             foreach (var detalle in venta.DetallesVentas)
             {
@@ -639,11 +713,115 @@ namespace ApplicationLayer.Services
                 }
             }
 
-            // Mover todos los conceptos varios a cafetería
-            if (venta.ConceptosVarios != null)
+            // SOLO mover conceptos varios si hay productos de cafetería
+            if (venta.ConceptosVarios != null && venta.ConceptosVarios.Any())
             {
                 _ventacafeteria.ConceptosVarios = venta.ConceptosVarios;
             }
+            else
+            {
+                _ventacafeteria.ConceptosVarios = null; // No asignar si solo hay helados
+            }
+        }
+
+        private ResumenesTicketsOperativos CrearResumenesTicketsOperativos()
+        {
+            decimal subtotalComanda = 0;
+            foreach (var detalle in _ventacafeteria.DetallesVentas)
+            {
+                subtotalComanda += RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario);
+            }
+
+            if (_ventacafeteria.ConceptosVarios != null)
+            {
+                foreach (var concepto in _ventacafeteria.ConceptosVarios)
+                {
+                    subtotalComanda += RedondearDinero((decimal)concepto.Precio);
+                }
+            }
+
+            decimal subtotalHeladeria = 0;
+            foreach (var detalle in _ventaHelados.DetallesVentas)
+            {
+                subtotalHeladeria += RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario);
+            }
+
+            subtotalComanda = Math.Max(0m, RedondearDinero(subtotalComanda));
+            subtotalHeladeria = Math.Max(0m, RedondearDinero(subtotalHeladeria));
+
+            decimal totalBruto = RedondearDinero(subtotalComanda + subtotalHeladeria);
+            decimal descuentoVenta = RedondearDinero(Math.Max(0m, (decimal)_ventaActual.Descuentos));
+            decimal descuentoUtilizable = Math.Min(descuentoVenta, totalBruto);
+            decimal descuentoComanda = 0;
+            decimal descuentoHeladeria = 0;
+
+            if (totalBruto > 0)
+            {
+                if (subtotalComanda == 0)
+                {
+                    descuentoHeladeria = descuentoUtilizable;
+                }
+                else if (subtotalHeladeria == 0)
+                {
+                    descuentoComanda = descuentoUtilizable;
+                }
+                else
+                {
+                    decimal tasaDescuento = descuentoUtilizable / totalBruto;
+                    descuentoComanda = RedondearDinero(tasaDescuento * subtotalComanda);
+                    descuentoHeladeria = descuentoUtilizable - descuentoComanda;
+                }
+            }
+
+            descuentoComanda = Math.Min(descuentoComanda, subtotalComanda);
+            descuentoHeladeria = Math.Min(descuentoHeladeria, subtotalHeladeria);
+
+            decimal descuentoPendiente = descuentoUtilizable - descuentoComanda - descuentoHeladeria;
+            if (descuentoPendiente > 0)
+            {
+                if (subtotalHeladeria > 0)
+                {
+                    descuentoHeladeria += Math.Min(descuentoPendiente, subtotalHeladeria - descuentoHeladeria);
+                }
+                else
+                {
+                    descuentoComanda += Math.Min(descuentoPendiente, subtotalComanda - descuentoComanda);
+                }
+            }
+
+            return new ResumenesTicketsOperativos
+            {
+                Comanda = new ResumenTicketOperativo
+                {
+                    Subtotal = subtotalComanda,
+                    Descuento = RedondearDinero(descuentoComanda),
+                    Total = RedondearDinero(Math.Max(0, subtotalComanda - descuentoComanda))
+                },
+                Heladeria = new ResumenTicketOperativo
+                {
+                    Subtotal = subtotalHeladeria,
+                    Descuento = RedondearDinero(descuentoHeladeria),
+                    Total = RedondearDinero(Math.Max(0, subtotalHeladeria - descuentoHeladeria))
+                }
+            };
+        }
+
+        private decimal RedondearDinero(decimal monto)
+        {
+            return decimal.Round(monto, 2, MidpointRounding.AwayFromZero);
+        }
+
+        private class ResumenesTicketsOperativos
+        {
+            public ResumenTicketOperativo Comanda { get; set; }
+            public ResumenTicketOperativo Heladeria { get; set; }
+        }
+
+        private class ResumenTicketOperativo
+        {
+            public decimal Subtotal { get; set; }
+            public decimal Descuento { get; set; }
+            public decimal Total { get; set; }
         }
 
         private int ObtenerYActualizarContador()
@@ -713,7 +891,7 @@ namespace ApplicationLayer.Services
                     string comprobante = $"Comp. {FacturaResponse.NumeroComprobante.ToString().PadLeft(8, '0')}";
 
                     g.DrawString(puntoVenta, fuenteNormal, Brushes.Black, leftMargin, yPos);
-                    g.DrawString(comprobante, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(comprobante, fuenteNormal).Width -20, yPos);
+                    g.DrawString(comprobante, fuenteNormal, Brushes.Black, rightMargin - g.MeasureString(comprobante, fuenteNormal).Width - 20, yPos);
                     yPos += 20;
 
                     // Fecha y hora

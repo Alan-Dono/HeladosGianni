@@ -64,8 +64,13 @@ namespace DataAccesLayer.Repositories
             // Asignar el ID del producto existente al producto recibido
             producto.Id = id;
 
+            var ordenExistente = productoExistente.Orden;
+            var esFavoritoExistente = productoExistente.EsFavorito;
+
             // Asignar los nuevos valores al producto existente sin crear un nuevo rastreo
             context.Entry(productoExistente).CurrentValues.SetValues(producto);
+            productoExistente.Orden = ordenExistente;
+            productoExistente.EsFavorito = esFavoritoExistente;
 
             // Guardar los cambios en la base de datos
             await context.SaveChangesAsync();

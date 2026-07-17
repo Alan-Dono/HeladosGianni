@@ -1,111 +1,183 @@
 import { createTheme } from '@mui/material/styles';
 
-const lightTheme = createTheme({
-    palette: {
-        mode: 'light',
-        primary: {
-            main: '#2f27ce',    // --primary luz
-        },
-        secondary: {
-            main: '#dddbff',    // --secondary luz
-            light: '#e5e4ff',   // un tono más claro para glow
-        },
-        success: {
-            main: '#4CAF50',    // lo mismo que antes
-        },
-        warning: {
-            main: '#FFA726',    // sin cambiar
-        },
-        error: {
-            main: '#F44336',    // sin cambiar
-        },
-        background: {
-            default: '#fbfbfe',   // --background luz
-            paper: '#ffffff',
-            componentes: '#443dff', // --accent luz (para fondos componentes)
-        },
-        text: {
-            primary: '#050316',   // --text luz
-            secondary: '#050316',
-        },
-        custom: {
-            glow: '#b0adff',      // brillo más visible (ajustable)
-        },
+// Definir colores por defecto para cada modo
+export const DEFAULT_COLORS = {
+    light: {
+        primary: '#2f27ce',
+        secondary: '#dddbff',
+        success: '#4CAF50',
+        warning: '#FFA726',
+        error: '#F44336',
+        info: '#2196F3',
+        background: '#fbfbfe',
+        paper: '#ffffff',
+        componentes: '#443dff',
+        textPrimary: '#050316',
+        textSecondary: '#050316',
+        glow: '#b0adff'
     },
-    typography: {
-        fontFamily: 'Roboto, Arial, sans-serif',
-    },
-    components: {
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    textTransform: 'none',
-                },
+    dark: {
+        primary: '#e35305',
+        secondary: '#050bba',
+        success: '#248636',
+        warning: '#FF8C00',
+        error: '#B22222',
+        info: '#2196F3',
+        background: '#020b09',
+        paper: '#0a1210',
+        componentes: '#4403bf',
+        textPrimary: '#e0f8f4',
+        textSecondary: '#b8d6d2',
+        glow: '#5a4dff',
+        grayAccent: '#3a3a3a'
+    }
+};
+
+// Función para ajustar luminosidad de colores
+const adjustColor = (color, amount) => {
+    if (!color || !color.startsWith('#')) return color;
+
+    try {
+        let r = parseInt(color.slice(1, 3), 16);
+        let g = parseInt(color.slice(3, 5), 16);
+        let b = parseInt(color.slice(5, 7), 16);
+
+        r = Math.max(0, Math.min(255, r + amount));
+        g = Math.max(0, Math.min(255, g + amount));
+        b = Math.max(0, Math.min(255, b + amount));
+
+        return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    } catch (error) {
+        console.error('Error adjusting color:', error);
+        return color;
+    }
+};
+
+// Crear tema base sin personalización
+const createBaseTheme = (mode, colors) => {
+    const isDark = mode === 'dark';
+
+    return {
+        palette: {
+            mode,
+            primary: {
+                main: colors.primary,
+                light: adjustColor(colors.primary, isDark ? 40 : -40),
+                dark: adjustColor(colors.primary, isDark ? -40 : 40),
+            },
+            secondary: {
+                main: colors.secondary,
+                light: adjustColor(colors.secondary, isDark ? 40 : -40),
+                dark: adjustColor(colors.secondary, isDark ? -40 : 40),
+            },
+            success: { main: colors.success },
+            warning: { main: colors.warning },
+            error: { main: colors.error },
+            info: { main: colors.info },
+            background: {
+                default: colors.background,
+                paper: colors.paper,
+                componentes: colors.componentes,
+            },
+            text: {
+                primary: colors.textPrimary,
+                secondary: colors.textSecondary,
+            },
+            custom: {
+                glow: colors.glow,
+                ...(isDark && colors.grayAccent ? { grayAccent: colors.grayAccent } : {}),
             },
         },
-    },
-});
-
-
-const darkTheme = createTheme({
-    palette: {
-        mode: 'dark',
-        primary: {
-            main: '#e35305',    // --primary (naranja intenso)
-            light: '#ff6d2a',   // naranja más claro
-            dark: '#b94200',    // naranja más oscuro
+        typography: {
+            fontFamily: 'Roboto, Arial, sans-serif',
+            h6: { fontWeight: 600 },
+            button: { textTransform: 'none' }
         },
-        secondary: {
-            main: '#050bba',    // --secondary (azul oscuro)
-            light: '#2a2aff',   // azul más brillante para efectos
+        shape: {
+            borderRadius: 8
         },
-        success: {
-            main: '#248636',    // verde oscuro (mantenido para contraste)
-        },
-        warning: {
-            main: '#FF8C00',   // naranja (similar al primary pero para advertencias)
-        },
-        error: {
-            main: '#B22222',    // rojo oscuro (para errores)
-        },
-        background: {
-            default: '#020b09', // --background (verde/negro muy oscuro)
-            paper: '#0a1210',   // un tono ligeramente más claro para "paper"
-            componentes: '#4403bf', // --accent (morado/azul intenso)
-        },
-        text: {
-            primary: '#e0f8f4',  // --text (verde/cyan muy claro)
-            secondary: '#b8d6d2', // un poco más oscuro para texto secundario
-        },
-        custom: {
-            glow: '#5a4dff',     // brillo morado/azul
-            grayAccent: '#3a3a3a' // gris para acentos
-        },
-    },
-    typography: {
-        fontFamily: 'Roboto, Arial, sans-serif',
-    },
-    components: {
-        MuiButton: {
-            styleOverrides: {
-                root: {
-                    textTransform: 'none',
-                },
-                containedPrimary: {
-                    '&:hover': {
-                        backgroundColor: '#ff6d2a', // naranja claro al hover
+        components: {
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        borderRadius: 8
                     },
+                    containedPrimary: isDark ? {
+                        '&:hover': {
+                            backgroundColor: adjustColor(colors.primary, 40),
+                        },
+                    } : {},
                 },
             },
-        },
-        MuiAppBar: {
-            styleOverrides: {
-                root: {
-                    backgroundColor: '#0a1210', // igual que paper
-                },
+            MuiCard: {
+                styleOverrides: {
+                    root: {
+                        borderRadius: 12,
+                        boxShadow: isDark
+                            ? '0 4px 12px rgba(0,0,0,0.3)'
+                            : '0 2px 8px rgba(0,0,0,0.1)'
+                    }
+                }
             },
+            MuiAppBar: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: isDark ? colors.paper : colors.primary
+                    }
+                }
+            }
         },
-    },
-});
+    };
+};
 
-export { lightTheme, darkTheme };
+// Función principal para crear tema personalizado
+export const createCustomTheme = (mode = 'light', customColors = null) => {
+    // Obtener colores base según el modo
+    const defaultColors = DEFAULT_COLORS[mode];
+
+    // Combinar colores por defecto con personalizaciones
+    const finalColors = customColors ? { ...defaultColors, ...customColors } : defaultColors;
+
+    // Crear el tema base
+    const themeConfig = createBaseTheme(mode, finalColors);
+
+    return createTheme(themeConfig);
+};
+
+// Función para obtener solo los colores personalizables
+export const getCustomizableColors = (mode = 'light') => {
+    const colors = DEFAULT_COLORS[mode];
+
+    return {
+        primary: colors.primary,
+        secondary: colors.secondary,
+        background: colors.background,
+        paper: colors.paper,
+        componentes: colors.componentes,
+        textPrimary: colors.textPrimary,
+        textSecondary: colors.textSecondary,
+        glow: colors.glow,
+        ...(mode === 'dark' && colors.grayAccent ? { grayAccent: colors.grayAccent } : {})
+    };
+};
+
+// Función para validar colores
+export const validateColors = (colors) => {
+    const hexColorRegex = /^#[0-9A-F]{6}$/i;
+
+    const requiredFields = ['primary', 'secondary', 'background', 'paper', 'textPrimary'];
+
+    for (const field of requiredFields) {
+        if (!colors[field] || !hexColorRegex.test(colors[field])) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+// Exportar temas por defecto
+export const lightTheme = createCustomTheme('light');
+export const darkTheme = createCustomTheme('dark');

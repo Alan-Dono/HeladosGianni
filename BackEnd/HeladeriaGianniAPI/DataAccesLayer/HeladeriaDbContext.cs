@@ -73,5 +73,7 @@ namespace DataAccesLayer
         public DbSet<FacturaAfip> FacturasAfip { get; set; }
         public DbSet<ConceptoVarios> ConceptoVarios { get; set; }
 
+        public DbSet<ConfiguracionTema> ConfiguracionesTema { get; set; }
+
     }
 }

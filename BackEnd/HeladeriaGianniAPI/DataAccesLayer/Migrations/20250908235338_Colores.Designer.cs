@@ -4,6 +4,7 @@ using DataAccesLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccesLayer.Migrations
 {
     [DbContext(typeof(HeladeriaDbContext))]
-    partial class HeladeriaDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250908235338_Colores")]
+    partial class Colores
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -61,9 +64,6 @@ namespace DataAccesLayer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Aclaracion")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdVenta")
                         .HasColumnType("int");
@@ -115,9 +115,6 @@ namespace DataAccesLayer.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Aclaracion")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");

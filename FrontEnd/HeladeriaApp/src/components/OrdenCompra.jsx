@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import Slide from '@mui/material/Slide';
 import { TextField, Typography, Box, Button, Snackbar, Fade, CircularProgress } from '@mui/material';
-import { Lock, LockOpen, Clear } from '@mui/icons-material'; // Añadí el icono Clear
+import { Lock, LockOpen } from '@mui/icons-material'; // Añadí el icono Clear
 import ProductTiket from './ProductTiket';
-import { useTheme } from '@emotion/react';
 import MuiAlert from '@mui/material/Alert';
 import { Dialog, DialogTitle, DialogContent, DialogActions, IconButton } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import VentaService from '../services/VentaService';
-import { use } from 'framer-motion/client';
 import LoadingOverlay from './LoadingOverlay';
 import LoadingButton from './LoadingButton';
-import { Delete } from '@mui/icons-material'; // Añade esta importación
-const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, cierreActivo, aclaracionCafeteria, setAclaracionCafeteria, aclaracionHeladeria, setAclaracionHeladeria, reiniciarAclaraciones }) => {
+
+const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, setDescuento, agregar, restar, eliminar, actualizarAclaracion, cierreActivo }) => {
 
     //const [codigoDescuento, setCodigoDescuento] = useState('');
     const [mostrarDescuento, setMostrarDescuento] = useState(false);
@@ -25,8 +23,6 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
     const [esFiscal, setEsFiscal] = useState(false);
     const [cargandoVenta, setCargandoVenta] = useState(false);
     const [mostrarExito, setMostrarExito] = useState(false);
-
-    const theme = useTheme();
 
     const vaciarCarrito = () => {
         if (carrito.length === 0) {
@@ -144,16 +140,16 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                 DetallesVentas: productosRegulares.map(producto => ({
                     ProductoId: producto.id,
                     Cantidad: producto.cantidad,
-                    PrecioUnitario: parseFloat(producto.precio.toFixed(2))
+                    PrecioUnitario: parseFloat(producto.precio.toFixed(2)),
+                    Aclaracion: producto.aclaracion?.trim() || null
                 })),
                 ConceptosVarios: productosVarios.length > 0
                     ? productosVarios.map(producto => ({
                         Nombre: producto.nombre,
-                        Precio: parseFloat(producto.precio.toFixed(2))
+                        Precio: parseFloat(producto.precio.toFixed(2)),
+                        Aclaracion: producto.aclaracion?.trim() || null
                     }))
-                    : null,
-                AclaracionCafeteria: aclaracionCafeteria?.trim() || null,
-                AclaracionHeladeria: aclaracionHeladeria?.trim() || null
+                    : null
             };
 
             // 3. Validación
@@ -177,9 +173,10 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
             setCarrito([]);
             setSubtotal(0);
             setDescuento(0);
+            setDescuentoValor(0);
+            setMostrarDescuento(false);
             setMensajeSnackbar('Venta registrada con éxito');
             setTipoAlerta("success");
-            reiniciarAclaraciones();
 
         } catch (error) {
             console.error("Error:", error);
@@ -206,11 +203,12 @@ const OrdenCompra = ({ carrito, setCarrito, subtotal, setSubtotal, descuento, se
                 ) : (
                     carrito.map(producto => (
                         <ProductTiket
-                            key={producto.id}
+                            key={producto.id || producto.nombre}
                             producto={producto}
                             agregar={agregar}
                             restar={restar}
                             eliminar={eliminar}
+                            actualizarAclaracion={actualizarAclaracion}
                         />
                     ))
                 )}

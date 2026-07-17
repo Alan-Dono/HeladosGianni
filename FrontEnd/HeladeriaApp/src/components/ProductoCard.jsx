@@ -1,17 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import { Card, Typography, Box, LinearProgress } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
 const ProductoCard = ({ producto, agregar, toggleFavorito, index, moveProduct }) => {
     const theme = useTheme();
-    const [temporizador, setTemporizador] = useState(null);
     const [tiempoPresionado, setTiempoPresionado] = useState(0);
     const [mostrarProgreso, setMostrarProgreso] = useState(false);
-    const [clickInicial, setClickInicial] = useState(null);
     const [estaActivo, setEstaActivo] = useState(false);
-    const [superoUmbral, setSuperoUmbral] = useState(false);
     const ref = useRef(null);
+    const delayRef = useRef(null);
+    const favoritoRef = useRef(null);
+    const animationFrameRef = useRef(null);
+    const clickInicialRef = useRef(null);
+    const estaActivoRef = useRef(false);
+    const superoUmbralRef = useRef(false);
 
     const [{ isDragging }, drag] = useDrag({
         type: 'PRODUCTO',
@@ -46,65 +49,78 @@ const ProductoCard = ({ producto, agregar, toggleFavorito, index, moveProduct })
 
     drag(drop(ref));
 
+    const resetearEstado = useCallback(() => {
+        clearTimeout(delayRef.current);
+        clearTimeout(favoritoRef.current);
+        cancelAnimationFrame(animationFrameRef.current);
+
+        delayRef.current = null;
+        favoritoRef.current = null;
+        animationFrameRef.current = null;
+        clickInicialRef.current = null;
+        estaActivoRef.current = false;
+
+        setMostrarProgreso(false);
+        setTiempoPresionado(0);
+        setEstaActivo(false);
+    }, []);
+
+    useEffect(() => resetearEstado, [resetearEstado]);
+
     const handleMouseDown = (e) => {
         // Solo inicia el arrastre si no es un click derecho
         if (e.button !== 0) return;
-        
-        setClickInicial(Date.now());
+
+        resetearEstado();
+        clickInicialRef.current = Date.now();
+        estaActivoRef.current = true;
+        superoUmbralRef.current = false;
         setEstaActivo(true);
-        setSuperoUmbral(false);
 
-        const delayId = setTimeout(() => {
+        delayRef.current = setTimeout(() => {
             // Solo activa el drag si se mantuvo presionado suficiente tiempo
-            if (Date.now() - clickInicial > 200) {
-                setMostrarProgreso(true);
-                setSuperoUmbral(true);
-                const startTime = Date.now();
+            if (!estaActivoRef.current) return;
 
-                const actualizarProgreso = () => {
-                    const elapsed = Date.now() - startTime;
-                    setTiempoPresionado((elapsed / 3000) * 100);
-                    if (elapsed < 3000) {
-                        requestAnimationFrame(actualizarProgreso);
-                    }
-                };
+            setMostrarProgreso(true);
+            superoUmbralRef.current = true;
+            const startTime = Date.now();
 
-                actualizarProgreso();
+            const actualizarProgreso = () => {
+                if (!estaActivoRef.current) return;
 
-                setTemporizador(
-                    setTimeout(async () => {
-                        await toggleFavorito(producto);
-                        resetearEstado();
-                    }, 3000)
-                );
-            }
+                const elapsed = Date.now() - startTime;
+                setTiempoPresionado(Math.min((elapsed / 3000) * 100, 100));
+                if (elapsed < 3000) {
+                    animationFrameRef.current = requestAnimationFrame(actualizarProgreso);
+                }
+            };
+
+            actualizarProgreso();
+
+            favoritoRef.current = setTimeout(async () => {
+                if (!estaActivoRef.current) return;
+
+                resetearEstado();
+                await toggleFavorito(producto);
+            }, 3000);
         }, 200);
-        
-        setTemporizador(delayId);
     };
 
     const handleMouseUp = () => {
-        const tiempoTranscurrido = clickInicial ? Date.now() - clickInicial : 0;
+        const tiempoTranscurrido = clickInicialRef.current
+            ? Date.now() - clickInicialRef.current
+            : 0;
 
         // Solo agrega al carrito si fue un click rápido y no se superó el umbral de arrastre
-        if (tiempoTranscurrido < 200 && !superoUmbral && !isDragging) {
+        if (tiempoTranscurrido < 200 && !superoUmbralRef.current && !isDragging) {
             agregar(producto);
         }
 
         resetearEstado();
-        setEstaActivo(false);
     };
 
     const handleMouseLeave = () => {
         resetearEstado();
-        setEstaActivo(false);
-    };
-
-    const resetearEstado = () => {
-        clearTimeout(temporizador);
-        setMostrarProgreso(false);
-        setTiempoPresionado(0);
-        setClickInicial(null);
     };
 
     // Color del glow (ajustado para combinar con el naranja/azul)
