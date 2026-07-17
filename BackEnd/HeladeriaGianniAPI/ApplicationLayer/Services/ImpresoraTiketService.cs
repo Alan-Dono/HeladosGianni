@@ -18,17 +18,18 @@ namespace ApplicationLayer.Services
         private const string NOMBRE_IMPRESORA = "GianniPrinter";
         private readonly WSFEService webService;
         private Venta _ventaActual;
-        private Venta _ventaHelados = new Venta();
-        private Venta _ventacafeteria = new Venta();
+        private Venta _ventaHelados = new Venta { DetallesVentas = new List<DetalleVenta>() };
+        private Venta _ventacafeteria = new Venta { DetallesVentas = new List<DetalleVenta>() };
+        private Venta _ventaVarios = new Venta { ConceptosVarios = new List<ConceptoVarios>() };
         private FacturaResponse FacturaResponse;
         private static readonly string RUTA_CONTADOR = Path.Combine(
-            @"C:\Users\ALAN\Desktop\RUTAS ",
+            @"C:\inetpub\wwwroot\deploy",
             "Contador.txt");
-        private static readonly string RUTA_MODO = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        private static readonly string RUTA_MODO = Path.Combine(@"C:\inetpub\wwwroot\deploy",
             "ModoImpresion.txt");
-        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\Users\ALAN\Desktop\RUTAS",
+        private static readonly string RUTA_COMANDA = Path.Combine(@"C:\inetpub\wwwroot\deploy",
         "Comanda.txt");
-        // C:\Users\ALAN\Desktop\RUTAS
+        // C:\Users\ALAN\Desktop\RUTAS desarrollo
         public ImpresoraTicketService(WSFEService webService)
         {
             bool impresoraEncontrada = false;
@@ -109,9 +110,8 @@ namespace ApplicationLayer.Services
                     throw new Exception($"La impresora '{NOMBRE_IMPRESORA}' no está disponible");
                 }
                 // Verificar SI HAY CONTENIDO real, no solo si no es null
-                bool tieneProductosCafeteria = _ventacafeteria.DetallesVentas.Any();
+                bool tieneProductosCafeteria = _ventacafeteria.DetallesVentas != null && _ventacafeteria.DetallesVentas.Any();
                 bool tieneConceptosVarios = _ventacafeteria.ConceptosVarios != null && _ventacafeteria.ConceptosVarios.Any();
-
 
                 if (tieneProductosCafeteria || tieneConceptosVarios)
                 {
@@ -127,17 +127,6 @@ namespace ApplicationLayer.Services
                         "COMANDA N");
                     tiketCafe.Print();
                 }
-
-
-                /*if (_ventacafeteria.DetallesVentas.Count > 0 || _ventacafeteria.ConceptosVarios != null)
-                {
-                    PrintDocument tiketCafe = new PrintDocument();
-                    tiketCafe.PrinterSettings.PrinterName = NOMBRE_IMPRESORA;
-                    tiketCafe.DefaultPageSettings.PaperSize = pd.DefaultPageSettings.PaperSize;
-                    tiketCafe.DefaultPageSettings.Margins = pd.DefaultPageSettings.Margins;
-                    tiketCafe.PrintPage += (sender, e) => ImprimirTicketProductos(_ventacafeteria.DetallesVentas, AclaracionCafeteria, e, "COMANDA N");
-                    tiketCafe.Print();
-                }*/
 
 
                 if (_ventaHelados.DetallesVentas.Count > 0)
@@ -185,7 +174,7 @@ namespace ApplicationLayer.Services
                 var paperSize = GetPaperSize();
                 var margins = new Margins(5, 5, 15, 30);
 
-                bool tieneCafeteria = _ventacafeteria.DetallesVentas.Any() ||
+                bool tieneCafeteria = (_ventacafeteria.DetallesVentas != null && _ventacafeteria.DetallesVentas.Any()) ||
                      (_ventacafeteria.ConceptosVarios != null &&
                       _ventacafeteria.ConceptosVarios.Any());
 
@@ -860,7 +849,7 @@ namespace ApplicationLayer.Services
                 int contadorActual = int.TryParse(contenido, out int result) ? result : 0;
                 int nuevoContador = (contadorActual + 1) % 100;
                 File.WriteAllText(RUTA_COMANDA, nuevoContador.ToString());
-                return nuevoContador;
+                return contadorActual;
             }
             catch
             {
