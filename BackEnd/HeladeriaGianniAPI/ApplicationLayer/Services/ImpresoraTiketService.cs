@@ -340,11 +340,21 @@ namespace ApplicationLayer.Services
                     g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
                     yPos += 10;
 
-                    // Total corregido más a la izquierda
+                    decimal descuentoFiscal = (decimal)_ventaActual.Descuentos;
+                    string subtotal = $"Subtotal: {(FacturaResponse.ImporteTotal + descuentoFiscal).ToString("C2")}";
+                    g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(subtotal, fuenteNormal).Height + 5;
+
+                    if (descuentoFiscal > 0)
+                    {
+                        string descuento = $"Descuento: {descuentoFiscal.ToString("C2")}";
+                        g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                        yPos += g.MeasureString(descuento, fuenteNormal).Height + 5;
+                    }
+
                     string total = $"TOTAL: {FacturaResponse.ImporteTotal.ToString("C2")}";
-                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
-                    g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width - 45, yPos);
-                    yPos += totalSize.Height + 20;
+                    g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(total, fuenteGrande).Height + 20;
 
                     // Generar QR
                     string qrText = FacturaResponse.DatosQR;
@@ -649,22 +659,19 @@ namespace ApplicationLayer.Services
                     yPos += 10;
 
                     string subtotal = $"Subtotal: {resumen.Subtotal.ToString("N0")}";
-                    SizeF subtotalSize = g.MeasureString(subtotal, fuenteNormal);
-                    g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin + printableWidth - subtotalSize.Width, yPos);
-                    yPos += subtotalSize.Height + 5;
+                    g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(subtotal, fuenteNormal).Height + 5;
 
                     if (resumen.Descuento != 0)
                     {
                         string descuento = $"Descuento: {resumen.Descuento.ToString("N0")}";
-                        SizeF descuentoSize = g.MeasureString(descuento, fuenteNormal);
-                        g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin + printableWidth - descuentoSize.Width, yPos);
-                        yPos += descuentoSize.Height + 5;
+                        g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                        yPos += g.MeasureString(descuento, fuenteNormal).Height + 5;
                     }
 
                     string total = $"TOTAL: {resumen.Total.ToString("N0")}";
-                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
-                    g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin + printableWidth - totalSize.Width, yPos);
-                    yPos += totalSize.Height + 20;
+                    g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(total, fuenteGrande).Height + 20;
                     e.HasMorePages = false;
                 }
             }
@@ -953,11 +960,21 @@ namespace ApplicationLayer.Services
                     g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
                     yPos += 10;
 
-                    // Total
+                    decimal descuentoFiscal = (decimal)_ventaActual.Descuentos;
+                    string subtotal = $"Subtotal: {(FacturaResponse.ImporteTotal + descuentoFiscal).ToString("C2")}";
+                    g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(subtotal, fuenteNormal).Height + 5;
+
+                    if (descuentoFiscal > 0)
+                    {
+                        string descuento = $"Descuento: {descuentoFiscal.ToString("C2")}";
+                        g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                        yPos += g.MeasureString(descuento, fuenteNormal).Height + 5;
+                    }
+
                     string total = $"TOTAL: {FacturaResponse.ImporteTotal.ToString("C2")}";
-                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
-                    g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width - 45, yPos);
-                    yPos += totalSize.Height + 20;
+                    g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(total, fuenteGrande).Height + 20;
 
                     e.HasMorePages = false;
                 }
@@ -1054,19 +1071,20 @@ namespace ApplicationLayer.Services
                     g.DrawLine(Pens.Black, leftMargin, yPos, rightMargin, yPos);
                     yPos += 10;
 
+                    string subtotal = $"Subtotal: {(_ventaActual.TotalVenta + _ventaActual.Descuentos).ToString("N0")}";
+                    g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(subtotal, fuenteNormal).Height + 5;
+
                     if (_ventaActual.Descuentos > 0)
                     {
                         string descuento = $"Descuento: {_ventaActual.Descuentos.ToString("N0")}";
-                        SizeF descuentoSize = g.MeasureString(descuento, fuenteGrande);
-                        g.DrawString(descuento, fuenteGrande, Brushes.Black, rightMargin - descuentoSize.Width - 20, yPos);
-                        yPos += descuentoSize.Height + 10;
+                        g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin, yPos);
+                        yPos += g.MeasureString(descuento, fuenteNormal).Height + 5;
                     }
 
-                    // Total corregido más a la izquierda
                     string total = $"TOTAL: {_ventaActual.TotalVenta.ToString("N0")}";
-                    SizeF totalSize = g.MeasureString(total, fuenteGrande);
-                    g.DrawString(total, fuenteGrande, Brushes.Black, rightMargin - totalSize.Width - 45, yPos);
-                    yPos += totalSize.Height + 20;
+                    g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin, yPos);
+                    yPos += g.MeasureString(total, fuenteGrande).Height + 20;
 
                     e.HasMorePages = false;
                 }
