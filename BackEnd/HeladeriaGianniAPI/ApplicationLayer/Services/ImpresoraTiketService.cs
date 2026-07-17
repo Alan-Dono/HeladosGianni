@@ -531,9 +531,9 @@ namespace ApplicationLayer.Services
                 using (Font fuenteNormal = new Font("Arial", 10))
                 using (Font fuenteGrande = new Font("Arial", 12, FontStyle.Bold))
                 using (Font fuenteContador = new Font("Arial", 24, FontStyle.Bold))
-                using (Font fuenteAclaracion = new Font("Arial", 8, FontStyle.Italic))
+                using (Font fuenteAclaracion = new Font("Arial", 8, FontStyle.Bold | FontStyle.Italic))
                 using (Font fuenteProducto = new Font("Arial", 9, FontStyle.Bold))
-                using (Font fuenteColumnas = new Font("Arial", 8))
+                using (Font fuenteColumnas = new Font("Arial", 9, FontStyle.Bold))
                 using (StringFormat formatoIzquierda = new StringFormat
                 {
                     Alignment = StringAlignment.Near,
@@ -612,14 +612,14 @@ namespace ApplicationLayer.Services
 
                         g.DrawString(nombreProducto, fuenteProducto, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc - 3, 20), formatoIzquierda);
                         g.DrawString(detalle.Cantidad.ToString(), fuenteColumnas, Brushes.Black, new RectangleF(colCant, yPos, anchoCant, 20), formatoDerecha);
-                        g.DrawString(RedondearDinero((decimal)detalle.PrecioUnitario).ToString("N2"), fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
-                        g.DrawString(RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario).ToString("N2"), fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
+                        g.DrawString(RedondearDinero((decimal)detalle.PrecioUnitario).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
+                        g.DrawString(RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
                         yPos += 20;
 
                         // Imprimir aclaración individual si existe
                         if (!string.IsNullOrEmpty(detalle.Aclaracion))
                         {
-                            g.DrawString("  >> " + detalle.Aclaracion, fuenteAclaracion, Brushes.DarkGray, colDesc, yPos);
+                            g.DrawString("  >> " + detalle.Aclaracion, fuenteAclaracion, Brushes.Black, colDesc, yPos);
                             yPos += 15;
                         }
                     }
@@ -631,14 +631,14 @@ namespace ApplicationLayer.Services
                         {
                             g.DrawString(concepto.Nombre, fuenteProducto, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc - 3, 20), formatoIzquierda);
                             g.DrawString("1", fuenteColumnas, Brushes.Black, new RectangleF(colCant, yPos, anchoCant, 20), formatoDerecha);
-                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N2"), fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
-                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N2"), fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
+                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
+                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
                             yPos += 20;
 
                             // Imprimir aclaración individual si existe
                             if (!string.IsNullOrEmpty(concepto.Aclaracion))
                             {
-                                g.DrawString("  >> " + concepto.Aclaracion, fuenteAclaracion, Brushes.DarkGray, colDesc, yPos);
+                                g.DrawString("  >> " + concepto.Aclaracion, fuenteAclaracion, Brushes.Black, colDesc, yPos);
                                 yPos += 15;
                             }
                         }
@@ -648,20 +648,20 @@ namespace ApplicationLayer.Services
                     g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
                     yPos += 10;
 
-                    string subtotal = $"Subtotal: {resumen.Subtotal.ToString("N2")}";
+                    string subtotal = $"Subtotal: {resumen.Subtotal.ToString("N0")}";
                     SizeF subtotalSize = g.MeasureString(subtotal, fuenteNormal);
                     g.DrawString(subtotal, fuenteNormal, Brushes.Black, leftMargin + printableWidth - subtotalSize.Width, yPos);
                     yPos += subtotalSize.Height + 5;
 
                     if (resumen.Descuento != 0)
                     {
-                        string descuento = $"Descuento: {resumen.Descuento.ToString("N2")}";
+                        string descuento = $"Descuento: {resumen.Descuento.ToString("N0")}";
                         SizeF descuentoSize = g.MeasureString(descuento, fuenteNormal);
                         g.DrawString(descuento, fuenteNormal, Brushes.Black, leftMargin + printableWidth - descuentoSize.Width, yPos);
                         yPos += descuentoSize.Height + 5;
                     }
 
-                    string total = $"TOTAL: {resumen.Total.ToString("N2")}";
+                    string total = $"TOTAL: {resumen.Total.ToString("N0")}";
                     SizeF totalSize = g.MeasureString(total, fuenteGrande);
                     g.DrawString(total, fuenteGrande, Brushes.Black, leftMargin + printableWidth - totalSize.Width, yPos);
                     yPos += totalSize.Height + 20;
