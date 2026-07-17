@@ -550,12 +550,6 @@ namespace ApplicationLayer.Services
                     FormatFlags = StringFormatFlags.NoWrap,
                     Trimming = StringTrimming.EllipsisCharacter
                 })
-                using (StringFormat formatoDerecha = new StringFormat
-                {
-                    Alignment = StringAlignment.Far,
-                    FormatFlags = StringFormatFlags.NoWrap,
-                    Trimming = StringTrimming.EllipsisCharacter
-                })
                 {
                     Graphics g = e.Graphics;
                     float yPos = e.MarginBounds.Top;
@@ -597,19 +591,16 @@ namespace ApplicationLayer.Services
                     g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
                     yPos += 10;
 
-                    float colDesc = leftMargin + 3;
-                    float anchoDesc = printableWidth * 0.45f;
-                    float colCant = leftMargin + printableWidth * 0.45f;
-                    float anchoCant = printableWidth * 0.13f;
-                    float colPU = leftMargin + printableWidth * 0.58f;
-                    float anchoPU = printableWidth * 0.20f;
-                    float colTotal = leftMargin + printableWidth * 0.78f;
-                    float anchoTotal = printableWidth * 0.22f;
+                    float colDesc = 5;
+                    float anchoDesc = 145;
+                    float colCant = 155;
+                    float colPU = 195;
+                    float colTotal = 238;
 
-                    g.DrawString("Descripción", fuenteColumnas, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc - 3, 20), formatoIzquierda);
-                    g.DrawString("Cant.", fuenteColumnas, Brushes.Black, new RectangleF(colCant, yPos, anchoCant, 20), formatoDerecha);
-                    g.DrawString("P.U.", fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
-                    g.DrawString("Total", fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
+                    g.DrawString("Descripción", fuenteColumnas, Brushes.Black, colDesc, yPos);
+                    g.DrawString("Cant.", fuenteColumnas, Brushes.Black, colCant, yPos);
+                    g.DrawString("P.U.", fuenteColumnas, Brushes.Black, colPU, yPos);
+                    g.DrawString("Total", fuenteColumnas, Brushes.Black, colTotal, yPos);
                     yPos += 20;
 
                     g.DrawLine(Pens.Black, leftMargin, yPos, leftMargin + printableWidth, yPos);
@@ -620,10 +611,10 @@ namespace ApplicationLayer.Services
                     {
                         string nombreProducto = detalle.Producto.NombreProducto;
 
-                        g.DrawString(nombreProducto, fuenteProducto, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc - 3, 20), formatoIzquierda);
-                        g.DrawString(detalle.Cantidad.ToString(), fuenteColumnas, Brushes.Black, new RectangleF(colCant, yPos, anchoCant, 20), formatoDerecha);
-                        g.DrawString(RedondearDinero((decimal)detalle.PrecioUnitario).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
-                        g.DrawString(RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
+                        g.DrawString(nombreProducto, fuenteProducto, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc, 20), formatoIzquierda);
+                        g.DrawString(detalle.Cantidad.ToString(), fuenteColumnas, Brushes.Black, colCant + 5, yPos);
+                        g.DrawString(RedondearDinero((decimal)detalle.PrecioUnitario).ToString("N0"), fuenteColumnas, Brushes.Black, colPU - 6, yPos);
+                        g.DrawString(RedondearDinero(detalle.Cantidad * (decimal)detalle.PrecioUnitario).ToString("N0"), fuenteColumnas, Brushes.Black, colTotal - 3, yPos);
                         yPos += 20;
 
                         // Imprimir aclaración individual si existe
@@ -639,10 +630,10 @@ namespace ApplicationLayer.Services
                     {
                         foreach (var concepto in conceptosVarios)
                         {
-                            g.DrawString(concepto.Nombre, fuenteProducto, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc - 3, 20), formatoIzquierda);
-                            g.DrawString("1", fuenteColumnas, Brushes.Black, new RectangleF(colCant, yPos, anchoCant, 20), formatoDerecha);
-                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colPU, yPos, anchoPU, 20), formatoDerecha);
-                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N0"), fuenteColumnas, Brushes.Black, new RectangleF(colTotal, yPos, anchoTotal, 20), formatoDerecha);
+                            g.DrawString(concepto.Nombre, fuenteProducto, Brushes.Black, new RectangleF(colDesc, yPos, anchoDesc, 20), formatoIzquierda);
+                            g.DrawString("1", fuenteColumnas, Brushes.Black, colCant + 5, yPos);
+                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N0"), fuenteColumnas, Brushes.Black, colPU - 6, yPos);
+                            g.DrawString(RedondearDinero((decimal)concepto.Precio).ToString("N0"), fuenteColumnas, Brushes.Black, colTotal - 3, yPos);
                             yPos += 20;
 
                             // Imprimir aclaración individual si existe
