@@ -169,6 +169,11 @@ namespace ApplicationLayer.Services
                     throw new Exception("No se pudo obtener la respuesta fiscal.");
                 }
 
+                if (!FacturaResponse.Exitoso)
+                {
+                    throw new Exception($"No se pudo generar la factura fiscal: {FacturaResponse.Error}");
+                }
+
                 ProductosCageteria(_ventaActual);
                 ResumenesTicketsOperativos resumenesTickets = CrearResumenesTicketsOperativos();
                 var paperSize = GetPaperSize();
